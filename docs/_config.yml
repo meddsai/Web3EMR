@@ -1,9 +1,5 @@
 # Minimal Mistakes theme configuration for GitHub Pages
-remote_theme: "mmistakes/minimal-mistakes"
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-remote-theme
+theme: jekyll-theme-cayman
 
 # Site settings
 title: "RustEMR Documentation"

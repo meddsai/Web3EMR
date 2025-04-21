@@ -1,0 +1,31 @@
+site_name: RustEMR Documentation
+site_description: Comprehensive guides and references for RustEMR.
+site_author: UbudCare
+repo_url: https://github.com/UbudCare/rustemr
+repo_name: UbudCare/rustemr
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Features: features.md
+  - Installation: installation.md
+  - Contributing: contributing.md
+  - License: license.md
+  - Acknowledgments: acknowledgments.md
+  - Contact & Discussions: contact.md
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+    - content.tabs.link
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
