@@ -22,7 +22,7 @@
           "id": 2,
           "title": "Set up React frontend with TypeScript",
           "description": "Initialize and configure the React frontend with TypeScript, including code quality tools",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             1
           ],
