@@ -34,7 +34,7 @@ jobs:
         working-directory: docs
 
       - name: Build with Jekyll
-        run: bundle exec jekyll build -s docs -d _site
+        run: bundle exec jekyll build -d _site
         working-directory: docs
 
       - name: List built site files
