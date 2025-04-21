@@ -1,15 +1,14 @@
-# Jekyll configuration for GitHub Pages
-
-# Minimal Mistakes theme (clean, minimalist)
-theme: "minimal-mistakes-jekyll"
+# Minimal Mistakes theme configuration for GitHub Pages
+remote_theme: "mmistakes/minimal-mistakes"
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-remote-theme
 
 # Site settings
 title: "RustEMR Documentation"
 description: "Comprehensive guides and references for RustEMR."
-url: "https://ubudcare.github.io/rustemr"
+url: "https://ubudcare.github.io"
 baseurl: "/rustemr"
 
 # Navigation (optional, for sidebar)
@@ -19,3 +18,5 @@ baseurl: "/rustemr"
 # Exclude files/directories
 exclude:
   - "README.md"
+  - "Gemfile*"
+  - "_pages/home.md"
