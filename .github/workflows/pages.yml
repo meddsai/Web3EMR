@@ -26,22 +26,25 @@ jobs:
         with:
           ruby-version: '3.1'
 
-      - name: Install Jekyll
-        run: |
-          gem install jekyll
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install dependencies
+        run: bundle install
+        working-directory: docs
 
       - name: Build with Jekyll
-        run: |
-          jekyll build -s docs -d _site
+        run: bundle exec jekyll build -s docs -d _site
+        working-directory: docs
 
       - name: List built site files
         run: |
-          ls -l _site
+          ls -l docs/_site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: docs/_site
 
   deploy:
     needs: build
