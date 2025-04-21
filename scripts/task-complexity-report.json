@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "generatedAt": "2025-04-21T12:58:12.560Z",
+    "tasksAnalyzed": 10,
+    "thresholdScore": 5,
+    "projectName": "Your Project Name",
+    "usedResearch": true
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 1,
+      "taskTitle": "Set up project structure and development environment",
+      "complexityScore": 6,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down into setting up Rust backend, React frontend, Docker configurations, and task automation scripts.",
+      "reasoning": "This task involves multiple technologies and configurations, requiring careful setup but is relatively straightforward."
+    },
+    {
+      "taskId": 2,
+      "taskTitle": "Design and implement database schema",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Include designing tables for patient records, encounters, and system data, implementing Diesel migrations, and optimizing performance.",
+      "reasoning": "Complexity arises from designing a comprehensive schema that aligns with FHIR standards and includes audit trails."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Implement authentication and authorization system",
+      "complexityScore": 9,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Focus on JWT authentication, role-based access control, user management, and session management with audit logging.",
+      "reasoning": "High complexity due to the need for secure authentication and authorization mechanisms."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Develop core patient management API",
+      "complexityScore": 8,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Implement CRUD operations with validation, error handling, and role-based authorization.",
+      "reasoning": "Complexity comes from ensuring API endpoints are secure, validated, and properly authorized."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Implement encounter tracking system",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Develop data models and API endpoints for encounters, vital signs, diagnoses, and treatments with proper validation.",
+      "reasoning": "Moderate complexity due to the need for comprehensive data models and workflows."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Develop FHIR API integration",
+      "complexityScore": 9,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Research FHIR resource mappings, implement adapter layers, and develop FHIR-compliant API endpoints.",
+      "reasoning": "High complexity due to the need for interoperability with external systems and adherence to FHIR standards."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Create React frontend for patient management",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Focus on setting up a React component library, implementing patient registration and search interfaces, and managing state.",
+      "reasoning": "Moderate complexity due to the need for responsive UI components and state management."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Implement clinical encounter UI",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Develop encounter creation forms, vital signs recording interfaces, and diagnosis/treatment documentation with proper validation.",
+      "reasoning": "Similar complexity to patient management UI, with a focus on clinical workflows."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Create comprehensive documentation",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Document installation, developer guides, API endpoints, and user manuals with screenshots.",
+      "reasoning": "Lower complexity as it involves organizing existing information into clear documentation."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Implement CI/CD and deployment configuration",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Set up CI/CD pipelines for automated testing, configure deployment environments, and implement backup procedures.",
+      "reasoning": "Complexity arises from setting up multiple pipelines and ensuring automated testing and deployment processes."
+    }
+  ]
+}

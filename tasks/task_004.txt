@@ -1,0 +1,42 @@
+# Task ID: 4
+# Title: Develop core patient management API
+# Status: pending
+# Dependencies: 2, 3
+# Priority: high
+# Description: Implement RESTful API endpoints for CRUD operations on patient records with proper validation and error handling.
+# Details:
+Create Rust models for patient data matching database schema. Implement RESTful endpoints for creating, reading, updating, and deleting patient records. Add comprehensive data validation for patient information. Implement error handling with appropriate HTTP status codes and error messages. Create search functionality with filtering and pagination. Ensure all operations are properly authorized based on user roles. Implement audit logging for all patient data modifications.
+
+# Test Strategy:
+Write unit tests for data validation. Create integration tests for each API endpoint. Test error scenarios and edge cases. Verify authorization rules are enforced correctly. Test search functionality with various parameters.
+
+# Subtasks:
+## 1. Create patient data models and database integration [pending]
+### Dependencies: None
+### Description: Define Rust models for patient data and implement database connectivity with schema validation
+#### 4.1.1 Define Rust structs for patient data fields (serde support)
+#### 4.1.2 Implement schema validation logic and unit tests
+#### 4.1.3 Set up database connection pool (Diesel)
+#### 4.1.4 Create repository layer for CRUD operations
+#### 4.1.5 Document model and data validation rules
+
+## 2. Implement core CRUD API endpoints with validation [pending]
+### Dependencies: 4.1
+### Description: Develop RESTful API endpoints for creating, reading, updating and deleting patient records with proper validation
+#### 4.2.1 Implement POST /patients (create) endpoint
+#### 4.2.2 Implement GET /patients/{id} (read) endpoint
+#### 4.2.3 Implement PUT /patients/{id} (update) endpoint
+#### 4.2.4 Implement DELETE /patients/{id} (delete) endpoint
+#### 4.2.5 Implement GET /patients (list) with pagination
+#### 4.2.6 Add error handling and standardized error responses
+#### 4.2.7 Write integration tests for all endpoints
+
+## 3. Add authorization, search functionality and audit logging [pending]
+### Dependencies: 4.2
+### Description: Implement role-based access control, advanced search capabilities and audit logging for patient operations
+#### 4.3.1 Integrate with authentication for RBAC enforcement
+#### 4.3.2 Implement advanced search and filtering (name, DOB, etc.)
+#### 4.3.3 Add sorting and pagination options
+#### 4.3.4 Implement audit logging middleware for patient modifications
+#### 4.3.5 Add OpenAPI/Swagger documentation for endpoints
+#### 4.3.6 Optimize database indexes for search performance

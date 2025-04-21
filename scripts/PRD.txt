@@ -1,0 +1,74 @@
+# Product Requirements Document (PRD)
+
+## Project: RustEMR
+
+### 1. Overview
+RustEMR is an open-source electronic medical record (EMR) system designed for clinics, hospitals, and healthcare organizations worldwide. Its goal is to deliver a secure, scalable, and interoperable solution, inspired by OpenEMR and OpenMRS, but built with a modern tech stack: Rust (backend), TypeScript/React (frontend), and PostgreSQL (database). RustEMR supports FHIR and REST APIs for integration with other healthcare systems.
+
+### 2. Goals & Objectives
+- Provide a robust, community-driven EMR platform
+- Ensure security, privacy, and compliance for sensitive medical data
+- Support modularity, extensibility, and scalability
+- Enable interoperability with external healthcare systems via FHIR and REST APIs
+- Deliver a user-friendly, responsive UI for clinical workflows
+
+### 3. Architecture
+- **Backend (Rust):** Handles business logic, data validation, and exposes RESTful/FHIR APIs. Emphasizes safety, performance, and concurrency.
+- **Frontend (TypeScript & React):** Responsive UI for patient management, scheduling, and clinical workflows.
+- **Database (PostgreSQL):** Stores patient, encounter, and system data. Supports migrations and complex queries.
+- **Modules & Plugins:** OpenEMR-style clinical forms, reporting plugins, OpenMRS-like concept dictionary for extensions.
+- **Data Flow:**
+  1. User interacts via React UI → HTTP/HTTPS requests
+  2. Rust backend processes requests, enforces ACLs, business rules
+  3. Data persists in PostgreSQL; FHIR resources mapped to relational tables
+  4. External integration via FHIR endpoints or REST hooks
+
+### 4. Features
+#### 4.1 Current Features
+- Basic Patient Management (CRUD patient records: name, DOB, contact info)
+- Encounter Tracking (record visits, vital signs, diagnoses, treatments)
+
+#### 4.2 Roadmap / Planned Features
+- Advanced Patient Management
+  - Demographics (age, gender, ethnicity)
+  - Medical history (conditions, surgeries, allergies)
+  - Family and social history
+- Clinical Decision Support
+  - Alerts for drug interactions, allergies
+  - Clinical guidelines and reminders
+- Billing & Insurance Integration
+  - Invoicing, payments, insurance claims
+- Reporting & Analytics
+  - Custom reports, data visualization
+- Mobile Application Support
+  - Responsive web, native mobile apps (future)
+- Interoperability Enhancements
+  - Full FHIR support, integration with labs, pharmacies, external services
+- Modular plugin system for forms, reports, and extensions
+
+### 5. Installation & Deployment
+#### 5.1 Prerequisites
+- Rust (v1.50+)
+- Node.js (v14+)
+- PostgreSQL (v12+)
+- Optional: cargo-make for task automation
+
+#### 5.2 Local Setup
+- Clone repository, set up PostgreSQL, configure backend and frontend, run services
+- See `docs/installation.md` for full instructions
+
+### 6. Contribution Guidelines
+- Fork, branch, and follow code style guidelines (Rust: `cargo fmt`, `clippy`; Frontend: `npm run lint`)
+- Write and run tests (`cargo test`, `npm test`)
+- Use Conventional Commits for PRs
+- See `docs/contributing.md` for details
+
+### 7. Licensing
+- Licensed under GNU GPL v3.0 (see `docs/license.md` and `LICENSE`)
+
+### 8. Acknowledgments
+- Inspired by OpenEMR and OpenMRS communities
+- Gratitude to contributors and the global open-source healthcare community
+
+### 9. Contact & Discussions
+- GitHub Discussions: https://github.com/UbudCare/rustemr/discussions

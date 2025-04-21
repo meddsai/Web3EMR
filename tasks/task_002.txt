@@ -1,0 +1,42 @@
+# Task ID: 2
+# Title: Design and implement database schema
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Create the PostgreSQL database schema for patient records, encounters, and system data with proper relationships and constraints.
+# Details:
+Design database tables for patients (demographics, contact info), encounters (visits, timestamps), vital signs, diagnoses, and treatments. Implement using Diesel migrations in Rust. Create schemas that align with FHIR resource structures where applicable. Include audit tables for tracking changes to medical records. Set up proper indexes for performance optimization. Implement foreign key constraints to maintain data integrity. Document the schema design with entity-relationship diagrams.
+
+# Test Strategy:
+Run migrations against a test database. Verify constraints with test data. Ensure schema supports the required queries for patient management and encounter tracking. Test performance with sample data volume.
+
+# Subtasks:
+## 1. Design core patient and encounter database tables [pending]
+### Dependencies: None
+### Description: Create the foundational database tables for patient demographics, contact information, and medical encounters with proper relationships
+#### 2.1.1 Design ER diagrams for patients, encounters, vital_signs, diagnoses, treatments
+#### 2.1.2 Define Diesel migration files for each table
+#### 2.1.3 Implement primary and foreign key constraints
+#### 2.1.4 Add NOT NULL and unique constraints on required fields
+#### 2.1.5 Align schema fields with FHIR Patient and Encounter resources
+#### 2.1.6 Document schema and relationships
+
+## 2. Implement audit and tracking functionality [pending]
+### Dependencies: 2.1
+### Description: Create audit tables and triggers to track all changes to medical records for compliance and history tracking
+#### 2.2.1 Define audit tables for each core table (patients, encounters, etc.)
+#### 2.2.2 Add metadata columns (user_id, timestamp, operation_type, previous_values)
+#### 2.2.3 Write PostgreSQL triggers for INSERT/UPDATE/DELETE
+#### 2.2.4 Implement Diesel migrations for audit tables and triggers
+#### 2.2.5 Test audit logging with sample data changes
+#### 2.2.6 Document audit schema and compliance rationale
+
+## 3. Optimize database performance and finalize schema [pending]
+### Dependencies: 2.1, 2.2
+### Description: Implement advanced indexes, constraints, and performance optimizations for the complete database schema
+#### 2.3.1 Analyze query patterns and identify bottlenecks
+#### 2.3.2 Add indexes for common queries (patient name, encounter date, diagnosis code)
+#### 2.3.3 Implement partial indexes and materialized views for reporting
+#### 2.3.4 Add check constraints for data validity (date ranges, code formats)
+#### 2.3.5 Finalize Diesel migration for all optimizations
+#### 2.3.6 Update ER diagrams and documentation
