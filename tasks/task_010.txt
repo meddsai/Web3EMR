@@ -14,33 +14,18 @@ Verify CI pipeline by making test commits with passing and failing tests. Test d
 ## 1. Set up CI pipelines with automated testing and linting [pending]
 ### Dependencies: None
 ### Description: Configure GitHub Actions workflows for continuous integration with automated testing and code quality checks for both backend and frontend components
-#### 10.1.1 Create GitHub Actions workflow files for backend and frontend
-#### 10.1.2 Set up cargo test, cargo clippy, and code coverage for Rust
-#### 10.1.3 Set up npm test, ESLint, and TypeScript checks for React
-#### 10.1.4 Configure workflow triggers for PRs and main branch
-#### 10.1.5 Add caching for dependencies to speed up CI runs
-#### 10.1.6 Set up status checks to block failing PRs
-#### 10.1.7 Document CI process in README
+### Details:
+Create GitHub Actions workflow files (.github/workflows/) with separate jobs for backend and frontend. For backend (Rust): configure cargo test, cargo clippy, and code coverage. For frontend (React/TypeScript): set up npm test, ESLint, and TypeScript type checking. Ensure workflows run on pull requests and main branch commits. Configure caching for dependencies to speed up CI runs. Set up status checks to prevent merging failing PRs. Document the CI process in the project README.
 
 ## 2. Create Docker configuration for development and production [pending]
 ### Dependencies: 10.1
 ### Description: Develop Docker and Docker Compose configurations for consistent development environments and production deployment
-#### 10.2.1 Write Dockerfiles for backend and frontend
-#### 10.2.2 Create docker-compose.yml for local development
-#### 10.2.3 Create docker-compose.prod.yml for production
-#### 10.2.4 Configure PostgreSQL container with data persistence
-#### 10.2.5 Set up environment variable management for all environments
-#### 10.2.6 Implement DB init and migration scripts for containers
-#### 10.2.7 Document Docker setup in DEPLOYMENT.md
+### Details:
+Create Dockerfiles for backend and frontend services. Develop docker-compose.yml for local development with hot-reloading. Create docker-compose.prod.yml for production deployment with optimized builds. Configure PostgreSQL container with volume mounts for data persistence. Set up environment variable management for different environments. Implement database initialization and migration scripts that run on container startup. Document Docker setup and usage in a DEPLOYMENT.md file.
 
 ## 3. Implement CD pipeline with staging/production environments and database management [pending]
 ### Dependencies: 10.1, 10.2
 ### Description: Configure continuous deployment workflows with separate staging and production environments, including database migration automation and backup procedures
-#### 10.3.1 Extend GitHub Actions for deployment to staging/production
-#### 10.3.2 Implement environment-specific config management
-#### 10.3.3 Automate database migrations in deployment pipeline
-#### 10.3.4 Create database backup scripts (scheduled and pre-migration)
-#### 10.3.5 Implement database restore and recovery procedures
-#### 10.3.6 Configure secrets management for sensitive data
-#### 10.3.7 Set up monitoring and alerting for deployment failures
-#### 10.3.8 Document full CI/CD and deployment process
+### Details:
+Extend GitHub Actions workflows to include deployment jobs for staging and production environments. Implement environment-specific configuration management. Set up automated database migrations as part of the deployment process using a migration tool like Diesel. Create database backup scripts that run on a schedule and before migrations. Implement database restore procedures and document recovery process. Configure secrets management for sensitive information. Set up monitoring and alerting for deployment failures. Create comprehensive deployment documentation covering the entire CI/CD pipeline, environment setup, and database management procedures.
+

@@ -14,30 +14,18 @@ Test login/logout flows. Verify role-based access restrictions. Perform security
 ## 1. Implement user authentication with JWT [pending]
 ### Dependencies: None
 ### Description: Create the core authentication system with JWT token generation, validation, and user credential management
-#### 3.1.1 Design user database schema (fields: username, email, password hash, timestamps)
-#### 3.1.2 Implement password hashing using bcrypt or Argon2
-#### 3.1.3 Develop JWT token generation and validation (RS256)
-#### 3.1.4 Build authentication endpoints: login, logout, token refresh
-#### 3.1.5 Add middleware for JWT validation on protected routes
-#### 3.1.6 Implement audit logging for authentication events (login, logout, failures)
+### Details:
+Create database tables for users with fields for username, email, password (hashed), created_at, and last_login. Implement password hashing using bcrypt or Argon2 with appropriate work factors. Develop JWT token generation with appropriate claims (user_id, roles, expiration) and signing using RS256. Create authentication endpoints for login, logout, and token refresh. Implement middleware for JWT validation on protected routes. Add proper error handling for authentication failures with appropriate HTTP status codes. Include audit logging for login attempts (successful and failed), password changes, and token refreshes.
 
 ## 2. Implement role-based access control (RBAC) system [pending]
 ### Dependencies: 3.1
 ### Description: Design and implement the RBAC system with predefined healthcare roles and permissions
-#### 3.2.1 Design roles and permissions schema (many-to-many: users, roles, permissions)
-#### 3.2.2 Implement role assignment and permission management endpoints (admin only)
-#### 3.2.3 Extend JWT payload to include roles and permissions
-#### 3.2.4 Middleware for role/permission checks on routes
-#### 3.2.5 Helper functions to verify permissions in route handlers
-#### 3.2.6 Audit logging for role and permission changes
+### Details:
+Create database tables for roles (admin, physician, nurse, patient, etc.) and permissions with many-to-many relationships. Implement role assignment functionality for users, allowing multiple roles per user. Design permission sets appropriate for healthcare context (view patient records, edit medical history, prescribe medication, etc.). Create API endpoints for role and permission management (admin only). Extend the JWT payload to include user roles and key permissions. Implement middleware for checking role-based access to protected routes. Add helper functions to verify permissions for specific actions within route handlers. Include audit logging for role and permission changes.
 
 ## 3. Implement session management and security enhancements [pending]
 ### Dependencies: 3.1, 3.2
 ### Description: Add session management with appropriate timeouts and additional security features for healthcare compliance
-#### 3.3.1 Implement token expiration and refresh token system (HTTP-only cookies)
-#### 3.3.2 Add token revocation and logout functionality
-#### 3.3.3 Implement rate limiting for authentication endpoints
-#### 3.3.4 Add IP tracking and suspicious activity detection
-#### 3.3.5 Password reset with secure time-limited tokens
-#### 3.3.6 Account lockout after failed attempts & two-factor authentication for sensitive roles
-#### 3.3.7 Comprehensive audit logging for all auth events (HIPAA compliance)
+### Details:
+Implement token expiration with shorter timeouts appropriate for healthcare applications (15-30 minutes). Create secure refresh token system with longer-lived tokens stored in HTTP-only cookies. Add token revocation capability for logout and security incidents. Implement rate limiting on authentication endpoints to prevent brute force attacks. Add IP tracking and suspicious activity detection. Create password reset functionality with secure time-limited tokens. Implement account lockout after multiple failed attempts. Add two-factor authentication option for sensitive roles. Ensure all authentication flows meet HIPAA compliance requirements. Create comprehensive audit logging system for all authentication and authorization events with appropriate detail for security reviews.
+

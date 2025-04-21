@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Set up project structure and development environment",
       "description": "Initialize the project repository with the correct structure for a Rust backend and React frontend, including configuration files and development environment setup.",
-      "status": "pending",
+      "status": "in-progress",
       "dependencies": [],
       "priority": "high",
       "details": "Create a monorepo structure with separate directories for backend (Rust) and frontend (React/TypeScript). Initialize the Rust project with Cargo.toml, setting up dependencies including actix-web for the server, diesel for ORM, and serde for serialization. Set up the React frontend with create-react-app or Next.js using TypeScript template. Configure ESLint and Prettier for frontend code quality. Create Docker configurations for development environment with PostgreSQL. Set up cargo-make for task automation.",
@@ -14,7 +14,7 @@
           "id": 1,
           "title": "Initialize monorepo structure with backend Rust configuration",
           "description": "Create the base monorepo structure and set up the Rust backend project with necessary dependencies and configuration files",
-          "status": "pending",
+          "status": "done",
           "dependencies": [],
           "details": "1. Create the root project directory and initialize git repository\n2. Create a monorepo structure with `/backend` and `/frontend` directories\n3. Inside `/backend`, initialize a new Rust project using `cargo init`\n4. Configure Cargo.toml with required dependencies: actix-web, diesel, serde, tokio\n5. Set up the basic project structure for the Rust backend with src/main.rs, src/routes/, src/models/, src/db/\n6. Create a basic .gitignore file for Rust projects\n7. Initialize a README.md with project setup instructions"
         },

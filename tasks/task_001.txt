@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Set up project structure and development environment
-# Status: pending
+# Status: in-progress
 # Dependencies: None
 # Priority: high
 # Description: Initialize the project repository with the correct structure for a Rust backend and React frontend, including configuration files and development environment setup.
@@ -11,7 +11,7 @@ Create a monorepo structure with separate directories for backend (Rust) and fro
 Verify that all services can be started locally. Run basic health checks to ensure the development environment is properly configured. Test database connectivity from the Rust backend.
 
 # Subtasks:
-## 1. Initialize monorepo structure with backend Rust configuration [pending]
+## 1. Initialize monorepo structure with backend Rust configuration [done]
 ### Dependencies: None
 ### Description: Create the base monorepo structure and set up the Rust backend project with necessary dependencies and configuration files
 ### Details:

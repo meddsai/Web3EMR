@@ -14,33 +14,18 @@ Validate FHIR resources against official schemas. Test interoperability with sam
 ## 1. Create FHIR resource mapping layer [pending]
 ### Dependencies: None
 ### Description: Develop a mapping layer that transforms internal data models to FHIR resources and vice versa
-#### 6.1.1 Research FHIR resource structures for Patient, Encounter, Observation, etc.
-#### 6.1.2 Define adapter classes for model-to-FHIR and FHIR-to-model conversion
-#### 6.1.3 Implement FHIR validation logic using official schemas
-#### 6.1.4 Handle FHIR versioning and compatibility
-#### 6.1.5 Unit test bidirectional mapping for all resources
-#### 6.1.6 Document mapping relationships and edge cases
+### Details:
+Implement adapter classes for each required FHIR resource (Patient, Encounter, Observation, etc.). Each adapter should: 1) Convert internal model to FHIR resource with proper element mapping, 2) Support conversion from FHIR resource back to internal model, 3) Include validation against FHIR specifications, 4) Handle versioning appropriately. Use the official FHIR SDK for your programming language. Create unit tests to verify bidirectional mapping accuracy. Document the mapping relationships between internal models and FHIR resources.
 
 ## 2. Implement core FHIR API endpoints and operations [pending]
 ### Dependencies: 6.1
 ### Description: Develop RESTful API endpoints that support basic FHIR operations for the mapped resources
-#### 6.2.1 Implement GET /{resourceType}/{id} (read) endpoint
-#### 6.2.2 Implement GET /{resourceType}?parameters (search) endpoint
-#### 6.2.3 Implement POST /{resourceType} (create) endpoint
-#### 6.2.4 Implement PUT /{resourceType}/{id} (update) endpoint
-#### 6.2.5 Implement DELETE /{resourceType}/{id} endpoint (if applicable)
-#### 6.2.6 Add support for content negotiation (JSON, XML)
-#### 6.2.7 Add request/response logging for debugging
-#### 6.2.8 Integration test all endpoints with FHIR clients
+### Details:
+Create API endpoints following FHIR RESTful conventions for each resource type. Implement the core FHIR interactions: read (GET /{resourceType}/{id}), search (GET /{resourceType}?parameters), create (POST /{resourceType}), update (PUT /{resourceType}/{id}), and delete if applicable. Add support for common search parameters for each resource. Implement proper HTTP status codes and error handling according to FHIR specifications. Set up content negotiation to support both JSON and XML formats using appropriate MIME types. Add request/response logging for debugging. Create integration tests for each endpoint.
 
 ## 3. Finalize FHIR compliance and documentation [pending]
 ### Dependencies: 6.2
 ### Description: Complete FHIR validation, advanced features, and create comprehensive documentation
-#### 6.3.1 Implement _include and _revinclude support for linked resources
-#### 6.3.2 Add support for conditional and _history operations
-#### 6.3.3 Generate CapabilityStatement (conformance resource)
-#### 6.3.4 Set up automated FHIR validation tools
-#### 6.3.5 Secure FHIR endpoints with authentication and authorization
-#### 6.3.6 Create OpenAPI/Swagger and FHIR documentation with examples
-#### 6.3.7 Develop test suite for FHIR compliance and edge cases
-#### 6.3.8 Add monitoring and performance metrics for FHIR API
+### Details:
+Implement advanced FHIR features: support for _include and _revinclude parameters, handling of conditional operations, and implementing _history operations where appropriate. Create a CapabilityStatement (conformance resource) that accurately describes the implemented resources, operations, and search parameters. Set up automated FHIR validation using official validation tools. Implement security features including authentication and authorization for FHIR endpoints. Create comprehensive API documentation with examples for each supported operation. Develop a test suite that verifies compliance with FHIR specifications. Add monitoring for API usage and performance.
+
