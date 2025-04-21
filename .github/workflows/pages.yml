@@ -34,6 +34,10 @@ jobs:
         run: |
           jekyll build -s docs -d _site
 
+      - name: List built site files
+        run: |
+          ls -l _site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

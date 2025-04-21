@@ -1,3 +1,5 @@
+---
+---
 # Architecture
 
 RustEMR follows a modular, service-oriented architecture inspired by OpenEMR and OpenMRS to ensure scalability, maintainability, and ease of extension.

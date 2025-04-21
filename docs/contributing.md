@@ -1,3 +1,5 @@
+---
+---
 # Contributing
 
 We welcome contributions from developers, healthcare professionals, and the broader community.

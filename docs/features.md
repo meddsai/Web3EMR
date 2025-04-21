@@ -1,3 +1,9 @@
+---
+layout: page
+title: Features
+permalink: /features/
+---
+
 # Features
 
 RustEMR focuses on core EMR functionalities, inspired by OpenEMR and OpenMRS.
