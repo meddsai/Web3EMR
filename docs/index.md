@@ -5,8 +5,6 @@ author_profile: false
 ---
 Welcome to the RustEMR documentation. This site provides in-depth guides and references based on the README and inspired by OpenEMR and OpenMRS docs.
 
-**Last updated: 2025-04-21**
-
 ## Table of Contents
 
 - [Architecture](architecture.md)
