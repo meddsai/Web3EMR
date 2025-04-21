@@ -1,0 +1,18 @@
+# Minimal Mistakes theme configuration for GitHub Pages
+theme: jekyll-theme-cayman
+
+# Site settings
+title: "RustEMR Documentation"
+description: "Comprehensive guides and references for RustEMR."
+url: "https://ubudcare.github.io"
+baseurl: "/rustemr"
+
+# Navigation (optional, for sidebar)
+# minimal_mistakes_skin: "air"
+# logo: "/assets/images/logo.png"
+
+# Exclude files/directories
+exclude:
+  - "README.md"
+  - "Gemfile*"
+  - "_pages/home.md"
