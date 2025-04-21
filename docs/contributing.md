@@ -1,5 +1,6 @@
 ---
 ---
+
 # Contributing
 
 We welcome contributions from developers, healthcare professionals, and the broader community.
@@ -16,6 +17,7 @@ We welcome contributions from developers, healthcare professionals, and the broa
    ```
 
 3. Follow coding guidelines:
+
    - Rust code: `cargo fmt`, `cargo clippy`.
    - Frontend: `npm run lint`.
    - Write tests and ensure they pass (`cargo test`, `npm test`).

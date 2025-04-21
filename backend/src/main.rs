@@ -1,8 +1,8 @@
-use actix_web::{web, App, HttpServer, HttpResponse, Responder, post};
-use serde::{Deserialize, Serialize};
-use jsonwebtoken::{encode, EncodingKey, Header};
-use chrono;
 use actix_cors::Cors;
+use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
+use chrono;
+use jsonwebtoken::{encode, EncodingKey, Header};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 struct LoginRequest {
@@ -37,7 +37,12 @@ async fn login(req: web::Json<LoginRequest>) -> impl Responder {
             "email": user.email,
             "exp": chrono::Utc::now().timestamp() + 24 * 3600
         });
-        let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(SECRET.as_ref())).unwrap();
+        let token = encode(
+            &Header::default(),
+            &claims,
+            &EncodingKey::from_secret(SECRET.as_ref()),
+        )
+        .unwrap();
         HttpResponse::Ok().json(LoginResponse { token, user })
     } else {
         HttpResponse::Unauthorized().body("Invalid credentials")
@@ -46,12 +51,8 @@ async fn login(req: web::Json<LoginRequest>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .wrap(Cors::permissive())
-            .service(login)
-    })
-    .bind(("0.0.0.0", 8080))?
-    .run()
-    .await
+    HttpServer::new(|| App::new().wrap(Cors::permissive()).service(login))
+        .bind(("0.0.0.0", 8080))?
+        .run()
+        .await
 }

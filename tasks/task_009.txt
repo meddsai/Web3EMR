@@ -28,4 +28,3 @@ Document the codebase structure with directory explanations and architecture dia
 ### Description: Document all API endpoints with request/response examples and implement Swagger/OpenAPI integration
 ### Details:
 Implement Swagger/OpenAPI for automatic REST endpoint documentation. Document each API endpoint with detailed descriptions, required parameters, authentication requirements, and possible response codes. Include request and response examples for each endpoint in multiple formats (JSON, XML). Document rate limiting and security considerations. Create a postman collection for testing API endpoints. Ensure documentation includes error handling and troubleshooting information. Implement interactive API documentation that allows testing endpoints directly from the documentation interface.
-

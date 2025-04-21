@@ -1,7 +1,8 @@
-version: '3.8'
+version: "3.8"
 services:
   db:
     image: postgres:15
+    container_name: RustEMR-db
     restart: always
     environment:
       POSTGRES_USER: rustemr
@@ -12,7 +13,11 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: RustEMR-backend
+    container_name: RustEMR-backend
     restart: always
     depends_on:
       - db
@@ -24,7 +29,11 @@ services:
     volumes:
       - ./backend:/app
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: RustEMR-frontend
+    container_name: RustEMR-frontend
     restart: always
     depends_on:
       - backend

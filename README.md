@@ -50,23 +50,28 @@ RustEMR is being developed with a focus on core EMR functionalities, drawing fro
 RustEMR’s development roadmap includes the following planned features, prioritized based on community needs and healthcare workflows:
 
 - **Advanced Patient Management**:
+
   - Demographics (age, gender, ethnicity)
   - Medical history (conditions, surgeries, allergies)
   - Family and social history
 
 - **Clinical Decision Support**:
+
   - Alerts for drug interactions and allergies
   - Clinical guidelines and best practice reminders
 
 - **Billing and Insurance Integration**:
+
   - Generate invoices and manage payments
   - Support for insurance claims and reimbursements
 
 - **Reporting and Analytics**:
+
   - Customizable reports for patient outcomes, clinic performance, and population health
   - Data visualization tools for healthcare insights
 
 - **Mobile Application Support**:
+
   - Responsive design for mobile devices
   - Native mobile apps for iOS and Android (future consideration)
 
@@ -153,6 +158,7 @@ cargo install cargo-make
 ```
 
 Common tasks:
+
 - `cargo make start` - Start Docker Compose services
 - `cargo make stop` - Stop services
 - `cargo make migrate` - Run DB migrations (placeholder)

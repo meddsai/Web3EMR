@@ -1,5 +1,6 @@
 ---
 ---
+
 # Architecture
 
 RustEMR follows a modular, service-oriented architecture inspired by OpenEMR and OpenMRS to ensure scalability, maintainability, and ease of extension.
@@ -9,7 +10,7 @@ RustEMR follows a modular, service-oriented architecture inspired by OpenEMR and
 - **Backend (Rust)**: Business logic, data validation, and RESTful/FHIR APIs. Leverages Rust’s safety, performance, and concurrency.
 - **Frontend (TypeScript & React)**: Responsive UI, form rendering, clinical workflows, and administrative dashboards.
 - **Database (PostgreSQL)**: Relational storage of patient, encounter, and system data. Supports migrations and complex queries.
-- **Modules & Plugins**: 
+- **Modules & Plugins**:
   - OpenEMR-style clinical forms, custom modules, and reporting plugins.
   - OpenMRS-like concept dictionary and module registry for extensions.
 

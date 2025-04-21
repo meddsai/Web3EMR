@@ -1,6 +1,7 @@
 ---
 title: "RustEMR Documentation"
 ---
+
 Welcome to the RustEMR documentation. This site provides in-depth guides and references based on the README and inspired by OpenEMR and OpenMRS docs.
 
 ## Table of Contents

@@ -23,9 +23,7 @@
           "title": "Set up React frontend with TypeScript",
           "description": "Initialize and configure the React frontend with TypeScript, including code quality tools",
           "status": "done",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "1. Inside the `/frontend` directory, initialize a new React project with TypeScript using `npx create-react-app . --template typescript` or `npx create-next-app . --typescript`\n2. Install and configure ESLint for TypeScript with `npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin`\n3. Set up Prettier with `npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier`\n4. Create configuration files: .eslintrc.js, .prettierrc\n5. Update package.json with appropriate scripts for linting and formatting\n6. Create a basic project structure with components/, pages/, services/ directories\n7. Update the frontend .gitignore file"
         },
         {
@@ -33,10 +31,7 @@
           "title": "Configure Docker and development automation",
           "description": "Set up Docker for the development environment with PostgreSQL and implement task automation with cargo-make",
           "status": "done",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "1. Create a docker-compose.yml file in the root directory with services for:\n   - PostgreSQL database\n   - Rust backend (with appropriate volumes and environment variables)\n   - React frontend (with appropriate volumes and environment variables)\n2. Create Dockerfiles for both backend and frontend\n3. Install cargo-make with `cargo install cargo-make`\n4. Create a Makefile.toml in the root directory with tasks for:\n   - Starting the development environment\n   - Running database migrations\n   - Building the backend and frontend\n   - Running tests\n   - Linting and formatting code\n5. Create .env files for development environment variables\n6. Update the README.md with instructions for using Docker and cargo-make\n7. Create a basic CI configuration file (.github/workflows/ci.yml or .gitlab-ci.yml)"
         }
       ]
@@ -46,9 +41,7 @@
       "title": "Design and implement database schema",
       "description": "Create the PostgreSQL database schema for patient records, encounters, and system data with proper relationships and constraints.",
       "status": "pending",
-      "dependencies": [
-        1
-      ],
+      "dependencies": [1],
       "priority": "high",
       "details": "Design database tables for patients (demographics, contact info), encounters (visits, timestamps), vital signs, diagnoses, and treatments. Implement using Diesel migrations in Rust. Create schemas that align with FHIR resource structures where applicable. Include audit tables for tracking changes to medical records. Set up proper indexes for performance optimization. Implement foreign key constraints to maintain data integrity. Document the schema design with entity-relationship diagrams.",
       "testStrategy": "Run migrations against a test database. Verify constraints with test data. Ensure schema supports the required queries for patient management and encounter tracking. Test performance with sample data volume.",
@@ -66,9 +59,7 @@
           "title": "Implement audit and tracking functionality",
           "description": "Create audit tables and triggers to track all changes to medical records for compliance and history tracking",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Design and implement audit tables that shadow the core tables created in subtask 1. For each core table (patients, encounters, vital_signs, diagnoses, treatments), create a corresponding audit table that includes all original fields plus metadata columns for: user_id (who made the change), timestamp, operation_type (INSERT/UPDATE/DELETE), and previous_values (for updates). Implement PostgreSQL triggers that automatically populate these audit tables whenever changes occur to the core tables. Write Diesel migrations to create these audit tables and triggers. Document the audit schema and how it relates to the core tables. Test the audit functionality to ensure all changes are properly tracked."
         },
         {
@@ -76,10 +67,7 @@
           "title": "Optimize database performance and finalize schema",
           "description": "Implement advanced indexes, constraints, and performance optimizations for the complete database schema",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Review the schema created in subtasks 1 and 2 and implement performance optimizations: 1) Create additional indexes on frequently queried fields (patient name, encounter dates, diagnosis codes), 2) Implement partial indexes for common query patterns, 3) Add check constraints to ensure data validity (e.g., date ranges, valid code formats), 4) Set up appropriate NOT NULL constraints on required fields, 5) Implement unique constraints where applicable, 6) Create materialized views for complex reporting queries if needed. Perform database query analysis to identify potential bottlenecks. Update the entity-relationship diagrams to reflect the final schema. Document all indexes, constraints, and optimization decisions with explanations of their purpose. Create a final Diesel migration that applies these optimizations to the existing schema."
         }
       ]
@@ -89,10 +77,7 @@
       "title": "Implement authentication and authorization system",
       "description": "Create a secure authentication system with role-based access control for healthcare providers, administrators, and patients.",
       "status": "pending",
-      "dependencies": [
-        1,
-        2
-      ],
+      "dependencies": [1, 2],
       "priority": "high",
       "details": "Implement JWT-based authentication in the Rust backend. Create user management with secure password hashing using bcrypt or Argon2. Design role-based access control (RBAC) system with predefined roles (admin, physician, nurse, patient, etc.). Implement middleware for route protection based on user roles. Create database tables for users, roles, and permissions. Implement session management with appropriate timeouts for healthcare context. Add audit logging for authentication events.",
       "testStrategy": "Test login/logout flows. Verify role-based access restrictions. Perform security testing including password policies, brute force protection, and session handling. Ensure compliance with healthcare security standards.",
@@ -110,9 +95,7 @@
           "title": "Implement role-based access control (RBAC) system",
           "description": "Design and implement the RBAC system with predefined healthcare roles and permissions",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create database tables for roles (admin, physician, nurse, patient, etc.) and permissions with many-to-many relationships. Implement role assignment functionality for users, allowing multiple roles per user. Design permission sets appropriate for healthcare context (view patient records, edit medical history, prescribe medication, etc.). Create API endpoints for role and permission management (admin only). Extend the JWT payload to include user roles and key permissions. Implement middleware for checking role-based access to protected routes. Add helper functions to verify permissions for specific actions within route handlers. Include audit logging for role and permission changes."
         },
         {
@@ -120,10 +103,7 @@
           "title": "Implement session management and security enhancements",
           "description": "Add session management with appropriate timeouts and additional security features for healthcare compliance",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Implement token expiration with shorter timeouts appropriate for healthcare applications (15-30 minutes). Create secure refresh token system with longer-lived tokens stored in HTTP-only cookies. Add token revocation capability for logout and security incidents. Implement rate limiting on authentication endpoints to prevent brute force attacks. Add IP tracking and suspicious activity detection. Create password reset functionality with secure time-limited tokens. Implement account lockout after multiple failed attempts. Add two-factor authentication option for sensitive roles. Ensure all authentication flows meet HIPAA compliance requirements. Create comprehensive audit logging system for all authentication and authorization events with appropriate detail for security reviews."
         }
       ]
@@ -133,10 +113,7 @@
       "title": "Develop core patient management API",
       "description": "Implement RESTful API endpoints for CRUD operations on patient records with proper validation and error handling.",
       "status": "pending",
-      "dependencies": [
-        2,
-        3
-      ],
+      "dependencies": [2, 3],
       "priority": "high",
       "details": "Create Rust models for patient data matching database schema. Implement RESTful endpoints for creating, reading, updating, and deleting patient records. Add comprehensive data validation for patient information. Implement error handling with appropriate HTTP status codes and error messages. Create search functionality with filtering and pagination. Ensure all operations are properly authorized based on user roles. Implement audit logging for all patient data modifications.",
       "testStrategy": "Write unit tests for data validation. Create integration tests for each API endpoint. Test error scenarios and edge cases. Verify authorization rules are enforced correctly. Test search functionality with various parameters.",
@@ -154,9 +131,7 @@
           "title": "Implement core CRUD API endpoints with validation",
           "description": "Develop RESTful API endpoints for creating, reading, updating and deleting patient records with proper validation",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create REST endpoints for: POST /patients (create), GET /patients/{id} (read), PUT /patients/{id} (update), DELETE /patients/{id} (delete), and GET /patients (list). Implement request validation using the models from subtask 1. Add proper error handling with appropriate HTTP status codes (400 for validation errors, 404 for not found, etc.). Return standardized error response objects. Implement pagination for the list endpoint with query parameters for page size and number. Write integration tests for each endpoint."
         },
         {
@@ -164,9 +139,7 @@
           "title": "Add authorization, search functionality and audit logging",
           "description": "Implement role-based access control, advanced search capabilities and audit logging for patient operations",
           "status": "pending",
-          "dependencies": [
-            2
-          ],
+          "dependencies": [2],
           "details": "Integrate with authentication system to enforce role-based access control (RBAC) for patient operations. Implement search functionality with filtering by various patient attributes (name, date of birth, etc.). Add sorting options to search endpoints. Create audit logging middleware to record all modifications to patient data, including the user who made the change, timestamp, and the specific changes made. Implement proper indexing strategies for efficient search. Add comprehensive documentation for all API endpoints using OpenAPI/Swagger."
         }
       ]
@@ -176,9 +149,7 @@
       "title": "Implement encounter tracking system",
       "description": "Develop API endpoints and business logic for tracking patient encounters, including visits, vital signs, diagnoses, and treatments.",
       "status": "pending",
-      "dependencies": [
-        4
-      ],
+      "dependencies": [4],
       "priority": "medium",
       "details": "Create data models for encounters, vital signs, diagnoses (using standard coding systems like ICD-10), and treatments. Implement API endpoints for managing encounter data. Develop business logic for encounter workflows, including validation rules. Create relationships between encounters and patients. Implement date-based querying for encounter history. Add support for encounter notes and attachments. Ensure proper authorization checks for clinical data access.",
       "testStrategy": "Test encounter creation, update, and retrieval workflows. Verify vital signs recording with valid ranges. Test diagnosis coding validation. Ensure encounter history is correctly maintained. Verify authorization rules for different user roles accessing clinical data.",
@@ -196,9 +167,7 @@
           "title": "Implement API endpoints for encounter management",
           "description": "Develop RESTful API endpoints for creating, reading, updating, and querying encounter data and related clinical information",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create the following API endpoints: 1) POST /api/encounters for creating new encounters; 2) GET /api/encounters/:id for retrieving specific encounters with optional include parameters for related data; 3) PUT /api/encounters/:id for updating encounters; 4) GET /api/patients/:id/encounters for retrieving a patient's encounter history with filtering options by date range and type; 5) POST endpoints for adding vital signs, diagnoses, treatments, notes and attachments to encounters; 6) Implement pagination for list endpoints; 7) Add filtering capabilities for date ranges and encounter types; 8) Include proper error handling and validation responses. Document all endpoints using OpenAPI/Swagger."
         },
         {
@@ -206,10 +175,7 @@
           "title": "Develop business logic and authorization for encounter workflows",
           "description": "Implement the business rules, workflow logic, and security controls for the encounter tracking system",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Implement the following business logic components: 1) Encounter state management with appropriate status transitions (scheduled, in-progress, completed, cancelled); 2) Validation rules for clinical data entry (e.g., vital signs within reasonable ranges, required fields based on encounter type); 3) Authorization middleware to restrict access based on user roles (doctors, nurses, administrative staff) with specific rules for who can view/edit different parts of encounters; 4) Audit logging for all changes to encounter data; 5) Business rules for encounter workflows (e.g., required diagnoses before closing an encounter, validation of treatment conflicts); 6) Integration with notification system to alert relevant staff about new or updated encounters; 7) Implement data export functionality for encounter summaries. Include comprehensive unit and integration tests for all business logic."
         }
       ]
@@ -219,10 +185,7 @@
       "title": "Develop FHIR API integration",
       "description": "Implement FHIR-compliant API endpoints for interoperability with external healthcare systems.",
       "status": "pending",
-      "dependencies": [
-        4,
-        5
-      ],
+      "dependencies": [4, 5],
       "priority": "medium",
       "details": "Research and implement FHIR resource mappings for Patient, Encounter, Observation, and other relevant resources. Create adapter layer to transform between internal data models and FHIR resources. Implement FHIR API endpoints following RESTful principles. Support common FHIR operations including search, read, create, update. Implement FHIR validation using official specifications. Add content negotiation for different formats (JSON, XML). Document FHIR capabilities in a CapabilityStatement.",
       "testStrategy": "Validate FHIR resources against official schemas. Test interoperability with sample FHIR clients. Verify search parameters work according to FHIR specifications. Test content negotiation with different formats. Ensure proper error responses for invalid requests.",
@@ -240,9 +203,7 @@
           "title": "Implement core FHIR API endpoints and operations",
           "description": "Develop RESTful API endpoints that support basic FHIR operations for the mapped resources",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create API endpoints following FHIR RESTful conventions for each resource type. Implement the core FHIR interactions: read (GET /{resourceType}/{id}), search (GET /{resourceType}?parameters), create (POST /{resourceType}), update (PUT /{resourceType}/{id}), and delete if applicable. Add support for common search parameters for each resource. Implement proper HTTP status codes and error handling according to FHIR specifications. Set up content negotiation to support both JSON and XML formats using appropriate MIME types. Add request/response logging for debugging. Create integration tests for each endpoint."
         },
         {
@@ -250,9 +211,7 @@
           "title": "Finalize FHIR compliance and documentation",
           "description": "Complete FHIR validation, advanced features, and create comprehensive documentation",
           "status": "pending",
-          "dependencies": [
-            2
-          ],
+          "dependencies": [2],
           "details": "Implement advanced FHIR features: support for _include and _revinclude parameters, handling of conditional operations, and implementing _history operations where appropriate. Create a CapabilityStatement (conformance resource) that accurately describes the implemented resources, operations, and search parameters. Set up automated FHIR validation using official validation tools. Implement security features including authentication and authorization for FHIR endpoints. Create comprehensive API documentation with examples for each supported operation. Develop a test suite that verifies compliance with FHIR specifications. Add monitoring for API usage and performance."
         }
       ]
@@ -262,10 +221,7 @@
       "title": "Create React frontend for patient management",
       "description": "Develop the React/TypeScript frontend components for patient registration, search, and profile management.",
       "status": "pending",
-      "dependencies": [
-        3,
-        4
-      ],
+      "dependencies": [3, 4],
       "priority": "medium",
       "details": "Set up React component library (Material-UI or Chakra UI recommended for healthcare UIs). Implement responsive layouts for desktop and mobile viewing. Create patient registration forms with validation. Develop patient search interface with filters. Build patient profile view with demographic information. Implement state management using React Context or Redux. Create API service layer for communication with backend. Add form validation matching backend requirements. Implement error handling and user notifications.",
       "testStrategy": "Write unit tests for React components using Jest and React Testing Library. Test form validation logic. Verify responsive design on different screen sizes. Test API integration with mock services. Conduct usability testing with sample users.",
@@ -283,9 +239,7 @@
           "title": "Implement patient registration and search components",
           "description": "Develop the patient registration form with validation and the patient search interface with filtering capabilities",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create a multi-step patient registration form with fields for personal information, contact details, medical history, and insurance information. Implement form validation using Formik or React Hook Form with Yup schema validation matching backend requirements. Add client-side validation for all fields (required fields, email format, phone numbers, etc.). Create the patient search component with filters for name, ID, date of birth, and other relevant criteria. Implement the search results display with pagination and sorting options. Add loading states and error handling for both registration and search components. Connect these components to the state management system established in subtask 1. Create mock data and services for development and testing purposes."
         },
         {
@@ -293,10 +247,7 @@
           "title": "Develop patient profile management and API integration",
           "description": "Build the patient profile view and complete the API integration with the backend",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Create the patient profile view component displaying demographic information, medical history, appointments, and other relevant patient data. Implement edit functionality for patient information with the same validation as the registration form. Add features for managing patient status (active/inactive) and handling special cases. Complete the API service layer by implementing all required endpoints for patient CRUD operations. Connect all components to the real API endpoints, replacing mock data. Implement comprehensive error handling with user-friendly notifications using a toast or alert system. Add loading states and optimistic UI updates for better user experience. Implement proper authentication token handling for API requests. Create unit and integration tests for all components. Optimize performance with React.memo, useMemo, and useCallback where appropriate."
         }
       ]
@@ -306,10 +257,7 @@
       "title": "Implement clinical encounter UI",
       "description": "Develop frontend components for managing clinical encounters, recording vital signs, diagnoses, and treatments.",
       "status": "pending",
-      "dependencies": [
-        5,
-        7
-      ],
+      "dependencies": [5, 7],
       "priority": "medium",
       "details": "Create encounter creation and editing forms. Implement vital signs recording interface with appropriate input validation. Develop diagnosis search and selection using ICD-10 codes. Build treatment documentation forms. Create encounter timeline view for patient history. Implement clinical notes editor with formatting options. Add file upload capability for clinical attachments. Ensure all forms follow healthcare UX best practices with clear labeling and error states.",
       "testStrategy": "Test encounter workflow from creation to completion. Verify vital signs validation with boundary testing. Test diagnosis search functionality. Ensure all clinical data is correctly saved and retrieved. Perform usability testing with healthcare professionals if possible.",
@@ -327,9 +275,7 @@
           "title": "Implement diagnosis and treatment documentation components",
           "description": "Create the UI components for searching, selecting, and documenting diagnoses using ICD-10 codes, and for recording treatments prescribed during the encounter.",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Develop a diagnosis search component that allows users to search for ICD-10 codes by keyword or code number with autocomplete functionality. Implement a selected diagnoses list with primary/secondary designation options. Create treatment documentation forms with fields for medications (name, dosage, frequency, duration), procedures, and other interventions. Include appropriate validation for all treatment fields. Design the components to be integrated into the main encounter form created in subtask 1, but implement them as separate, reusable components that can be tested independently."
         },
         {
@@ -337,10 +283,7 @@
           "title": "Develop clinical notes editor and encounter timeline view",
           "description": "Create a rich text editor for clinical notes and a timeline view to display patient encounter history, including file attachment capabilities.",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Implement a clinical notes editor with basic text formatting options (bold, italic, lists, headings) and templates for common note structures (SOAP, etc.). Add file upload functionality for clinical attachments with preview capabilities for images and PDFs, ensuring proper validation for file types and sizes. Create an encounter timeline component that chronologically displays a patient's encounter history with filtering options by encounter type, provider, or date range. Implement a detailed view mode that expands to show complete encounter information when selected. Ensure all components follow accessibility guidelines and responsive design principles to work on various device sizes."
         }
       ]
@@ -350,16 +293,7 @@
       "title": "Create comprehensive documentation",
       "description": "Develop user, developer, and API documentation for the RustEMR system.",
       "status": "pending",
-      "dependencies": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
-      ],
+      "dependencies": [1, 2, 3, 4, 5, 6, 7, 8],
       "priority": "low",
       "details": "Create installation and setup guide covering all prerequisites. Write developer documentation explaining the codebase structure and architecture. Document API endpoints with request/response examples. Create user manual for clinical staff with screenshots and workflows. Document FHIR implementation details and capabilities. Create contribution guidelines following the project's standards. Generate API documentation using Swagger/OpenAPI for REST endpoints. Include database schema documentation with entity relationships.",
       "testStrategy": "Verify documentation accuracy by following installation steps on a clean system. Have developers review technical documentation for accuracy. Test API examples to ensure they work as documented. Have non-technical users review user documentation for clarity.",
@@ -377,9 +311,7 @@
           "title": "Develop technical and developer documentation",
           "description": "Create comprehensive documentation for developers explaining the system architecture, codebase structure, and contribution guidelines",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Document the codebase structure with directory explanations and architecture diagrams. Create detailed documentation of the database schema showing entity relationships and data models. Write contribution guidelines that follow the project's coding standards, pull request process, and testing requirements. Include documentation on the FHIR implementation details and capabilities. Add setup instructions for development environments. Create troubleshooting guides for common development issues. Use diagrams to illustrate system architecture and component interactions."
         },
         {
@@ -387,9 +319,7 @@
           "title": "Generate API documentation",
           "description": "Document all API endpoints with request/response examples and implement Swagger/OpenAPI integration",
           "status": "pending",
-          "dependencies": [
-            2
-          ],
+          "dependencies": [2],
           "details": "Implement Swagger/OpenAPI for automatic REST endpoint documentation. Document each API endpoint with detailed descriptions, required parameters, authentication requirements, and possible response codes. Include request and response examples for each endpoint in multiple formats (JSON, XML). Document rate limiting and security considerations. Create a postman collection for testing API endpoints. Ensure documentation includes error handling and troubleshooting information. Implement interactive API documentation that allows testing endpoints directly from the documentation interface."
         }
       ]
@@ -399,16 +329,7 @@
       "title": "Implement CI/CD and deployment configuration",
       "description": "Set up continuous integration, testing, and deployment pipelines for the RustEMR project.",
       "status": "pending",
-      "dependencies": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
-      ],
+      "dependencies": [1, 2, 3, 4, 5, 6, 7, 8],
       "priority": "low",
       "details": "Configure GitHub Actions or similar CI/CD service for automated testing. Set up separate pipelines for backend and frontend. Implement automated testing for Rust (cargo test) and React (npm test). Configure linting checks (clippy for Rust, ESLint for TypeScript). Create Docker compose files for production deployment. Implement database migration automation for deployments. Set up staging and production environments. Create backup and restore procedures for the PostgreSQL database. Document deployment process and requirements.",
       "testStrategy": "Verify CI pipeline by making test commits with passing and failing tests. Test deployment to staging environment. Perform database migration testing with sample data. Test backup and restore procedures. Verify that the deployed application functions correctly in a production-like environment.",
@@ -426,9 +347,7 @@
           "title": "Create Docker configuration for development and production",
           "description": "Develop Docker and Docker Compose configurations for consistent development environments and production deployment",
           "status": "pending",
-          "dependencies": [
-            1
-          ],
+          "dependencies": [1],
           "details": "Create Dockerfiles for backend and frontend services. Develop docker-compose.yml for local development with hot-reloading. Create docker-compose.prod.yml for production deployment with optimized builds. Configure PostgreSQL container with volume mounts for data persistence. Set up environment variable management for different environments. Implement database initialization and migration scripts that run on container startup. Document Docker setup and usage in a DEPLOYMENT.md file."
         },
         {
@@ -436,10 +355,7 @@
           "title": "Implement CD pipeline with staging/production environments and database management",
           "description": "Configure continuous deployment workflows with separate staging and production environments, including database migration automation and backup procedures",
           "status": "pending",
-          "dependencies": [
-            1,
-            2
-          ],
+          "dependencies": [1, 2],
           "details": "Extend GitHub Actions workflows to include deployment jobs for staging and production environments. Implement environment-specific configuration management. Set up automated database migrations as part of the deployment process using a migration tool like Diesel. Create database backup scripts that run on a schedule and before migrations. Implement database restore procedures and document recovery process. Configure secrets management for sensitive information. Set up monitoring and alerting for deployment failures. Create comprehensive deployment documentation covering the entire CI/CD pipeline, environment setup, and database management procedures."
         }
       ]
