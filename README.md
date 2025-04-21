@@ -1,3 +1,5 @@
+- [Documentation](https://ubudcare.github.io/rustemr/)
+
 # RustEMR
 
 RustEMR is an open-source electronic medical record (EMR) system designed to provide a secure, scalable, and interoperable solution for healthcare providers. Built with a modern tech stack—Rust for the backend, TypeScript for the frontend, and PostgreSQL as the database—it supports FHIR and REST APIs for seamless integration with other healthcare systems.

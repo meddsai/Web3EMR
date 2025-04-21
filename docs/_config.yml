@@ -1,0 +1,21 @@
+# Jekyll configuration for GitHub Pages
+
+# Minimal Mistakes theme (clean, minimalist)
+theme: "minimal-mistakes-jekyll"
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Site settings
+title: "RustEMR Documentation"
+description: "Comprehensive guides and references for RustEMR."
+url: "https://ubudcare.github.io/rustemr"
+baseurl: "/rustemr"
+
+# Navigation (optional, for sidebar)
+# minimal_mistakes_skin: "air"
+# logo: "/assets/images/logo.png"
+
+# Exclude files/directories
+exclude:
+  - "README.md"
