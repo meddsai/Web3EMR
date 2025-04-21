@@ -1,0 +1,45 @@
+[tasks.start]
+description = "Start all services with Docker Compose"
+command = "docker-compose"
+args = ["up"]
+
+[tasks.stop]
+description = "Stop all services"
+command = "docker-compose"
+args = ["down"]
+
+[tasks.migrate]
+description = "Run database migrations (placeholder)"
+script = [
+    "echo 'Run migration tool here'"
+]
+
+[tasks.backend-build]
+description = "Build backend Rust project"
+command = "cargo"
+args = ["build"]
+
+[tasks.frontend-build]
+description = "Build frontend Next.js project"
+command = "npm"
+args = ["run", "build"]
+cwd = "./frontend"
+
+[tasks.test]
+description = "Run backend tests"
+command = "cargo"
+args = ["test"]
+
+[tasks.lint]
+description = "Lint frontend and backend"
+script = [
+    "cd frontend && npm run lint",
+    "cargo clippy"
+]
+
+[tasks.format]
+description = "Format frontend and backend code"
+script = [
+    "cd frontend && npm run format",
+    "cargo fmt"
+]

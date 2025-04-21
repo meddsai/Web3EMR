@@ -15,6 +15,9 @@ Inspired by OpenEMR and OpenMRS, RustEMR combines the comprehensive feature set 
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
+- [Development with Docker](#development-with-docker)
+- [Task Automation with cargo-make](#task-automation-with-cargo-make)
+- [CI/CD](#cicd)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -120,6 +123,48 @@ npm start
 
 - Backend API: `http://localhost:8080`
 - Frontend: `http://localhost:3000`
+
+## Development with Docker
+
+1. Make sure you have Docker and Docker Compose installed.
+2. Copy the example .env files or create your own in the root, backend, and frontend directories.
+3. Start all services:
+
+```bash
+cargo make start
+```
+
+- This will run `docker-compose up` and start the database, backend, and frontend.
+- The backend will be available at http://localhost:8080
+- The frontend will be available at http://localhost:3000
+
+To stop all services:
+
+```bash
+cargo make stop
+```
+
+## Task Automation with cargo-make
+
+Install cargo-make if you haven't already:
+
+```bash
+cargo install cargo-make
+```
+
+Common tasks:
+- `cargo make start` - Start Docker Compose services
+- `cargo make stop` - Stop services
+- `cargo make migrate` - Run DB migrations (placeholder)
+- `cargo make backend-build` - Build backend
+- `cargo make frontend-build` - Build frontend
+- `cargo make test` - Run backend tests
+- `cargo make lint` - Lint frontend and backend
+- `cargo make format` - Format frontend and backend
+
+## CI/CD
+
+Basic CI is configured in `.github/workflows/ci.yml` to check build and lint for backend and frontend.
 
 ## Contributing
 

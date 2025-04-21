@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Set up project structure and development environment
-# Status: in-progress
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: Initialize the project repository with the correct structure for a Rust backend and React frontend, including configuration files and development environment setup.
@@ -35,7 +35,7 @@ Verify that all services can be started locally. Run basic health checks to ensu
 6. Create a basic project structure with components/, pages/, services/ directories
 7. Update the frontend .gitignore file
 
-## 3. Configure Docker and development automation [pending]
+## 3. Configure Docker and development automation [done]
 ### Dependencies: 1.1, 1.2
 ### Description: Set up Docker for the development environment with PostgreSQL and implement task automation with cargo-make
 ### Details:

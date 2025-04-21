@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Set up project structure and development environment",
       "description": "Initialize the project repository with the correct structure for a Rust backend and React frontend, including configuration files and development environment setup.",
-      "status": "in-progress",
+      "status": "done",
       "dependencies": [],
       "priority": "high",
       "details": "Create a monorepo structure with separate directories for backend (Rust) and frontend (React/TypeScript). Initialize the Rust project with Cargo.toml, setting up dependencies including actix-web for the server, diesel for ORM, and serde for serialization. Set up the React frontend with create-react-app or Next.js using TypeScript template. Configure ESLint and Prettier for frontend code quality. Create Docker configurations for development environment with PostgreSQL. Set up cargo-make for task automation.",
@@ -32,7 +32,7 @@
           "id": 3,
           "title": "Configure Docker and development automation",
           "description": "Set up Docker for the development environment with PostgreSQL and implement task automation with cargo-make",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             1,
             2

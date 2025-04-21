@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: rustemr
+          POSTGRES_PASSWORD: rustemr
+          POSTGRES_DB: rustemr_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://rustemr:rustemr@localhost:5432/rustemr_dev
+      RUST_LOG: debug
+      SECRET: supersecretkey
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: 1.76
+      - name: Build backend
+        run: |
+          cd backend
+          cargo build --all --release
+      - name: Run backend tests
+        run: |
+          cd backend
+          cargo test --all
+      - name: Lint backend
+        run: |
+          cd backend
+          cargo clippy --all -- -D warnings
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+      - name: Lint frontend
+        run: |
+          cd frontend
+          npm run lint
