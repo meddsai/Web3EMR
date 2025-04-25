@@ -28,3 +28,4 @@ Create REST endpoints for: POST /patients (create), GET /patients/{id} (read), P
 ### Description: Implement role-based access control, advanced search capabilities and audit logging for patient operations
 ### Details:
 Integrate with authentication system to enforce role-based access control (RBAC) for patient operations. Implement search functionality with filtering by various patient attributes (name, date of birth, etc.). Add sorting options to search endpoints. Create audit logging middleware to record all modifications to patient data, including the user who made the change, timestamp, and the specific changes made. Implement proper indexing strategies for efficient search. Add comprehensive documentation for all API endpoints using OpenAPI/Swagger.
+

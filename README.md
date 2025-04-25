@@ -101,9 +101,11 @@ cd rustemr
 2. **Set up the database**:
 
 ```bash
+# If running locally (outside Docker):
 CREATE DATABASE rustemr;
 CREATE USER rustemr_user WITH PASSWORD 'password';
 GRANT ALL PRIVILEGES ON DATABASE rustemr TO rustemr_user;
+# If using Docker Compose, the database will be created automatically on port 55432.
 ```
 
 3. **Configure the backend**:
@@ -112,6 +114,8 @@ GRANT ALL PRIVILEGES ON DATABASE rustemr TO rustemr_user;
 cd backend
 cp .env.example .env
 # Edit .env to include your PostgreSQL credentials
+# Default PostgreSQL port: The database now runs on host port `55432` (not the default `5432`). If you run multiple projects or encounter connection issues, ensure your `.env` and client tools use:
+DATABASE_URL=postgres://rustemr:rustemr@localhost:55432/rustemr_dev
 cargo build
 cargo run
 ```
@@ -142,6 +146,7 @@ cargo make start
 - This will run `docker-compose up` and start the database, backend, and frontend.
 - The backend will be available at http://localhost:8080
 - The frontend will be available at http://localhost:3000
+- The backend service in Docker Compose uses the service name `db` and port `5432` internally, so no changes are needed there unless you customize further.
 
 To stop all services:
 
