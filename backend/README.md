@@ -21,9 +21,10 @@ This is the Rust backend for the RustEMR project.
 - Copy `.env.example` to `.env` and set your database credentials and secrets.
 - Example `.env` (not included in repo):
   ```env
-  DATABASE_URL=postgres://user:password@localhost/rustemr
+  DATABASE_URL=postgres://user:password@localhost:55432/rustemr
   RUST_LOG=debug
   ```
+- If you run multiple projects with Postgres, you may need to change the port (e.g., `55432`) to avoid conflicts. Update your `.env` and Docker Compose as needed.
 
 ## Development
 

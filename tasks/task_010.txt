@@ -28,3 +28,4 @@ Create Dockerfiles for backend and frontend services. Develop docker-compose.yml
 ### Description: Configure continuous deployment workflows with separate staging and production environments, including database migration automation and backup procedures
 ### Details:
 Extend GitHub Actions workflows to include deployment jobs for staging and production environments. Implement environment-specific configuration management. Set up automated database migrations as part of the deployment process using a migration tool like Diesel. Create database backup scripts that run on a schedule and before migrations. Implement database restore procedures and document recovery process. Configure secrets management for sensitive information. Set up monitoring and alerting for deployment failures. Create comprehensive deployment documentation covering the entire CI/CD pipeline, environment setup, and database management procedures.
+

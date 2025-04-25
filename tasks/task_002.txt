@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Design and implement database schema
-# Status: pending
+# Status: in-progress
 # Dependencies: 1
 # Priority: high
 # Description: Create the PostgreSQL database schema for patient records, encounters, and system data with proper relationships and constraints.
@@ -11,7 +11,7 @@ Design database tables for patients (demographics, contact info), encounters (vi
 Run migrations against a test database. Verify constraints with test data. Ensure schema supports the required queries for patient management and encounter tracking. Test performance with sample data volume.
 
 # Subtasks:
-## 1. Design core patient and encounter database tables [pending]
+## 1. Design core patient and encounter database tables [in-progress]
 ### Dependencies: None
 ### Description: Create the foundational database tables for patient demographics, contact information, and medical encounters with proper relationships
 ### Details:
@@ -28,3 +28,4 @@ Design and implement audit tables that shadow the core tables created in subtask
 ### Description: Implement advanced indexes, constraints, and performance optimizations for the complete database schema
 ### Details:
 Review the schema created in subtasks 1 and 2 and implement performance optimizations: 1) Create additional indexes on frequently queried fields (patient name, encounter dates, diagnosis codes), 2) Implement partial indexes for common query patterns, 3) Add check constraints to ensure data validity (e.g., date ranges, valid code formats), 4) Set up appropriate NOT NULL constraints on required fields, 5) Implement unique constraints where applicable, 6) Create materialized views for complex reporting queries if needed. Perform database query analysis to identify potential bottlenecks. Update the entity-relationship diagrams to reflect the final schema. Document all indexes, constraints, and optimization decisions with explanations of their purpose. Create a final Diesel migration that applies these optimizations to the existing schema.
+

@@ -54,3 +54,4 @@ Verify that all services can be started locally. Run basic health checks to ensu
 5. Create .env files for development environment variables
 6. Update the README.md with instructions for using Docker and cargo-make
 7. Create a basic CI configuration file (.github/workflows/ci.yml or .gitlab-ci.yml)
+
