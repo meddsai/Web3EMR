@@ -7,21 +7,21 @@ Web3EMR is a decentralized Electronic Medical Record (EMR) system built on a Sub
 - **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js).
 - **Secure Data Storage**: EMRs are encrypted and stored on IPFS, with hashes on-chain for integrity.
 - **Access Control**: Fine-grained permissions via Substrate pallets, allowing patients to grant/revoke provider access.
-- **Interoperability**: Built on a Substrate-based blockchain (e.g., MandalaChain), supporting Polkadot's XCM for cross-chain data sharing.
+- **Interoperability**: Built on a Substrate-based blockchain, supporting Polkadot's XCM for cross-chain data sharing.
 - **Regulatory Compliance**: Designed for HIPAA/GDPR compliance through encryption and audit trails.
 - **Immutable Audit Trail**: All EMR interactions are logged on-chain for transparency.
 
 ## Architecture
 
-- **Blockchain Layer**: Custom Substrate pallets for EMR storage, access control, and identity management, running on a Substrate-based chain (e.g., MandalaChain or custom parachain).
+- **Blockchain Layer**: Custom Substrate pallets for EMR storage, access control, and identity management, running on a Substrate-based chain.
 - **Off-Chain Storage**: Encrypted EMRs stored on IPFS, with metadata/hashes on-chain.
 - **Frontend**: React-based UI with Polkadot.js for wallet integration and blockchain interaction.
-- **Identity**: Integrates with MandalaChain's IDCHAIN or a custom decentralized identity system.
+- **Identity**: Integrates with DID or a custom decentralized identity system.
 
 ## Prerequisites
 
 - [Rust](https://www.rust-lang.org/): Stable toolchain (`rustup update stable`).
-- [Substrate](https://substrate.dev/): Substrate Node Template or MandalaChain node ([Mandala-Node](https://github.com/MandalaChain/Mandala-Node)).
+- [Substrate](https://substrate.dev/): Substrate Node Template.
 - [IPFS](https://ipfs.io/): For off-chain storage.
 - [Node.js](https://nodejs.org/): For the React frontend (>=16.0.0).
 - [Polkadot.js](https://polkadot.js.org/extension/): Browser extension for wallet management.
@@ -38,13 +38,11 @@ cd Web3EMR
 
 ### 2. Set Up the Substrate Blockchain
 
-#### Option 1: Use MandalaChain
-
 ```bash
-git clone https://github.com/MandalaChain/Mandala-Node
-cd Mandala-Node
+git clone https://github.com/substrate-developer-hub/substrate-node-template
+cd substrate-node-template
 cargo build --release
-./target/release/mandala-node --dev
+./target/release/node-template --dev
 ```
 
 #### Option 2: Custom Substrate Chain
@@ -92,13 +90,13 @@ Install the [Polkadot.js browser extension](https://polkadot.js.org/extension/) 
 
 ### Run the Blockchain:
 
-Start the Substrate node (MandalaChain or custom):
+Start the Substrate node:
 
 ```bash
 ./target/release/mandala-node --dev
 ```
 
-Connect to the node via WebSocket (e.g., `wss://rpc.mandalachain.io` or `ws://127.0.0.1:9944`).
+Connect to the node via WebSocket (e.g., `ws://127.0.0.1:9944`).
 
 ### Store an EMR:
 
@@ -143,7 +141,7 @@ Check the blockchain's event log for EMR interactions (e.g., `EMRStored`, `Acces
 
 - Extend the EMR pallet for additional functionality (e.g., clinical trial data, insurance integration)
 - Enhance the frontend with visualizations or multi-language support
-- Integrate with MandalaChain's IDCHAIN for advanced identity management
+- Integrate with DID for advanced identity management
 
 ## Testing
 
@@ -155,21 +153,21 @@ Check the blockchain's event log for EMR interactions (e.g., `EMRStored`, `Acces
 
 ### Testnet:
 
-- Deploy to MandalaChain's testnet (contact [MandalaChain](https://www.mandalachain.io) for access)
+- Deploy to Substrate's testnet (contact [Substrate](https://www.substrate.io) for access)
 - Simulate patient/provider interactions with multiple wallets
 
 ## Deployment
 
 ### Mainnet:
 
-1. Deploy the Substrate chain to MandalaChain's mainnet or a custom Polkadot parachain slot
+1. Deploy the Substrate chain to Substrate's mainnet or a custom Polkadot parachain slot
 2. Configure IPFS nodes for production-grade storage
 3. Host the frontend on a decentralized platform (e.g., Fleek, IPFS)
 
 ### Compliance:
 
 - Ensure AES-256 encryption for EMRs
-- Implement zero-knowledge proofs (ZKPs) for private transactions (supported by MandalaChain)
+- Implement zero-knowledge proofs (ZKPs) for private transactions
 - Maintain audit logs for HIPAA/GDPR compliance
 
 ## Contributing
@@ -189,7 +187,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Resources
 
 - [Substrate Developer Hub](https://substrate.dev)
-- [MandalaChain](https://www.mandalachain.io)
 - [Polkadot.js](https://polkadot.js.org)
 - [IPFS](https://ipfs.io)
 - [Original RustEMR](https://github.com/meddsai/RustEMR)
