@@ -1,0 +1,642 @@
+# Web3EMR: Decentralized Electronic Medical Records System
+# Product Requirements Document (PRD)
+
+## 1. Overview
+
+### 1.1 Product Vision
+Web3EMR is a decentralized Electronic Medical Record (EMR) system built on a Substrate-based blockchain that empowers patients with complete control over their medical records while ensuring security, privacy, and regulatory compliance. By leveraging blockchain technology, decentralized identity management, and secure off-chain storage, Web3EMR aims to transform healthcare data management by putting patients at the center of their healthcare journey.
+
+### 1.2 Problem Statement
+Current EMR systems suffer from several critical issues:
+- Centralized control by healthcare providers, limiting patient access and ownership
+- Data silos preventing efficient sharing between different healthcare providers
+- Security vulnerabilities in centralized storage systems
+- Complex compliance with regulations like HIPAA and GDPR
+- Lack of transparent audit trails for data access and modifications
+- Limited patient control over who can access their medical information
+
+### 1.3 Target Users
+1. **Patients**: Individuals seeking control over their medical records
+2. **Healthcare Providers**: Doctors, nurses, and other medical professionals
+3. **Healthcare Entities**: Hospitals, clinics, and other healthcare organizations
+4. **Medical Boards and Accreditation Bodies**: Organizations that validate credentials
+5. **Regulatory Authorities**: Bodies ensuring compliance with healthcare regulations
+
+### 1.4 Success Metrics
+- Number of patients using the system to manage their EMRs
+- Number of healthcare providers and entities registered on the platform
+- Volume of EMRs securely stored and accessed through the system
+- Reduction in unauthorized access incidents compared to traditional EMR systems
+- Compliance verification success rate for regulatory audits
+- User satisfaction ratings from both patients and healthcare providers
+
+## 2. Core Features
+
+### 2.1 Patient-Centric Control
+**Description**: Patients have full ownership and control over their medical records through cryptographic wallets and decentralized identities.
+
+**Requirements**:
+- Patients must be able to create and manage their KILT DIDs
+- Patients must be able to upload, view, and manage their EMRs
+- Patients must have granular control over who can access their records
+- System must provide intuitive interfaces for managing access permissions
+- Patients must be able to revoke access at any time
+
+**Acceptance Criteria**:
+- Patient can successfully create a KILT DID and link it to their Polkadot.js wallet
+- Patient can upload an EMR that is encrypted and stored on StorageHub
+- Patient can grant and revoke access to specific healthcare providers
+- All access control changes are reflected immediately in the system
+
+### 2.2 Decentralized Identity Management
+**Description**: Integration with KILT Protocol for secure, verifiable digital identities for all system participants.
+
+**Requirements**:
+- Support for KILT DID creation and management for patients, personnel, and entities
+- Verification of DIDs through the KILT network
+- Linking of DIDs to on-chain attestations and credentials
+- Support for zero-knowledge proofs for privacy-preserving verification
+
+**Acceptance Criteria**:
+- All users can create and manage KILT DIDs through the system
+- DIDs are verifiable on the KILT network
+- Attestations are correctly linked to DIDs
+- Zero-knowledge proofs function correctly for credential verification without revealing sensitive data
+
+### 2.3 Credential Attestation System
+**Description**: A system for verifying and attesting the credentials of healthcare entities and personnel.
+
+**Requirements**:
+- Healthcare entities must be able to register with verifiable accreditation
+- Medical personnel must be able to have their credentials (e.g., medical licenses) attested
+- Attestations must be linked to KILT DIDs and validated by authorized organizations
+- Attestations must include expiry information and be revocable
+
+**Acceptance Criteria**:
+- Entities can register with verifiable accreditation information
+- Personnel can have their credentials attested and linked to their DID
+- Attestations are verifiable by third parties with appropriate permissions
+- Expired or revoked attestations are properly reflected in the system
+
+### 2.4 Secure EMR Storage and Access
+**Description**: Encrypted storage of EMRs on StorageHub with blockchain-based access control.
+
+**Requirements**:
+- EMRs must be encrypted using AES-256 before storage
+- Only hashes of EMRs are stored on-chain, with actual data on StorageHub
+- Access control lists are maintained on-chain
+- Providers can only access EMRs with explicit patient permission
+- System must maintain high performance for EMR retrieval
+
+**Acceptance Criteria**:
+- EMRs are successfully encrypted and stored on StorageHub
+- Only authorized users can decrypt and access EMRs
+- Access attempts are properly logged on-chain
+- System maintains sub-second response times for authorized access requests
+
+### 2.5 Immutable Audit Trail
+**Description**: Blockchain-based logging of all system interactions for transparency and compliance.
+
+**Requirements**:
+- All EMR access events must be logged on-chain
+- All credential attestations and revocations must be recorded
+- All permission changes must be timestamped and recorded
+- Audit logs must be immutable and tamper-proof
+- Logs must be accessible to patients and authorized regulators
+
+**Acceptance Criteria**:
+- All system events are properly logged on the blockchain
+- Logs cannot be altered or deleted
+- Patients can view a complete history of access to their records
+- Regulators can audit the system for compliance verification
+
+### 2.6 Interoperability
+**Description**: Cross-chain communication capabilities for sharing data across different healthcare systems.
+
+**Requirements**:
+- Support for Polkadot's XCM (Cross-Consensus Messaging) protocol
+- Ability to share EMR access across different parachains
+- Standardized data formats for cross-system compatibility
+- Support for healthcare data standards (e.g., FHIR, HL7)
+
+**Acceptance Criteria**:
+- EMR access can be granted across different Polkadot parachains
+- Data can be shared between Web3EMR and other compatible systems
+- Shared data maintains its integrity and security across systems
+
+### 2.7 Data Analytics
+**Description**: Privacy-preserving analytics on medical data with patient consent.
+
+**Requirements**:
+- Differential privacy mechanisms to protect individual patient data
+- Aggregated analytics for population health insights
+- Patient consent management for analytics participation
+- Role-based access control for analytics results
+- Support for custom queries and reports
+
+**Acceptance Criteria**:
+- Analytics can be performed without exposing individual patient data
+- Patients can opt in or out of analytics programs
+- Healthcare entities can access authorized analytics dashboards
+- System maintains privacy guarantees even with multiple queries
+
+### 2.8 AI/ML Integration
+**Description**: Machine learning models for medical insights and predictive healthcare.
+
+**Requirements**:
+- Secure model training on encrypted or anonymized data
+- Federated learning capabilities for cross-institutional collaboration
+- Model validation and explainability features
+- Integration with clinical decision support systems
+- Version control and audit trail for AI models
+
+**Acceptance Criteria**:
+- AI models can be trained without compromising patient privacy
+- Models demonstrate clinically relevant predictive capabilities
+- Healthcare providers can receive AI-generated insights within their workflow
+- AI recommendations include confidence levels and explanations
+- All model usage is properly logged for audit purposes
+
+## 3. User Experience
+
+### 3.1 Patient Interface
+**Description**: Web application for patients to manage their medical records and access permissions.
+
+**Requirements**:
+- Intuitive dashboard showing all stored EMRs
+- Simple interface for uploading new medical records
+- Clear visualization of who has access to which records
+- Easy-to-use permission management system
+- Mobile-responsive design for access on various devices
+
+**Acceptance Criteria**:
+- Patients can navigate the interface without training
+- All core functions are accessible within 3 clicks
+- Interface works correctly on desktop, tablet, and mobile devices
+- Users report high satisfaction scores in usability testing
+
+### 3.2 Healthcare Provider Interface
+**Description**: Web application for healthcare providers to access authorized patient records.
+
+**Requirements**:
+- Dashboard showing all patients who have granted access
+- Efficient search and filter capabilities for finding specific records
+- Clear indication of access permissions and limitations
+- Intuitive viewing interface for different types of medical data
+
+**Acceptance Criteria**:
+- Providers can quickly locate and access authorized records
+- Interface clearly indicates which records they can access
+- System prevents attempts to access unauthorized records
+- Medical data is displayed in a clinically useful format
+
+### 3.3 Administrative Interface
+**Description**: Management interface for healthcare entities to manage personnel and attestations.
+
+**Requirements**:
+- Dashboard for managing entity credentials and attestations
+- Interface for attesting personnel credentials
+- Tools for managing organizational policies and access controls
+- Analytics on system usage and compliance
+
+**Acceptance Criteria**:
+- Administrators can efficiently manage personnel attestations
+- System provides useful analytics on usage patterns
+- Interface supports bulk operations for efficiency
+- All administrative actions are properly logged
+
+### 3.4 Wallet Integration
+**Description**: Seamless integration with Polkadot.js wallet for authentication and transactions.
+
+**Requirements**:
+- Simple connection process for Polkadot.js browser extension
+- Clear transaction signing prompts with detailed information
+- Support for multiple accounts within a wallet
+- Secure session management
+
+**Acceptance Criteria**:
+- Users can connect their wallet with a single click
+- Transaction details are clearly explained before signing
+- Wallet connection remains stable throughout the session
+- Users can easily switch between accounts if needed
+
+## 4. Technical Architecture
+
+### 4.1 Blockchain Layer
+**Description**: Substrate-based blockchain providing the foundation for the system.
+
+**Components**:
+- **EMR Pallet**: Core pallet managing EMR storage references and access control
+  - Functions: store_emr, grant_access, revoke_access, verify_access
+  - Storage: EMRHashes, AccessLists, AccessHistory
+
+- **Attestation Pallet**: Pallet handling entity and credential attestations
+  - Functions: register_entity, attest_patient, attest_personnel, revoke_credential
+  - Storage: Entities, Personnel, Patients, Attestations
+
+- **Runtime Configuration**: Substrate runtime with necessary dependencies
+  - System, Timestamp, Balances pallets
+  - Custom configuration for EMR and Attestation pallets
+
+**Technical Requirements**:
+- Support for at least 1,000 transactions per block
+- Block time of 6 seconds or less
+- Support for on-chain storage of access control lists and attestation data
+- Integration with off-chain workers for credential validation
+
+### 4.2 Storage Layer
+**Description**: StorageHub integration for secure off-chain storage of EMRs and credentials.
+
+**Components**:
+- **StorageHub Client**: Interface for interacting with StorageHub nodes
+  - Functions: store_encrypted_data, retrieve_encrypted_data, verify_data_integrity
+
+- **Encryption Module**: AES-256 encryption/decryption for EMRs and credentials
+  - Functions: encrypt_data, decrypt_data, generate_keys
+
+- **Data Integrity**: Hash verification for ensuring data hasn't been tampered with
+  - Functions: generate_hash, verify_hash
+
+**Technical Requirements**:
+- Support for storing files up to 100MB in size
+- Sub-second retrieval times for authorized requests
+- 99.99% uptime for storage nodes
+- Data redundancy across multiple storage nodes
+
+### 4.3 Identity Layer
+**Description**: KILT Protocol integration for decentralized identity management.
+
+**Components**:
+- **KILT SDK Integration**: Interface for creating and managing DIDs
+  - Functions: create_did, verify_did, manage_credentials
+
+- **Zero-Knowledge Proof Module**: Privacy-preserving credential verification
+  - Functions: generate_proof, verify_proof
+
+- **Attestation Module**: Management of credential attestations
+  - Functions: issue_attestation, verify_attestation, revoke_attestation
+
+**Technical Requirements**:
+- Support for W3C DID standard
+- Integration with KILT's attestation mechanisms
+- Support for selective disclosure of credential attributes
+- Efficient ZKP generation and verification
+
+### 4.4 Analytics & AI Layer
+**Description**: Privacy-preserving data analytics and machine learning capabilities.
+
+**Components**:
+- **Analytics Engine**: Framework for performing privacy-preserving analytics
+  - Functions: run_analysis, generate_report, manage_consent
+  - Features: Differential privacy, aggregated statistics, trend analysis
+
+- **Machine Learning Pipeline**: System for training and deploying ML models
+  - Functions: train_model, validate_model, deploy_model, generate_predictions
+  - Models: Disease prediction, treatment recommendation, risk assessment
+
+- **Federated Learning Module**: Distributed training across healthcare entities
+  - Functions: coordinate_training, aggregate_models, distribute_updates
+  - Features: No raw data sharing, secure aggregation, model validation
+
+- **Explainable AI Components**: Tools for understanding AI decisions
+  - Functions: generate_explanation, visualize_factors, assess_confidence
+  - Features: Feature importance, confidence scoring, decision paths
+
+**Technical Requirements**:
+- Differential privacy guarantees with epsilon < 1.0
+- Model accuracy comparable to centralized training (within 5%)
+- Sub-second inference time for deployed models
+- Compliance with regulatory requirements for AI in healthcare
+- Audit trail for all AI-generated recommendations
+
+### 4.5 Frontend Layer
+**Description**: React-based web application for user interactions.
+
+**Components**:
+- **Patient Portal**: Interface for patient interactions
+  - Features: EMR management, access control, history viewing
+
+- **Provider Portal**: Interface for healthcare provider interactions
+  - Features: Patient record access, credential management
+
+- **Administrative Portal**: Interface for healthcare entity management
+  - Features: Personnel attestation, entity management
+
+- **Polkadot.js Integration**: Wallet connection and transaction signing
+  - Features: Account management, transaction approval
+
+**Technical Requirements**:
+- Support for modern browsers (Chrome, Firefox, Safari, Edge)
+- Mobile-responsive design
+- Accessibility compliance (WCAG 2.1 AA)
+- Sub-second response times for UI interactions
+
+## 5. Development Roadmap
+
+### 5.1 Phase 1: Foundation (Months 1-3)
+**Objectives**:
+- Develop core blockchain infrastructure
+- Implement basic EMR and attestation pallets
+- Create simple frontend for testing
+- Establish StorageHub integration
+
+**Deliverables**:
+- Functional Substrate node with EMR and attestation pallets
+- Basic StorageHub integration for data storage and retrieval
+- Simple web interface for testing core functionality
+- Technical documentation for core components
+
+### 5.2 Phase 2: Core Features (Months 4-6)
+**Objectives**:
+- Implement KILT DID integration
+- Develop full patient and provider interfaces
+- Enhance security features
+- Implement comprehensive testing
+
+**Deliverables**:
+- Complete KILT DID integration
+- Functional patient and provider portals
+- Enhanced encryption and security features
+- Comprehensive test suite with >80% coverage
+
+### 5.3 Phase 3: Advanced Features (Months 7-9)
+**Objectives**:
+- Implement interoperability features
+- Add advanced privacy features
+- Develop administrative tools
+- Implement core analytics capabilities
+- Conduct security audits
+
+**Deliverables**:
+- XCM integration for cross-chain communication
+- Zero-knowledge proof (ZKP) implementation
+- Administrative dashboard
+- Privacy-preserving analytics engine with differential privacy
+- Basic population health analytics dashboard
+- Security audit report and fixes
+
+### 5.4 Phase 4: Testnet and Refinement (Months 10-12)
+**Objectives**:
+- Deploy to testnet
+- Conduct user testing
+- Refine features based on feedback
+- Prepare for mainnet launch
+
+**Deliverables**:
+- Testnet deployment
+- User testing report
+- Refined features and bug fixes
+- Mainnet launch plan
+
+### 5.5 Phase 5: Advanced AI/ML Integration (Months 13-18)
+**Objectives**:
+- Develop and train specialized medical AI models
+- Implement federated learning across healthcare entities
+- Create clinical decision support systems
+- Establish research partnerships for model validation
+
+**Deliverables**:
+- Disease prediction and early diagnosis models
+- Federated learning infrastructure for cross-institutional collaboration
+- Clinical decision support dashboard for healthcare providers
+- Explainable AI components for medical recommendations
+- Research validation reports on model accuracy and clinical utility
+
+## 6. Logical Dependency Chain
+
+### 6.1 Core Infrastructure Dependencies
+1. Substrate node template setup
+2. EMR pallet development
+3. Attestation pallet development
+4. Runtime integration of pallets
+5. StorageHub integration
+6. KILT Protocol integration
+
+### 6.2 Feature Dependencies
+1. **Patient-Centric Control**
+   - Depends on: EMR pallet, StorageHub integration, KILT DID integration
+
+2. **Credential Attestation**
+   - Depends on: Attestation pallet, KILT DID integration
+
+3. **EMR Storage and Access**
+   - Depends on: EMR pallet, StorageHub integration, Encryption module
+
+4. **Audit Trail**
+   - Depends on: EMR pallet, Attestation pallet, Runtime events
+
+5. **Interoperability**
+   - Depends on: All core features, XCM integration
+
+6. **Data Analytics**
+   - Depends on: Secure Storage, Access Control, and Analytics & AI Layer
+
+7. **AI/ML Integration**
+   - Depends on: Data Analytics, Secure Storage, and Analytics & AI Layer
+
+### 6.3 Interface Dependencies
+1. **Patient Portal**
+   - Depends on: Patient-Centric Control, EMR Storage and Access
+
+2. **Provider Portal**
+   - Depends on: Credential Attestation, EMR Storage and Access
+
+3. **Administrative Portal**
+   - Depends on: Credential Attestation, Audit Trail
+
+4. **Wallet Integration**
+   - Required by: All user interfaces
+
+### 6.4 Deployment Dependencies
+1. **Local Development**
+   - Depends on: Core Infrastructure
+
+2. **Testnet Deployment**
+   - Depends on: All features, Security Audit
+
+3. **Mainnet Deployment**
+   - Depends on: Successful Testnet phase, Regulatory Compliance
+## 7. Risks and Mitigations
+
+### 7.1 Technical Risks
+
+**Risk**: Integration challenges between Substrate, StorageHub, and KILT
+**Impact**: High
+**Probability**: Medium
+**Mitigation**: 
+- Develop proof-of-concept integrations early in the development process
+- Maintain close communication with the development teams of each technology
+- Create detailed integration tests to verify compatibility
+
+**Risk**: Performance bottlenecks in EMR retrieval
+**Impact**: High
+**Probability**: Medium
+**Mitigation**:
+- Implement caching mechanisms for frequently accessed data
+- Optimize StorageHub retrieval processes
+- Conduct regular performance testing throughout development
+
+**Risk**: Security vulnerabilities in the encryption implementation
+**Impact**: Critical
+**Probability**: Low
+**Mitigation**:
+- Use well-established encryption libraries
+- Conduct regular security audits
+- Implement a bug bounty program for security researchers
+
+**Risk**: AI model bias or inaccuracy in medical predictions
+**Impact**: Critical
+**Probability**: Medium
+**Mitigation**:
+- Use diverse and representative training datasets
+- Implement rigorous validation protocols with healthcare professionals
+- Deploy explainable AI techniques for transparency in decision-making
+- Establish regular model review and retraining processes
+
+**Risk**: Privacy leakage through analytics or model inference
+**Impact**: Critical
+**Probability**: Medium
+**Mitigation**:
+- Implement robust differential privacy with formal guarantees
+- Use secure multi-party computation for sensitive analytics
+- Conduct privacy impact assessments for all analytics features
+- Develop privacy-preserving machine learning techniques
+
+### 7.2 Regulatory Risks
+
+**Risk**: Non-compliance with healthcare regulations (HIPAA, GDPR)
+**Impact**: Critical
+**Probability**: Medium
+**Mitigation**:
+- Engage healthcare compliance experts early in the development process
+- Document all compliance measures
+- Implement regular compliance audits
+
+**Risk**: Changes in regulatory requirements
+**Impact**: High
+**Probability**: Medium
+**Mitigation**:
+- Design the system with flexibility to adapt to regulatory changes
+- Maintain awareness of upcoming regulatory developments
+- Establish relationships with regulatory bodies
+
+**Risk**: Non-compliance with emerging AI regulations in healthcare
+**Impact**: Critical
+**Probability**: High
+**Mitigation**:
+- Monitor evolving AI regulatory frameworks (FDA, EU AI Act, etc.)
+- Implement model documentation and validation processes
+- Design AI systems with auditability and explainability from the start
+- Engage with regulatory bodies on AI in healthcare standards
+
+### 7.3 Adoption Risks
+
+**Risk**: Low user adoption due to complexity
+**Impact**: High
+**Probability**: High
+**Mitigation**:
+- Focus on user experience design
+- Provide comprehensive onboarding materials
+- Conduct usability testing with target users
+
+**Risk**: Resistance from established healthcare providers
+**Impact**: High
+**Probability**: High
+**Mitigation**:
+- Demonstrate clear benefits for providers
+- Develop integration pathways with existing systems
+- Partner with forward-thinking healthcare organizations
+
+### 7.4 Operational Risks
+
+**Risk**: StorageHub node failures
+**Impact**: High
+**Probability**: Low
+**Mitigation**:
+- Implement redundant storage across multiple nodes
+- Develop automated failover mechanisms
+- Establish monitoring and alerting systems
+
+**Risk**: Blockchain network congestion
+**Impact**: Medium
+**Probability**: Medium
+**Mitigation**:
+- Optimize transaction efficiency
+- Implement priority mechanisms for critical operations
+- Design for off-chain scaling solutions
+
+## 8. Appendix
+
+### 8.1 Glossary
+
+**AES-256**: Advanced Encryption Standard with 256-bit key length, a symmetric encryption algorithm.
+
+**AI (Artificial Intelligence)**: Computer systems able to perform tasks that normally require human intelligence, such as visual perception, speech recognition, decision-making, and translation.
+
+**Attestation**: A claim made by one party about another, verified by a trusted third party.
+
+**DID (Decentralized Identifier)**: A new type of identifier that enables verifiable, decentralized digital identity.
+
+**Differential Privacy**: A system for publicly sharing information about a dataset by describing patterns of groups within the dataset while withholding information about individuals.
+
+**EMR (Electronic Medical Record)**: Digital version of a patient's paper medical chart.
+
+**Explainable AI**: AI systems that make their decisions transparent and understandable to humans.
+
+**Federated Learning**: A machine learning approach that trains algorithms across multiple decentralized devices or servers holding local data samples, without exchanging them.
+
+**GDPR (General Data Protection Regulation)**: EU regulation on data protection and privacy.
+
+**HIPAA (Health Insurance Portability and Accountability Act)**: US legislation that provides data privacy and security provisions for safeguarding medical information.
+
+**KILT Protocol**: A blockchain protocol for issuing self-sovereign verifiable credentials and decentralized identifiers.
+
+**ML (Machine Learning)**: A subset of AI that provides systems the ability to automatically learn and improve from experience without being explicitly programmed.
+
+**Pallet**: A module in the Substrate blockchain framework that encapsulates specific functionality.
+
+**Secure Multi-Party Computation (SMPC)**: Cryptographic techniques that allow parties to jointly compute a function over their inputs while keeping those inputs private.
+
+**StorageHub**: A decentralized storage solution developed by Moonsong Labs for the Polkadot ecosystem.
+
+**Substrate**: A blockchain framework that allows for the creation of custom, specialized blockchains.
+
+**XCM (Cross-Consensus Messaging)**: A format for communication between different consensus systems in the Polkadot ecosystem.
+
+**ZKP (Zero-Knowledge Proof)**: A method by which one party can prove to another that they know a value, without conveying any information apart from the fact that they know the value.
+
+### 8.2 References
+
+1. Substrate Developer Documentation: https://substrate.dev
+2. KILT Protocol Documentation: https://docs.kilt.io
+3. StorageHub Repository: https://github.com/Moonsong-Labs/storage-hub
+4. Polkadot.js Documentation: https://polkadot.js.org/docs/
+5. HIPAA Compliance Guidelines: https://www.hhs.gov/hipaa
+6. GDPR Official Text: https://gdpr-info.eu
+7. W3C DID Specification: https://www.w3.org/TR/did-core/
+
+### 8.3 Technical Specifications
+
+**Blockchain Specifications**:
+- Consensus: Nominated Proof of Stake (NPoS)
+- Block Time: 6 seconds
+- Transaction Throughput: >1,000 TPS
+- Storage Capacity: Optimized for references, not full data storage
+
+**StorageHub Specifications**:
+- Encryption: AES-256
+- File Size Limit: 100MB per EMR
+- Redundancy: Minimum 3x replication
+- Retrieval Time: <1 second for authorized requests
+
+**Frontend Specifications**:
+- Framework: React with TypeScript
+- Responsive Design: Support for desktop, tablet, and mobile
+- Accessibility: WCAG 2.1 AA compliance
+- Browser Support: Chrome, Firefox, Safari, Edge (latest 2 versions)
+
+**Security Specifications**:
+- Encryption: AES-256 for data at rest and in transit
+- Authentication: Polkadot.js wallet-based
+- Authorization: On-chain access control lists
+- Audit: Immutable blockchain-based event logging
