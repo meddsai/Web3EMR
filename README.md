@@ -1,5 +1,40 @@
 # Web3EMR dApp
 
+[![Rust](https://img.shields.io/badge/Rust-1.70.0-orange)](https://www.rust-lang.org/)
+[![Substrate](https://img.shields.io/badge/Substrate-4.0.0-5929FF)](https://substrate.dev/)
+[![StorageHub](https://img.shields.io/badge/StorageHub-0.9.0-FF6B6B)](https://github.com/Moonsong-Labs/storage-hub)
+[![KILT](https://img.shields.io/badge/KILT_SDK-0.27.0-FF6B6B)](https://www.kilt.io/)
+[![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
+[![Polkadot.js](https://img.shields.io/badge/Polkadot.js-10.9.1-E6007A)](https://polkadot.js.org/)
+[![Chainlink](https://img.shields.io/badge/Chainlink-2.0.0-375BD2)](https://chain.link/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![Status](https://img.shields.io/badge/Status-Experimental-orange)
+
+## Table of Contents
+
+- [Description](#description)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Security Considerations](#security-considerations)
+- [Real-World Integration](#real-world-integration)
+- [Compliance](#compliance)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Security Considerations](#security-considerations)
+- [Real-World Integration](#real-world-integration)
+- [Compliance](#compliance)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Security Considerations](#security-considerations)
+- [Real-World Integration](#real-world-integration)
+- [Compliance](#compliance)
+
+## Description
 Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
 
 Leveraging a custom Substrate chain or a Substrate-based parachain in the Polkadot ecosystem, Web3EMR uses StorageHub for off-chain storage, aligning with Web3 principles of decentralization, transparency, and interoperability while meeting healthcare regulatory requirements (e.g., HIPAA, GDPR).
