@@ -1,6 +1,6 @@
 # Web3EMR dApp
 
-Web3EMR is a decentralized Electronic Medical Record (EMR) with embe system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
+Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
 
 Leveraging a custom Substrate chain or a Substrate-based parachain in the Polkadot ecosystem, Web3EMR uses StorageHub for off-chain storage, aligning with Web3 principles of decentralization, transparency, and interoperability while meeting healthcare regulatory requirements (e.g., HIPAA, GDPR).
 
