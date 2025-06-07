@@ -285,6 +285,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Resources
 
+- [Product Requirements Document (PRD)](./.taskmaster/templates/PRD.txt)
 - [Substrate Developer Hub](https://substrate.dev)
 - [KILT Protocol](https://www.kilt.io)
 - [StorageHub](https://github.com/Moonsong-Labs/storage-hub)
