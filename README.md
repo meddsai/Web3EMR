@@ -23,16 +23,6 @@
 - [Security Considerations](#security-considerations)
 - [Real-World Integration](#real-world-integration)
 - [Compliance](#compliance)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Security Considerations](#security-considerations)
-- [Real-World Integration](#real-world-integration)
-- [Compliance](#compliance)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Security Considerations](#security-considerations)
-- [Real-World Integration](#real-world-integration)
-- [Compliance](#compliance)
 
 ## Description
 Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
