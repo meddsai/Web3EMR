@@ -1,31 +1,39 @@
 # Web3EMR dApp
 
-Web3EMR is a decentralized Electronic Medical Record (EMR) system built on a Substrate-based blockchain, transforming RustEMR into a Web3-native application. It empowers patients to control their medical records securely, enables providers to access records with permission, and ensures interoperability via Polkadot's ecosystem. The dApp uses custom Substrate pallets for on-chain logic, IPFS for off-chain storage, and a React frontend with Polkadot.js for user interaction.
+Web3EMR is a decentralized Electronic Medical Record (EMR) system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
+
+Leveraging a custom Substrate chain or a Substrate-based parachain in the Polkadot ecosystem, Web3EMR uses StorageHub for off-chain storage, aligning with Web3 principles of decentralization, transparency, and interoperability while meeting healthcare regulatory requirements (e.g., HIPAA, GDPR).
 
 ## Features
 
-- **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js).
-- **Secure Data Storage**: EMRs are encrypted and stored on IPFS, with hashes on-chain for integrity.
-- **Access Control**: Fine-grained permissions via Substrate pallets, allowing patients to grant/revoke provider access.
-- **Interoperability**: Built on a Substrate-based blockchain, supporting Polkadot's XCM for cross-chain data sharing.
-- **Regulatory Compliance**: Designed for HIPAA/GDPR compliance through encryption and audit trails.
-- **Immutable Audit Trail**: All EMR interactions are logged on-chain for transparency.
+- **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js) and KILT DIDs.
+- **Secure Data Storage**: EMRs and credentials are encrypted and stored on StorageHub, with hashes recorded on-chain for integrity.
+- **Attestation System**: Verifies patients, healthcare personnel, and entities (hospitals, clinics) through a Substrate-based attestation pallet, ensuring only authorized participants interact with EMRs.
+- **Credential Validation**: Links medical licenses, nursing certifications, and hospital accreditations to KILT DIDs, validated by real-world organizations (e.g., medical boards, accreditation bodies).
+- **Access Control**: Fine-grained permissions allow patients to grant/revoke provider access, with checks for valid credentials.
+- **Revocation Support**: Handles credential revocation (e.g., expired or suspended licenses) with on-chain updates.
+- **Interoperability**: Integrates with Polkadot's XCM for cross-chain data sharing, enabling multi-institutional ecosystems.
+- **Regulatory Compliance**: Ensures HIPAA/GDPR compliance through AES-256 encryption, zero-knowledge proofs (ZKPs), and immutable audit trails.
+- **Immutable Audit Trail**: Logs all EMR and attestation interactions on-chain for transparency and compliance.
 
 ## Architecture
 
-- **Blockchain Layer**: Custom Substrate pallets for EMR storage, access control, and identity management, running on a Substrate-based chain.
-- **Off-Chain Storage**: Encrypted EMRs stored on IPFS, with metadata/hashes on-chain.
+- **Blockchain Layer**: Custom Substrate pallets (`emr_pallet`, `attestation_pallet`) for EMR management, access control, attestation, and credential validation, running on a Substrate-based blockchain.
+- **Off-Chain Storage**: Encrypted EMRs and credential documents (e.g., license PDFs) stored on StorageHub, with hashes on-chain.
+- **Identity System**: Integrates with KILT Protocol for secure, verified DIDs, supporting credential attestation.
 - **Frontend**: React-based UI with Polkadot.js for wallet integration and blockchain interaction.
-- **Identity**: Integrates with DID or a custom decentralized identity system.
+- **Real-World Integration**: Oracles (e.g., Chainlink on Polkadot) or a healthcare DAO validate credentials from trusted organizations (e.g., AMA, Joint Commission).
 
 ## Prerequisites
 
 - [Rust](https://www.rust-lang.org/): Stable toolchain (`rustup update stable`).
-- [Substrate](https://substrate.dev/): Substrate Node Template.
-- [IPFS](https://ipfs.io/): For off-chain storage.
+- [Substrate](https://substrate.dev/): Substrate Node Template ([repository](https://github.com/substrate-developer-hub/substrate-node-template)).
+- [StorageHub](https://github.com/Moonsong-Labs/storage-hub): For off-chain storage.
 - [Node.js](https://nodejs.org/): For the React frontend (>=16.0.0).
 - [Polkadot.js](https://polkadot.js.org/extension/): Browser extension for wallet management.
-- Docker (optional): For running IPFS or blockchain nodes.
+- [KILT SDK](https://github.com/KILTprotocol/kilt-sdk-js): For DID management.
+- Docker (optional): For running StorageHub or blockchain nodes.
+- Chainlink (optional): For oracle-based credential validation.
 
 ## Installation
 
@@ -38,14 +46,7 @@ cd Web3EMR
 
 ### 2. Set Up the Substrate Blockchain
 
-```bash
-git clone https://github.com/substrate-developer-hub/substrate-node-template
-cd substrate-node-template
-cargo build --release
-./target/release/node-template --dev
-```
-
-#### Option 2: Custom Substrate Chain
+Use the Substrate Node Template to create a custom chain:
 
 ```bash
 git clone https://github.com/substrate-developer-hub/substrate-node-template
@@ -54,27 +55,56 @@ cargo build --release
 ./target/release/node-template --dev
 ```
 
-### 3. Install IPFS
+Alternatively, connect to an existing Substrate-based parachain in the Polkadot ecosystem (e.g., a testnet or mainnet).
+
+### 3. Set Up StorageHub
+
+Clone and run StorageHub:
 
 ```bash
-wget https://dist.ipfs.io/go-ipfs/v0.10.0/go-ipfs_v0.10.0_linux-amd64.tar.gz
-tar -xvzf go-ipfs_v0.10.0_linux-amd64.tar.gz
-cd go-ipfs
-./install.sh
-ipfs init
-ipfs daemon
+git clone https://github.com/Moonsong-Labs/storage-hub
+cd storage-hub
+cargo build --release
+./target/release/storage-hub-node --dev
 ```
 
-### 4. Set Up the Backend
+Follow StorageHub's documentation for configuration and network connection.
+
+### 4. Set Up KILT Protocol
+
+Install the KILT SDK for DID management:
+
+```bash
+cd backend
+npm install @kiltprotocol/sdk-js
+```
+
+### 5. Set Up the Backend
+
+Install Rust dependencies and build the pallets:
 
 ```bash
 cd backend
 cargo build --release
 ```
 
-Copy the `emr_pallet.rs` to the Substrate node's pallets directory and update the runtime configuration (`runtime/src/lib.rs`).
+Add `emr_pallet.rs` and `attestation_pallet.rs` to the Substrate node's pallets directory. Update the runtime configuration (`runtime/src/lib.rs`):
 
-### 5. Set Up the Frontend
+```rust
+impl emr_pallet::Config for Runtime {
+    type Event = Event;
+}
+
+impl attestation_pallet::Config for Runtime {
+    type Event = Event;
+    type AttestationExpiry = AttestationExpiry;
+    type MaxAttestationsPerEntity = MaxAttestationsPerEntity;
+}
+```
+
+### 6. Set Up the Frontend
+
+Install Node.js dependencies and start the React app:
 
 ```bash
 cd frontend
@@ -82,99 +112,159 @@ npm install
 npm start
 ```
 
-### 6. Configure Polkadot.js
+### 7. Configure Polkadot.js and KILT
 
-Install the [Polkadot.js browser extension](https://polkadot.js.org/extension/) and create/import accounts for testing (e.g., Alice, Bob).
+Install the [Polkadot.js browser extension](https://polkadot.js.org/extension/) and create/import accounts for testing.
+
+Create KILT DIDs for testing entities, patients, and personnel using the KILT SDK. (see https://docs.kilt.io).
 
 ## Usage
 
-### Run the Blockchain:
+### 1. Run the Blockchain
 
 Start the Substrate node:
 
 ```bash
-./target/release/mandala-node --dev
+./target/release/node-template --dev
 ```
 
 Connect to the node via WebSocket (e.g., `ws://127.0.0.1:9944`).
 
-### Store an EMR:
+### 2. Register Entities
 
-1. Access the frontend at http://localhost:3000
-2. Connect your Polkadot.js wallet
-3. Upload an EMR (JSON format), which is encrypted and stored on IPFS
-4. Submit the EMR hash to the blockchain using the `store_emr` pallet call
+Healthcare entities (e.g., hospitals, clinics) register on-chain:
 
-### Manage Access:
+1. Create a KILT DID for the entity
+2. Submit the entity's DID, name, and accreditation hash (e.g., Joint Commission certification) via `register_entity`
+3. Accreditation is validated off-chain by real-world organizations or oracles
 
-- Grant/revoke provider access via the frontend, using the `grant_access`/`revoke_access` pallet calls
-- Providers retrieve EMRs by fetching the IPFS hash from the blockchain and decrypting with authorized keys
+### 3. Attest Personnel and Patients
 
-### View Audit Trail:
+Healthcare entities attest patients and personnel:
 
-Check the blockchain's event log for EMR interactions (e.g., `EMRStored`, `AccessGranted`).
+- **Patients**: Link patient KILT DID to entity DID using `attest_patient`
+- **Personnel**: Submit personnel KILT DID, entity DID, credential hash (e.g., medical license), and expiry timestamp via `attest_personnel`
+
+Credentials are validated off-chain by real-world organizations (e.g., medical boards) and stored on StorageHub.
+
+### 4. Store an EMR
+
+Patients upload EMRs:
+
+1. Log in with a Polkadot.js wallet and KILT DID
+2. Upload an EMR (JSON format), which is encrypted and stored on StorageHub
+3. Submit the EMR hash to the blockchain using `store_emr`
+
+### 5. Manage Access
+
+Patients control provider access:
+
+- Grant access with `grant_access`, specifying the provider's KILT DID and EMR hash
+- The system verifies the provider's attestation status before allowing access
+- Revoke access with `revoke_access`
+
+Providers retrieve EMRs from StorageHub using the on-chain hash, decrypting with authorized keys.
+
+### 6. Revoke Credentials
+
+Authorities revoke credentials (e.g., expired licenses) using `revoke_credential`, updating on-chain status.
+
+### 7. View Audit Trail
+
+Check the blockchain's event log (via Polkadot.js Apps) for EMR and attestation events (e.g., `EMRStored`, `PersonnelAttested`, `CredentialRevoked`).
 
 ## Example Workflow
 
-### Patient:
-1. Logs in with Polkadot.js wallet
-2. Uploads EMR (e.g., `{"name": "John Doe", "record": "..."}`)
-3. EMR is encrypted, stored on IPFS, and its hash is recorded on-chain
+### Healthcare Entity Registration
+1. A medical board creates a KILT DID for a hospital
+2. The board registers the hospital with an accreditation hash on-chain
+3. The hospital's identity is now verifiable on the blockchain
 
-### Provider:
-1. Requests access via the dApp
-2. Patient grants access, triggering an on-chain `AccessGranted` event
-3. Provider retrieves the EMR from IPFS using the on-chain hash
+### Credential Attestation
+1. The hospital attests a doctor's medical license
+2. This links the doctor's KILT DID to their credential hash and expiry date
+3. The credential can be verified by any authorized party
 
-### Audit:
-- All actions are logged on-chain, viewable via [Polkadot.js Apps](https://polkadot.js.org/apps)
+### Patient Attestation
+1. The hospital attests a patient's registration
+2. This links the patient's KILT DID to the hospital
+3. The patient's identity is now verifiable within the system
+
+### EMR Management
+1. The patient uploads an EMR
+2. The EMR is encrypted and stored on StorageHub
+3. Only the hash of the EMR is recorded on-chain
+4. The patient grants access to the doctor
+5. The doctor retrieves the EMR after credential validation
+
+### Audit and Compliance
+- All actions are logged on-chain
+- This ensures transparency and regulatory compliance
+- Audit trails are immutable and verifiable
 
 ## Development
 
 ### Key Components
 
-- **EMR Pallet**: Handles EMR storage, access control, and audit logging (see `backend/pallets/emr_pallet.rs`)
-- **IPFS Integration**: Encrypts and stores EMRs off-chain (see `backend/ipfs_storage.rs`)
-- **Frontend**: React app with Polkadot.js for blockchain interaction (see `frontend/src/emr_dapp.js`)
+- **EMR Pallet**: Manages EMR storage and access control (`backend/pallets/emr_pallet.rs`)
+- **Attestation Pallet**: Handles entity, patient, and personnel attestation with credential validation (`backend/pallets/attestation_pallet.rs`)
+- **StorageHub Integration**: Encrypts and stores EMRs/credentials off-chain (`backend/storagehub.rs`)
+- **Frontend**: React app with Polkadot.js and KILT SDK for blockchain and DID interaction (`frontend/src`)
 
 ### Adding New Features
 
-- Extend the EMR pallet for additional functionality (e.g., clinical trial data, insurance integration)
-- Enhance the frontend with visualizations or multi-language support
-- Integrate with DID for advanced identity management
+- Extend pallets for clinical trial data or insurance integration
+- Implement ZKPs for private credential verification using KILT's capabilities
+- Add multi-language support to the frontend
+- Integrate a healthcare DAO for governance using Substrate's democracy pallet
 
 ## Testing
 
-### Local Testing:
+### Local Testing
 
 1. Run a local Substrate node with `--dev` flag
-2. Use [Polkadot.js Apps](https://polkadot.js.org/apps) to interact with the EMR pallet
-3. Test IPFS storage/retrieval with sample EMRs
+2. Use [Polkadot.js Apps](https://polkadot.js.org/apps) to interact with pallets
+3. Test StorageHub storage/retrieval with sample EMRs and credentials
+4. Test KILT DID creation and attestation using the KILT SDK
 
-### Testnet:
+### Testnet
 
-- Deploy to Substrate's testnet (contact [Substrate](https://www.substrate.io) for access)
-- Simulate patient/provider interactions with multiple wallets
+- Deploy to a Substrate-based testnet (e.g., a custom chain or Polkadot parachain)
+- Connect to KILT's Peregrine testnet (https://docs.kilt.io)
+- Simulate attestation workflows with multiple KILT DIDs
 
 ## Deployment
 
-### Mainnet:
+### Mainnet
 
-1. Deploy the Substrate chain to Substrate's mainnet or a custom Polkadot parachain slot
-2. Configure IPFS nodes for production-grade storage
-3. Host the frontend on a decentralized platform (e.g., Fleek, IPFS)
+1. Deploy to a custom Substrate-based mainnet or a Polkadot parachain slot
+2. Configure production-grade StorageHub nodes
+3. Host the frontend on a decentralized platform (e.g., Fleek)
 
-### Compliance:
+### Compliance
 
-- Ensure AES-256 encryption for EMRs
-- Implement zero-knowledge proofs (ZKPs) for private transactions
+- Use AES-256 encryption for EMRs and credentials
+- Implement ZKPs for private transactions (supported by KILT)
 - Maintain audit logs for HIPAA/GDPR compliance
+
+### Real-World Integration
+
+- Partner with medical boards (e.g., AMA) or accreditation bodies (e.g., Joint Commission) for credential validation
+- Use oracles (e.g., Chainlink) or a healthcare DAO for off-chain verification
+
+## Security Considerations
+
+- **Encryption**: AES-256 for off-chain data on StorageHub
+- **Key Management**: Secure patient/provider keys via Polkadot.js wallets and KILT DIDs
+- **Credential Validation**: Ensure real-world organizations attest credentials to prevent fraud
+- **Auditability**: Immutable on-chain logs for all interactions
+- **Privacy**: Use KILT's ZKPs for sensitive data (e.g., license details)
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/xyz`)
-3. Commit your changes (`git commit -m 'Add XYZ feature'`)
+3. Commit changes (`git commit -m "Add XYZ feature"`)
 4. Push to the branch (`git push origin feature/xyz`)
 5. Open a pull request
 
@@ -187,9 +277,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Resources
 
 - [Substrate Developer Hub](https://substrate.dev)
+- [KILT Protocol](https://www.kilt.io)
+- [StorageHub](https://github.com/Moonsong-Labs/storage-hub)
 - [Polkadot.js](https://polkadot.js.org)
-- [IPFS](https://ipfs.io)
-- [Original RustEMR](https://github.com/meddsai/RustEMR)
+- [Chainlink on Polkadot](https://docs.chain.link)
 
 ## Contact
 
@@ -197,4 +288,4 @@ For questions or support, open an issue or contact the maintainers at meddsai@ex
 
 ---
 
-Built with ❤️ for decentralized healthcare.
+_Empowering decentralized healthcare with trust and transparency._
