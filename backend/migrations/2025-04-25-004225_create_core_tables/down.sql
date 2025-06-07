@@ -1,5 +1,0 @@
-DROP TABLE IF EXISTS treatments;
-DROP TABLE IF EXISTS diagnoses;
-DROP TABLE IF EXISTS vital_signs;
-DROP TABLE IF EXISTS encounters;
-DROP TABLE IF EXISTS patients;
