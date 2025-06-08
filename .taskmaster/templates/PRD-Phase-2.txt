@@ -1,0 +1,180 @@
+# Web3EMR: Decentralized Electronic Medical Records System
+# Product Requirements Document (PRD) - Phase 2: Core Features
+
+## 1. Overview of Phase 2
+
+Phase 2 builds upon the foundation established in Phase 1, focusing on implementing credential attestation, audit trail functionality, and enhancing the security and usability of the system. This phase introduces the attestation pallet and expands the user interfaces for healthcare providers and entities.
+
+## 2. Core Features for Phase 2
+
+### 2.1 Credential Attestation System
+**Description**: A system for verifying and attesting the credentials of healthcare entities and personnel.
+
+**Requirements**:
+- Healthcare entities must be able to register with verifiable accreditation
+- Medical personnel must be able to have their credentials (e.g., medical licenses) attested
+- Attestations must be linked to KILT DIDs and validated by authorized organizations
+- Attestations must include expiry information and be revocable
+
+**Acceptance Criteria**:
+- Entities can register with verifiable accreditation
+- Personnel can have their credentials attested and linked to their DID
+- Attestations are verifiable by third parties with appropriate permissions
+- Expired or revoked attestations are properly reflected in the system
+
+### 2.2 Immutable Audit Trail
+**Description**: On-chain logging of all system events for transparency and compliance.
+
+**Requirements**:
+- All EMR access events must be logged on-chain
+- All attestation events must be logged on-chain
+- Logs must include timestamp, actor, action, and target
+- Logs must be immutable and tamper-proof
+- Authorized users must be able to view relevant logs
+
+**Acceptance Criteria**:
+- All system events are properly logged on the blockchain
+- Logs cannot be altered or deleted
+- Patients can view a complete history of access to their records
+- Regulators can audit the system for compliance verification
+
+### 2.3 Enhanced Identity Management
+**Description**: Advanced KILT Protocol integration with expanded credential management.
+
+**Requirements**:
+- Support for complex credential structures and hierarchies
+- Enhanced verification mechanisms for credentials
+- Support for credential delegation and proxy access
+- Improved revocation mechanisms
+
+**Acceptance Criteria**:
+- Complex credential structures can be created and verified
+- Delegation of access works correctly and securely
+- Revocation mechanisms function properly and immediately
+
+## 3. Technical Architecture for Phase 2
+
+### 3.1 Blockchain Layer Enhancements
+**Description**: Expanded Substrate pallets for attestation and audit functionality.
+
+**Components**:
+- **Attestation Pallet**: Pallet handling entity and credential attestations
+  - Functions: register_entity, attest_patient, attest_personnel, revoke_credential
+  - Storage: Entities, Personnel, Patients, Attestations
+
+- **Audit Pallet**: Enhanced logging capabilities for system events
+  - Functions: log_event, verify_log, query_logs
+  - Storage: EventLogs, AccessLogs, AttestationLogs
+
+**Technical Requirements**:
+- Support for complex attestation structures
+- Efficient storage and retrieval of audit logs
+- Integration with the existing EMR pallet
+- Support for regulatory compliance queries
+
+### 3.2 Identity Layer
+**Description**: KILT Protocol integration for decentralized identity management.
+
+**Components**:
+- **KILT SDK Integration**: Interface for creating and managing DIDs
+  - Functions: create_did, verify_did, manage_credentials
+
+- **Zero-Knowledge Proof Module**: Privacy-preserving credential verification
+  - Functions: generate_proof, verify_proof
+
+- **Attestation Module**: Management of credential attestations
+  - Functions: issue_attestation, verify_attestation, revoke_attestation
+
+**Technical Requirements**:
+- Support for W3C DID standard
+- Integration with KILT's attestation mechanisms
+- Support for selective disclosure of credential attributes
+- Efficient ZKP generation and verification
+
+### 3.3 Frontend Layer Expansion
+**Description**: Enhanced web applications for different user types.
+
+**Components**:
+- **Provider Portal**: Interface for healthcare provider interactions
+  - Features: Patient record access, credential management
+
+- **Administrative Portal**: Interface for healthcare entity management
+  - Features: Personnel attestation, entity management
+
+**Technical Requirements**:
+- Role-based access control for different user types
+- Intuitive interfaces for credential management
+- Comprehensive audit log viewing
+- Enhanced security features
+
+## 4. Development Roadmap for Phase 2
+
+### 4.1 Phase 2: Core Features (Months 4-6)
+**Objectives**:
+- Implement attestation pallet and credential system
+- Develop audit trail functionality
+- Enhance KILT DID integration
+- Expand frontend for providers and administrators
+- Enhance security features
+- Implement comprehensive testing
+
+**Deliverables**:
+- Complete KILT DID integration
+- Functional patient and provider portals
+- Enhanced encryption and security features
+- Comprehensive test suite with >80% coverage
+- Attestation pallet with full credential management
+- Audit trail system with compliance reporting
+
+## 5. Risks and Mitigations for Phase 2
+
+### 5.1 Technical Risks
+
+**Risk**: Security vulnerabilities in the encryption implementation
+**Impact**: Critical
+**Probability**: Low
+**Mitigation**:
+- Use well-established encryption libraries
+- Conduct regular security audits
+- Implement a bug bounty program for security researchers
+
+**Risk**: Integration challenges with KILT Protocol
+**Impact**: High
+**Probability**: Medium
+**Mitigation**:
+- Establish direct communication with KILT development team
+- Create comprehensive integration tests
+- Develop fallback mechanisms for critical functions
+
+### 5.2 Operational Risks
+
+**Risk**: Complexity in credential verification process
+**Impact**: High
+**Probability**: Medium
+**Mitigation**:
+- Design intuitive user interfaces for credential management
+- Provide comprehensive documentation and training
+- Implement automated verification where possible
+
+## 6. Logical Dependency Chain for Phase 2
+
+### 6.1 Feature Dependencies
+1. **Credential Attestation** depends on Identity Layer and Blockchain Layer
+2. **Audit Trail** depends on Blockchain Layer and EMR functionality
+3. **Enhanced Identity Management** depends on KILT Protocol integration
+
+### 6.2 Interface Dependencies
+1. **Provider Portal** depends on Credential Attestation and EMR Access
+2. **Administrative Portal** depends on Credential Attestation and Entity Registration
+
+## 7. Appendix for Phase 2
+
+### 7.1 Glossary Additions
+
+**Attestation**: A claim made by one party about another, verified by a trusted third party.
+
+**DID (Decentralized Identifier)**: A new type of identifier that enables verifiable, decentralized digital identity.
+
+**KILT Protocol**: A blockchain protocol for issuing self-sovereign verifiable credentials and decentralized identifiers.
+
+**ZKP (Zero-Knowledge Proof)**: A method by which one party can prove to another that they know a value, without conveying any information apart from the fact that they know the value.
