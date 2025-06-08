@@ -42,14 +42,40 @@ Leveraging a custom Substrate chain (which can be deployed as either a public bl
 - **Immutable Audit Trail**: Logs all EMR and attestation interactions on-chain for transparency and compliance.
 - **Data Analytics**: Privacy-preserving analytics on medical data with patient consent, enabling population health insights while maintaining individual privacy.
 - **AI/ML Integration**: Machine learning models for predictive diagnostics, treatment recommendations, and clinical decision support based on anonymized or consented patient data.
+- **Enterprise Integration**: Connects with Enterprise Risk Management (ERM) systems and other enterprise platforms (e.g., SAP) through a secure API Gateway, enabling integration with supply chain, insurance, financial, and marketing systems.
 
 ## Architecture
+
+```mermaid
+graph TD
+    subgraph "Web3EMR Core System"
+        BL[Blockchain Layer] --- OS[Off-Chain Storage]
+        BL --- IS[Identity System]
+        BL --- AA[Analytics & AI Layer]
+    end
+    
+    subgraph "Integration & Access"
+        FE[Frontend] --- BL
+        EI[Enterprise Integration Layer] --- BL
+        EI --- AA
+    end
+    
+    subgraph "External Systems"
+        EI --- SC[Supply Chain Systems]
+        EI --- IN[Insurance Systems]
+        EI --- FM[Financial Management]
+        EI --- MK[Marketing/CRM]
+    end
+    
+    RWI[Real-World Integration] --- IS
+```
 
 - **Blockchain Layer**: Custom Substrate pallets (`emr_pallet`, `attestation_pallet`) for EMR management, access control, attestation, and credential validation, running on a Substrate-based blockchain.
 - **Off-Chain Storage**: Encrypted EMRs and credential documents (e.g., license PDFs) stored on StorageHub, with hashes on-chain.
 - **Identity System**: Integrates with KILT Protocol for secure, verified DIDs, supporting credential attestation.
 - **Analytics & AI Layer**: Privacy-preserving data analytics and machine learning models for medical insights, predictive diagnostics, and clinical decision support.
 - **Frontend**: React-based UI with Polkadot.js for wallet integration and blockchain interaction.
+- **Enterprise Integration Layer**: API Gateway and connector modules enabling secure integration with enterprise systems including ERM platforms, supply chain management, insurance systems, and financial management tools.
 - **Real-World Integration**: Oracles (e.g., Chainlink on Polkadot) or a healthcare DAO validate credentials from trusted organizations (e.g., AMA, Joint Commission).
 
 ## Prerequisites
@@ -240,6 +266,7 @@ Check the blockchain's event log (via Polkadot.js Apps) for EMR and attestation 
 - **Analytics Engine**: Privacy-preserving data analytics with differential privacy guarantees (`backend/analytics/`)
 - **AI/ML Models**: Machine learning pipeline for medical data analysis and predictive healthcare (`backend/ml/`)
 - **Frontend**: React app with Polkadot.js and KILT SDK for blockchain and DID interaction (`frontend/src`)
+- **Enterprise Integration Layer**: API Gateway and connector modules enabling secure integration with enterprise systems including ERM platforms, supply chain management, insurance systems, and financial management tools (`backend/enterprise_integration/`)
 
 ### Adding New Features
 
