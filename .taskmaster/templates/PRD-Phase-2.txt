@@ -7,6 +7,20 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 
 ## 2. Core Features for Phase 2
 
+### 2.0 Technology Stack Update
+**Description**: Migration to Polkadot SDK framework.
+
+**Requirements**:
+- Update all blockchain components to use the latest Polkadot SDK
+- Ensure compatibility with Polkadot's NPoS consensus
+- Update development toolchain and documentation
+- Test all existing functionality with the new framework
+
+**Acceptance Criteria**:
+- All blockchain functionality works with Polkadot SDK
+- Performance meets or exceeds previous benchmarks
+- Updated documentation reflects the new technology stack
+
 ### 2.1 Credential Attestation System
 **Description**: A system for verifying and attesting the credentials of healthcare entities and personnel.
 

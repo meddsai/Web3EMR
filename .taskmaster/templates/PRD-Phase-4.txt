@@ -7,6 +7,20 @@ Phase 4 builds upon the analytics capabilities established in Phase 3, focusing 
 
 ## 2. Core Features for Phase 4
 
+### 2.0 Technology Stack Update
+**Description**: Ensure AI/ML features are optimized for Polkadot SDK.
+
+**Requirements**:
+- Optimize AI/ML model inference for Polkadot's execution environment
+- Ensure secure enclave support for privacy-preserving computations
+- Update model training pipelines to work with Polkadot's off-chain workers
+- Document any SDK-specific considerations for AI/ML features
+
+**Acceptance Criteria**:
+- AI/ML models perform efficiently in the Polkadot environment
+- Privacy guarantees are maintained during model training and inference
+- Documentation is comprehensive and up-to-date
+
 ### 2.1 AI/ML Integration
 **Description**: Machine learning models for medical insights and predictive healthcare.
 

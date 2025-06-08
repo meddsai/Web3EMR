@@ -4,7 +4,7 @@
 ## 1. Overview
 
 ### 1.1 Product Vision
-Web3EMR is a decentralized Electronic Medical Record (EMR) system built on a Substrate-based blockchain that empowers patients with complete control over their medical records while ensuring security, privacy, and regulatory compliance. By leveraging blockchain technology, decentralized identity management, and secure off-chain storage, Web3EMR aims to transform healthcare data management by putting patients at the center of their healthcare journey.
+Web3EMR is a decentralized Electronic Medical Record (EMR) system built on the Polkadot SDK that empowers patients with complete control over their medical records while ensuring security, privacy, and regulatory compliance. By leveraging the Polkadot SDK, decentralized identity management, and secure off-chain storage, Web3EMR aims to transform healthcare data management by putting patients at the center of their healthcare journey.
 
 ### 1.2 Problem Statement
 Current EMR systems suffer from several critical issues:

@@ -7,6 +7,20 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 
 ## 2. Core Features for Phase 3
 
+### 2.0 Technology Stack Update
+**Description**: Ensure all Phase 3 features are compatible with Polkadot SDK.
+
+**Requirements**:
+- Verify all interoperability features work with Polkadot's XCM v3
+- Update cross-chain communication to use latest Polkadot standards
+- Ensure privacy features leverage Polkadot's latest cryptographic primitives
+- Update documentation to reflect any SDK-specific implementations
+
+**Acceptance Criteria**:
+- All Phase 3 features function correctly with Polkadot SDK
+- Cross-chain communication is stable and secure
+- Updated documentation is comprehensive and accurate
+
 ### 2.1 Interoperability
 **Description**: Cross-chain communication capabilities for sharing data across different healthcare systems.
 
