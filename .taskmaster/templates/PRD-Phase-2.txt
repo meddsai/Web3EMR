@@ -8,33 +8,41 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 ## 2. Core Features for Phase 2
 
 ### 2.0 Technology Stack Update
-**Description**: Migration to Polkadot SDK framework.
+**Description**: Migration to Polkadot SDK framework and CESS for decentralized storage.
 
 **Requirements**:
 - Update all blockchain components to use the latest Polkadot SDK
+- Integrate with CESS (Cumulus Encrypted Storage System) for decentralized storage
 - Ensure compatibility with Polkadot's NPoS consensus
-- Update development toolchain and documentation
-- Test all existing functionality with the new framework
+- Update development toolchain and documentation for CESS integration
+- Test all existing functionality with the new storage solution
+- Implement content addressing using CIDs (Content Identifiers)
 
 **Acceptance Criteria**:
 - All blockchain functionality works with Polkadot SDK
-- Performance meets or exceeds previous benchmarks
-- Updated documentation reflects the new technology stack
+- EMRs are successfully stored and retrieved from CESS
+- Content addressing with CIDs is functioning correctly
+- Performance meets or exceeds previous benchmarks with the new storage layer
+- Updated documentation reflects the new technology stack and storage solution
 
 ### 2.1 Credential Attestation System
-**Description**: A system for verifying and attesting the credentials of healthcare entities and personnel.
+**Description**: A system for verifying and attesting the credentials of healthcare entities and personnel using Polkadot Identity.
 
 **Requirements**:
 - Healthcare entities must be able to register with verifiable accreditation
 - Medical personnel must be able to have their credentials (e.g., medical licenses) attested
-- Attestations must be linked to KILT DIDs and validated by authorized organizations
-- Attestations must include expiry information and be revocable
+- Attestations must be linked to Polkadot Identities and validated by authorized registrars
+- Support for hierarchical attestation structures (e.g., medical board → hospital → doctor)
+- Attestations must include expiry information and be revokable
+- Integration with Polkadot's Identity pallet for credential verification
 
 **Acceptance Criteria**:
-- Entities can register with verifiable accreditation
-- Personnel can have their credentials attested and linked to their DID
+- Entities can register with verifiable accreditation using their Polkadot Identity
+- Personnel can have their credentials attested and linked to their Identity
 - Attestations are verifiable by third parties with appropriate permissions
 - Expired or revoked attestations are properly reflected in the system
+- Hierarchical attestation structures function as expected
+- Integration with Polkadot's Identity pallet is functional
 
 ### 2.2 Immutable Audit Trail
 **Description**: On-chain logging of all system events for transparency and compliance.
@@ -52,7 +60,26 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 - Patients can view a complete history of access to their records
 - Regulators can audit the system for compliance verification
 
-### 2.3 Enhanced Identity Management
+### 2.3 Enhanced CESS Integration
+**Description**: Advanced features leveraging CESS for secure, decentralized storage.
+
+**Requirements**:
+- Implement CESS's Proof of Data Reduplication and Recovery (PoDR²)
+- Utilize CESS's built-in encryption for additional security layer
+- Implement content addressing using IPFS-compatible CIDs
+- Set up monitoring for CESS storage nodes and network health
+- Configure appropriate replication factors for healthcare data
+- Implement data recovery procedures using CESS's built-in mechanisms
+
+**Acceptance Criteria**:
+- PoDR² is functioning correctly, ensuring data integrity
+- All EMRs are properly encrypted and stored across CESS nodes
+- Content addressing with CIDs is working as expected
+- Monitoring provides visibility into storage health and performance
+- Data recovery procedures have been tested and documented
+- Storage costs and performance meet healthcare industry requirements
+
+### 2.4 Enhanced Identity Management
 **Description**: Advanced KILT Protocol integration with expanded credential management.
 
 **Requirements**:

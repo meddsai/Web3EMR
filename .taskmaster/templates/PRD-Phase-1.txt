@@ -33,22 +33,41 @@ Current EMR systems suffer from several critical issues:
 ## 2. Core Features for Phase 1
 
 ### 2.1 Patient-Centric Control
-**Description**: Patients have full ownership and control over their medical records through cryptographic wallets and decentralized identities.
+**Description**: Patients have full ownership and control over their medical records through cryptographic wallets and Polkadot Identity.
 
 **Requirements**:
-- Patients must be able to create and manage their KILT DIDs
+- Patients must be able to create and manage their Polkadot Identity on the People Chain
 - Patients must be able to upload, view, and manage their EMRs
 - Patients must have granular control over who can access their records
 - System must provide intuitive interfaces for managing access permissions
 - Patients must be able to revoke access at any time
+- Support for hierarchical identity structures with sub-identities
 
 **Acceptance Criteria**:
-- Patient can successfully create a KILT DID and link it to their Polkadot.js wallet
+- Patient can successfully create a Polkadot Identity and link it to their Polkadot.js wallet
+- Patient can create and manage sub-identities for different healthcare contexts
 - Patient can upload an EMR that is encrypted and stored on StorageHub
 - Patient can grant and revoke access to specific healthcare providers
 - All access control changes are reflected immediately in the system
 
-### 2.2 Decentralized Identity Management
+### 2.2 Polkadot Identity Integration
+**Description**: Secure, verifiable digital identities using Polkadot's native Identity pallet and People Chain.
+
+**Requirements**:
+- Integration with Polkadot's People Chain for identity management
+- Support for hierarchical identity structures with up to 100 sub-identities
+- Verification of credentials by trusted registrars (e.g., medical boards, accreditation bodies)
+- Selective disclosure of identity attributes for privacy preservation
+- Support for identity recovery mechanisms
+- Integration with the EMR system for access control
+
+**Acceptance Criteria**:
+- Users can create and manage their Polkadot Identity
+- System supports hierarchical identity structures with sub-identities
+- Identity verification by trusted registrars is functional
+- Selective disclosure of attributes works as expected
+- Identity recovery mechanisms are secure and reliable
+- EMR access control integrates with Polkadot Identity
 **Description**: Integration with KILT Protocol for secure, verifiable digital identities for all system participants.
 
 **Requirements**:
@@ -74,11 +93,13 @@ Current EMR systems suffer from several critical issues:
 - All access attempts are logged on-chain
 
 **Acceptance Criteria**:
-- EMRs are successfully encrypted and stored on StorageHub
-- Only hash references are stored on the blockchain
-- Only users with permission can access and decrypt EMRs
+- EMRs are successfully encrypted and stored on CESS (Cumulus Encrypted Storage System)
+- Content-addressable hashes (CIDs) are stored on the blockchain
+- Only users with permission can retrieve and decrypt EMRs from CESS
+- Data integrity is verifiable using on-chain CIDs
 - Unauthorized access attempts are blocked and logged
 - Access logs are immutable and verifiable
+- Data redundancy and availability meet healthcare industry standards
 
 ## 3. Technical Architecture for Phase 1
 
@@ -88,7 +109,9 @@ Current EMR systems suffer from several critical issues:
 **Components**:
 - **EMR Pallet**: Core pallet managing EMR storage references and access control
   - Functions: store_emr, grant_access, revoke_access, verify_access
-  - Storage: EMRHashes, AccessLists, AccessHistory
+  - Storage: EMR_CIDs (Content Identifiers), AccessLists, AccessHistory
+  - Integration with CESS storage nodes for data retrieval
+  - Verification of data integrity using CIDs
 
 - **Runtime Configuration**: Substrate runtime with necessary dependencies
   - System, Timestamp, Balances pallets
@@ -101,17 +124,14 @@ Current EMR systems suffer from several critical issues:
 - Integration with off-chain workers for basic operations
 
 ### 3.2 Storage Layer
-**Description**: StorageHub integration for secure off-chain storage of EMRs.
+**Description**: CESS (Cumulus Encrypted Storage System) integration for secure, decentralized off-chain storage of EMRs.
 
 **Components**:
-- **StorageHub Client**: Interface for interacting with StorageHub nodes
-  - Functions: store_encrypted_data, retrieve_encrypted_data, verify_data_integrity
-
-- **Encryption Module**: AES-256 encryption/decryption for EMRs
-  - Functions: encrypt_data, decrypt_data, generate_keys
-
-- **Data Integrity**: Hash verification for ensuring data hasn't been tampered with
-  - Functions: generate_hash, verify_hash
+- **CESS Network**: Decentralized storage network with built-in encryption
+- **Content Addressing**: IPFS-compatible CIDs (Content Identifiers) for content-addressable storage
+- **Data Redundancy**: Automatic data replication and erasure coding for high availability
+- **Retrieval**: Efficient content retrieval using CIDs with built-in verification
+- **Proof of Data Reduplication and Recovery (PoDR²)**: Ensures data integrity and availability
 
 **Technical Requirements**:
 - Support for storing files up to 100MB in size

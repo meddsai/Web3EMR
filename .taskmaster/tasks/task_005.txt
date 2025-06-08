@@ -14,41 +14,104 @@
 7. Implement accessibility features (WCAG 2.1 AA compliance)
 8. Add offline capabilities for basic functions
 
-Pseudo-code for React components:
+Pseudo-code for React components with latest Polkadot.js API:
 ```typescript
 // src/components/EMRManagement.tsx
-import React, { useState, useEffect } from 'react';
-import { useSubstrateState } from '../substrate-lib';
-import { web3FromSource } from '@polkadot/extension-dapp';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { web3Enable, web3FromSource } from '@polkadot/extension-dapp';
+import { keyring } from '@polkadot/ui-keyring';
+import { TypeRegistry } from '@polkadot/types/create';
+import { formatBalance } from '@polkadot/util';
+
+// Configure format balance options
+const formatBalanceOptions = {
+  decimals: 12, // Adjust based on your chain's token decimals
+  withUnit: 'UNIT', // Your chain's token symbol
+  withSi: true,
+};
 
 interface EMR {
   id: string;
   name: string;
   date: string;
   hash: string;
+  size: number;
+  type: string;
+  accessList: string[];
 }
 
 const EMRManagement: React.FC = () => {
-  const { api, currentAccount } = useSubstrateState();
+  const [api, setApi] = useState<ApiPromise | null>(null);
   const [emrs, setEmrs] = useState<EMR[]>([]);
   const [file, setFile] = useState<File | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<any>(null);
   
+  // Initialize API connection
   useEffect(() => {
-    if (api && currentAccount) {
-      fetchEMRs();
-    }
-  }, [api, currentAccount]);
+    const connect = async () => {
+      try {
+        // Connect to node
+        const wsProvider = new WsProvider('wss://your-node-endpoint');
+        const api = await ApiPromise.create({ provider: wsProvider });
+        setApi(api);
+        
+        // Load web3 extension
+        await web3Enable('Web3EMR');
+        
+        // Load accounts
+        const allAccounts = await web3Accounts();
+        setAccounts(allAccounts);
+        
+        if (allAccounts.length > 0) {
+          setSelectedAccount(allAccounts[0]);
+          await fetchEMRs(allAccounts[0]);
+        }
+        
+        setIsConnected(true);
+      } catch (error) {
+        console.error('Error connecting to node:', error);
+      }
+    };
+    
+    connect();
+    
+    return () => {
+      api?.disconnect();
+    };
+  }, []);
   
-  const fetchEMRs = async () => {
-    if (!api || !currentAccount) return;
+  const fetchEMRs = useCallback(async (account: any) => {
+    if (!api) return;
     
-    // Fetch EMR hashes from blockchain
-    const emrHashes = await api.query.emrPallet.emrHashes(currentAccount.address);
-    
-    // Fetch EMR metadata from StorageHub or local cache
-    // Implementation details
-    
-    setEmrs(/* processed EMRs */);
+    try {
+      // Fetch EMR hashes from blockchain
+      const emrHashes = await api.query.emrPallet.emrHashes(account.address);
+      
+      // Process EMR hashes and fetch metadata
+      const processedEmrs = await Promise.all(
+        emrHashes.map(async (hash: any) => {
+          // Fetch EMR metadata from StorageHub or local cache
+          const metadata = await fetchEMRMetadata(hash);
+          return {
+            id: hash.toString(),
+            name: metadata.name,
+            date: metadata.date,
+            hash: hash.toString(),
+            size: metadata.size,
+            type: metadata.type,
+            accessList: metadata.accessList || []
+          };
+        })
+      );
+      
+      setEmrs(processedEmrs);
+    } catch (error) {
+      console.error('Error fetching EMRs:', error);
+    }
+  }, [api]);
   };
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,11 +163,38 @@ export default EMRManagement;
 ```
 
 # Test Strategy:
-1. Unit tests for React components
-2. Integration tests for wallet connectivity
-3. UI/UX testing across different devices and screen sizes
-4. Accessibility testing for WCAG 2.1 AA compliance
-5. Performance testing for rendering and data loading
-6. Offline functionality testing
-7. Cross-browser testing (Chrome, Firefox, Safari, Edge)
-8. User acceptance testing with sample patient scenarios
+1. Unit Testing
+   - Test React components in isolation with Jest and React Testing Library
+   - Test custom hooks for data fetching and state management
+   - Test utility functions and form validation
+
+2. Integration Testing
+   - Test component interactions
+   - Verify wallet connection and account management flows
+   - Test EMR upload and retrieval workflows
+   - Validate access control implementation
+
+3. End-to-End Testing
+   - Test complete user flows with Cypress
+   - Verify cross-browser compatibility
+   - Test with different wallet extensions
+
+4. Performance Testing
+   - Measure load times for large EMR datasets
+   - Test with slow network conditions
+   - Verify memory usage with large file uploads
+
+5. Security Testing
+   - Test for XSS and other web vulnerabilities
+   - Verify secure handling of private keys
+   - Test session management and token handling
+
+6. Accessibility Testing
+   - WCAG 2.1 AA compliance
+   - Keyboard navigation
+   - Screen reader compatibility
+
+7. Offline Testing
+   - Test service worker functionality
+   - Verify data synchronization when back online
+   - Test error handling for offline operations

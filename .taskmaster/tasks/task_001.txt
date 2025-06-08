@@ -6,7 +6,7 @@
 # Description: Initialize and configure the Substrate-based blockchain that will serve as the foundation for the Web3EMR system.
 # Details:
 1. Install Rust and required dependencies
-2. Initialize a new Substrate node template
+2. Set up the Polkadot SDK development environment
 3. Configure the node for Nominated Proof of Stake (NPoS) consensus
 4. Set block time to 6 seconds as specified
 5. Configure runtime for >1000 TPS throughput
@@ -18,7 +18,7 @@ Pseudo-code for node setup:
 ```rust
 // In node/cargo.toml
 [dependencies]
-substrate = { git = "https://github.com/paritytech/substrate", branch = "master" }
+polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master" }
 // Additional dependencies
 
 // In runtime/src/lib.rs
@@ -47,14 +47,14 @@ impl pallet_nomination_pools::Config for Runtime {
 6. Run integration tests for System, Timestamp, and Balances pallets
 
 # Subtasks:
-## 1. Install Development Environment and Initialize Substrate Node [in-progress]
+## 1. Install Development Environment and Set Up Polkadot SDK [in-progress]
 ### Dependencies: None
-### Description: Set up the development environment by installing Rust, required dependencies, and initializing a new Substrate node template as the foundation for the Web3EMR system.
+### Description: Set up the development environment by installing Rust, required dependencies, and configuring the Polkadot SDK development environment as the foundation for the Web3EMR system.
 ### Details:
 1. Install Rust using rustup: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
 2. Install required dependencies: `rustup update nightly && rustup target add wasm32-unknown-unknown --toolchain nightly`
-3. Install substrate node template: `git clone https://github.com/substrate-developer-hub/substrate-node-template`
-4. Navigate to the project directory and build the node: `cd substrate-node-template && cargo build --release`
+3. Clone the Polkadot SDK: `git clone https://github.com/paritytech/polkadot-sdk`
+4. Navigate to the project directory and build the node template: `cd polkadot-sdk && cargo build --release -p node-template`
 5. Verify installation by running the node in dev mode: `./target/release/node-template --dev`
 
 ## 2. Configure Consensus Mechanism for NPoS [pending]

@@ -12,15 +12,34 @@
 5. Develop key management system for encryption/decryption
 6. Create off-chain worker for handling StorageHub operations
 
-Pseudo-code for StorageHub integration:
+Pseudo-code for StorageHub integration with Polkadot SDK:
 ```rust
+// In pallets/emr-storage/Cargo.toml
+[dependencies]
+frame-support = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+frame-system = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+sp-io = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+
 // In off-chain worker module
 use aes_gcm::{Aes256Gcm, Key, Nonce};
-use aes_gcm::aead::{Aead, NewAead};
+use aes_gcm::aead::{AeadInPlace, KeyInit};
+use sp_core::offchain::HttpError;
 
-pub struct StorageHubClient {
-    endpoint: String,
-    // Other configuration
+#[derive(Clone, Debug)]
+pub struct StorageHubClient<T: Config> {
+    _phantom: PhantomData<T>,
+    endpoint: Vec<u8>,
+    nonce: [u8; 12],
+}
+
+impl<T: Config> Default for StorageHubClient<T> {
+    fn default() -> Self {
+        Self {
+            _phantom: Default::default(),
+            endpoint: b"https://storage-hub.example.com".to_vec(),
+            nonce: [0u8; 12],
+        }
+    }
 }
 
 impl StorageHubClient {
@@ -28,20 +47,42 @@ impl StorageHubClient {
         Self { endpoint }
     }
     
-    pub fn store_encrypted_data(&self, data: Vec<u8>, encryption_key: &[u8]) -> Result<String, Error> {
-        // Encrypt data using AES-256
-        let key = Key::from_slice(encryption_key);
+    pub fn store_encrypted_data(
+        &mut self,
+        data: &[u8],
+        encryption_key: &[u8; 32],
+    ) -> Result<Vec<u8>, Error<T>> {
+        // Generate a unique nonce for each encryption
+        self.nonce[..8].copy_from_slice(&frame_system::Pallet::<T>::block_number().to_le_bytes());
+        let nonce = Nonce::from_slice(&self.nonce);
+        
+        // Encrypt data using AES-256-GCM
+        let key = Key::<Aes256Gcm>::from_slice(encryption_key);
         let cipher = Aes256Gcm::new(key);
-        let nonce = Nonce::from_slice(b"unique nonce"); // In production, generate a unique nonce
         
-        let encrypted_data = cipher.encrypt(nonce, data.as_ref())
-            .map_err(|_| Error::EncryptionFailed)?;
+        let mut buffer = data.to_vec();
+        let tag = cipher
+            .encrypt_in_place_detached(nonce, b"", &mut buffer)
+            .map_err(|_| Error::<T>::EncryptionFailed)?;
         
-        // Store encrypted data on StorageHub
-        let storage_response = self.upload_to_storagehub(encrypted_data)?;
+        // Combine encrypted data with tag
+        let mut encrypted_data = buffer;
+        encrypted_data.extend_from_slice(tag.as_slice());
         
-        // Return content identifier
-        Ok(storage_response.content_id)
+        // Store encrypted data on StorageHub using off-chain worker
+        let request = sp_io::offchain::http::Request::post(
+            &String::from_utf8(self.endpoint.clone()).map_err(|_| Error::<T>::InvalidEndpoint)?,
+            &[("Content-Type", "application/octet-stream")],
+        );
+        
+        let pending = request
+            .body(encrypted_data)
+            .map_err(|_| Error::<T>::HttpError)?
+            .send()
+            .map_err(|_| Error::<T>::HttpError)?;
+            
+        // Return content identifier (in a real implementation, this would be the CID)
+        Ok(sp_io::hashing::blake2_256(&pending.try_wait().map_err(|_| Error::<T>::RequestError)?.body().collect::<Vec<_>>()).to_vec())
     }
     
     pub fn retrieve_encrypted_data(&self, content_id: &str, encryption_key: &[u8]) -> Result<Vec<u8>, Error> {
@@ -61,14 +102,13 @@ impl StorageHubClient {
     
     // Additional methods for StorageHub interaction
 }
-```
 
-# Test Strategy:
-1. Test encryption and decryption of sample EMR data
-2. Verify successful storage and retrieval from StorageHub
-3. Test data integrity verification
-4. Measure retrieval times to ensure <1 second target
-5. Test handling of files up to 100MB in size
-6. Verify error handling for network issues
-7. Test concurrent access scenarios
-8. Validate redundancy across multiple storage nodes
+// Test Strategy:
+1. Test encryption and decryption of EMR data with different key sizes
+2. Verify data integrity after storage and retrieval
+3. Test error handling for network issues and timeouts
+4. Validate key management system with key rotation
+5. Test off-chain worker functionality with mock HTTP responses
+6. Performance testing with large EMR files
+7. Test concurrent access and race conditions
+8. Verify security against common cryptographic vulnerabilities

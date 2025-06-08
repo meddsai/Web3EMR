@@ -33,10 +33,10 @@ Current EMR systems suffer from several critical issues:
 ## 2. Core Features
 
 ### 2.1 Patient-Centric Control
-**Description**: Patients have full ownership and control over their medical records through cryptographic wallets and decentralized identities.
+**Description**: Patients have full ownership and control over their medical records through cryptographic wallets and Polkadot Identity.
 
 **Requirements**:
-- Patients must be able to create and manage their KILT DIDs
+- Patients must be able to create and manage their Polkadot Identity
 - Patients must be able to upload, view, and manage their EMRs
 - Patients must have granular control over who can access their records
 - System must provide intuitive interfaces for managing access permissions
@@ -44,11 +44,26 @@ Current EMR systems suffer from several critical issues:
 
 **Acceptance Criteria**:
 - Patient can successfully create a KILT DID and link it to their Polkadot.js wallet
-- Patient can upload an EMR that is encrypted and stored on StorageHub
+- Patient can upload an EMR that is encrypted and stored on CESS (Cumulus Encrypted Storage System)
 - Patient can grant and revoke access to specific healthcare providers
 - All access control changes are reflected immediately in the system
 
-### 2.2 Decentralized Identity Management
+### 2.2 Decentralized Identity with Polkadot People Chain
+**Description**: Secure, verifiable digital identities using Polkadot's native Identity pallet and People Chain.
+
+**Requirements**:
+- Integration with Polkadot's People Chain for identity management
+- Support for hierarchical identity structures with up to 100 sub-identities
+- Verification of credentials by trusted registrars (e.g., medical boards, accreditation bodies)
+- Selective disclosure of identity attributes for privacy preservation
+- Support for identity recovery mechanisms
+
+**Acceptance Criteria**:
+- Users can create and manage their Polkadot Identity
+- System supports hierarchical identity structures with sub-identities
+- Identity verification by trusted registrars is functional
+- Selective disclosure of attributes works as expected
+- Identity recovery mechanisms are secure and reliable
 **Description**: Integration with KILT Protocol for secure, verifiable digital identities for all system participants.
 
 **Requirements**:
@@ -79,20 +94,23 @@ Current EMR systems suffer from several critical issues:
 - Expired or revoked attestations are properly reflected in the system
 
 ### 2.4 Secure EMR Storage and Access
-**Description**: Encrypted storage of EMRs on StorageHub with blockchain-based access control.
+**Description**: Encrypted storage of EMRs on CESS (Cumulus Encrypted Storage System) with blockchain-based access control.
 
 **Requirements**:
 - EMRs must be encrypted using AES-256 before storage
-- Only hashes of EMRs are stored on-chain, with actual data on StorageHub
-- Access control lists are maintained on-chain
+- Content-addressable hashes (CIDs) of EMRs are stored on-chain, with actual data on CESS
+- Access control lists and decryption keys are managed on-chain
 - Providers can only access EMRs with explicit patient permission
-- System must maintain high performance for EMR retrieval
+- Integration with CESS for decentralized, redundant storage
+- Support for data recovery and verification using on-chain CIDs
 
 **Acceptance Criteria**:
-- EMRs are successfully encrypted and stored on StorageHub
-- Only authorized users can decrypt and access EMRs
+- EMRs are successfully encrypted and stored on CESS with content-addressable references
+- Only authorized users can retrieve and decrypt EMRs from CESS
+- Data integrity is verifiable using on-chain CIDs
 - Access attempts are properly logged on-chain
 - System maintains sub-second response times for authorized access requests
+- Data redundancy and availability meet healthcare industry standards
 
 ### 2.5 Immutable Audit Trail
 **Description**: Blockchain-based logging of all system interactions for transparency and compliance.
@@ -247,7 +265,9 @@ Current EMR systems suffer from several critical issues:
 **Components**:
 - **EMR Pallet**: Core pallet managing EMR storage references and access control
   - Functions: store_emr, grant_access, revoke_access, verify_access
-  - Storage: EMRHashes, AccessLists, AccessHistory
+  - Storage: EMR_CIDs (Content Identifiers), AccessLists, AccessHistory
+  - Integration with CESS storage nodes for data retrieval
+  - Verification of data integrity using CIDs
 
 - **Attestation Pallet**: Pallet handling entity and credential attestations
   - Functions: register_entity, attest_patient, attest_personnel, revoke_credential

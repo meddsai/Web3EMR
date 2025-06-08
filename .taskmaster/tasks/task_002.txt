@@ -1,9 +1,9 @@
 # Task ID: 2
-# Title: Implement EMR Pallet Core Functionality
+# Title: Implement EMR Pallet Core Functionality with Polkadot SDK
 # Status: pending
 # Dependencies: 1
 # Priority: high
-# Description: Develop the core EMR pallet that will manage EMR storage references and access control on the blockchain.
+# Description: Develop the core EMR pallet using Polkadot SDK that will manage EMR storage references and access control on the blockchain.
 # Details:
 1. Create a new pallet structure for EMR management
 2. Implement storage structures for EMRHashes, AccessLists, and AccessHistory
@@ -12,16 +12,33 @@
 5. Add error handling for all functions
 6. Implement access control verification logic
 
-Pseudo-code for EMR pallet:
+Pseudo-code for EMR pallet with Polkadot SDK:
 ```rust
-#[pallet::storage]
-pub type EMRHashes<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, BoundedVec<EMRHash, T::MaxEMRsPerAccount>>;
+// In pallets/emr/Cargo.toml
+[dependencies]
+frame-support = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
+frame-system = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git", branch = "master" }
 
 #[pallet::storage]
-pub type AccessLists<T: Config> = StorageDoubleMap<_, Blake2_128Concat, EMRHash, Blake2_128Concat, T::AccountId, AccessLevel>;
+pub type EMRHashes<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, BoundedVec<EMRHash, T::MaxEMRsPerAccount>>;
 
 #[pallet::storage]
-pub type AccessHistory<T: Config> = StorageMap<_, Blake2_128Concat, EMRHash, BoundedVec<AccessRecord<T::AccountId, T::BlockNumber>, T::MaxAccessRecords>>;
+pub type AccessLists<T: Config> = StorageDoubleMap<
+    _,
+    Twox64Concat,
+    EMRHash,
+    Twox64Concat,
+    T::AccountId,
+    AccessLevel,
+>;
+
+#[pallet::storage]
+pub type AccessHistory<T: Config> = StorageMap<
+    _,
+    Twox64Concat,
+    EMRHash,
+    BoundedVec<AccessRecord<T::AccountId, BlockNumberFor<T>>, T::MaxAccessRecords>,
+>;
 
 #[pallet::call]
 impl<T: Config> Pallet<T> {

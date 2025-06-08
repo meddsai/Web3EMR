@@ -1,37 +1,83 @@
 # Task ID: 3
-# Title: Integrate KILT Protocol for Decentralized Identity
+# Title: Implement Decentralized Identity with Polkadot People Chain
 # Status: pending
 # Dependencies: 1
 # Priority: high
-# Description: Implement integration with KILT Protocol to provide secure, verifiable digital identities for all system participants.
+# Description: Implement a robust DID solution using Polkadot's People Chain for secure, verifiable digital identities for all system participants.
 # Details:
-1. Add KILT Protocol dependencies to the project
-2. Implement DID creation and management functionality
-3. Develop verification mechanisms for DIDs through the KILT network
+1. Integrate with Polkadot's People Chain for identity management
+2. Implement DID creation and management using the Identity pallet
+3. Develop verification mechanisms for DIDs through the People Chain
 4. Create functionality for linking DIDs to on-chain attestations and credentials
-5. Implement zero-knowledge proof support for privacy-preserving verification
-6. Develop interfaces for DID management in the runtime
+5. Implement sub-identities for hierarchical identity structures (up to 100 per primary account)
+6. Develop interfaces for DID management in the runtime and frontend
+7. Implement identity revocation and recovery mechanisms
+8. Add support for verifiable credentials and selective disclosure
 
-Pseudo-code for KILT integration:
+Pseudo-code for Polkadot People Chain DID integration:
 ```rust
-// In runtime/cargo.toml
+// In runtime/Cargo.toml
 [dependencies]
-kilt_primitives = { git = "https://github.com/KILTprotocol/kilt-node", default-features = false }
-kilt_did = { git = "https://github.com/KILTprotocol/kilt-node", default-features = false }
+pallet-identity = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
 
 // In runtime/src/lib.rs
-impl kilt_did::Config for Runtime {
-    type Event = Event;
-    type Public = AccountId;
-    type Signature = Signature;
-    // Other KILT DID specific configuration
+parameter_types! {
+    pub const BasicDeposit: Balance = 10 * DOLLARS;  // 10 DOT or your chain's token
+    pub const FieldDeposit: Balance = 0.25 * DOLLARS; // 0.25 DOT per field
+    pub const SubAccountDeposit: Balance = 2 * DOLLARS; // 2 DOT per sub-account
+    pub const MaxSubAccounts: u32 = 100;
 }
 
-// In emr_pallet/src/lib.rs
-use kilt_did::Did;
+impl pallet_identity::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type Currency = Balances;
+    type BasicDeposit = BasicDeposit;
+    type FieldDeposit = FieldDeposit;
+    type SubAccountDeposit = SubAccountDeposit;
+    type MaxSubAccounts = MaxSubAccounts;
+    type MaxAdditionalFields = ConstU32<32>;  // Max additional fields per identity
+    type MaxRegistrars = ConstU32<20>;       // Max registrars
+    type Slash = ();
+    type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+    type WeightInfo = pallet_identity::weights::SubstrateWeight<Runtime>;
+}
+
+// In pallets/emr/Cargo.toml
+[dependencies]
+frame-support = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+frame-system = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+sp-std = { version = "25.0.0", default-features = false, git = "https://github.com/paritytech/polkadot-sdk.git" }
+
+// In pallets/emr/src/lib.rs
+#[pallet::storage]
+#[pallet::getter(fn user_identity)]
+pub type UserIdentity<T: Config> = StorageMap<
+    _,
+    Twox64Concat,
+    T::AccountId,
+    IdentityInfo<T::AccountId, <T as frame_system::Config>::BlockNumber>,
+    OptionQuery
+>;
+
+// Custom struct for EMR-specific identity info
+#[derive(Encode, Decode, Clone, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+#[scale_info(skip_type_params(T))]
+pub struct EMRIdentityInfo<T: Config> {
+    pub identity: IdentityInfo<T::AccountId, <T as frame_system::Config>::BlockNumber>,
+    pub verified: bool,
+    pub verification_level: VerificationLevel,
+    pub last_verified: Option<BlockNumberFor<T>>,
+}
 
 #[pallet::storage]
-pub type UserDids<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, Did>;
+#[pallet::getter(fn emr_identity)]
+pub type EMRIdentity<T: Config> = StorageMap<
+    _,
+    Twox64Concat,
+    T::AccountId,
+    EMRIdentityInfo<T>,
+    OptionQuery
+>;
 
 #[pallet::call]
 impl<T: Config> Pallet<T> {
@@ -48,7 +94,35 @@ impl<T: Config> Pallet<T> {
 ```
 
 # Test Strategy:
-1. Test DID creation for different user types
+1. Identity Lifecycle Testing
+   - Test identity creation and registration with various info fields
+   - Verify sub-identity management (up to 100 per account)
+   - Test identity updates and removal
+   - Verify deposit and fee calculations
+
+2. Verification and Attestation
+   - Test registrar verification flows
+   - Verify attestation of identity fields
+   - Test verification levels and access control
+   - Verify identity revocation and recovery
+
+3. Integration Testing
+   - Test EMR access control based on identity verification
+   - Verify cross-chain identity resolution with People Chain
+   - Test identity-based permissions for EMR operations
+   - Verify compatibility with wallet integrations
+
+4. Performance Testing
+   - Test with maximum number of sub-identities (100)
+   - Measure identity verification performance under load
+   - Test concurrent identity operations
+   - Verify scalability with large numbers of identities
+
+5. Security Testing
+   - Test permission boundaries for identity management
+   - Verify secure handling of identity deposits
+   - Test recovery mechanisms for lost keys
+   - Verify resistance to common attacks (replay, spoofing, etc.)
 2. Verify DID verification through KILT network
 3. Test linking of attestations to DIDs
 4. Validate zero-knowledge proof functionality

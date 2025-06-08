@@ -2,8 +2,8 @@
 
 [![Rust](https://img.shields.io/badge/Rust-1.70.0-orange)](https://www.rust-lang.org/)
 [![Polkadot SDK](https://img.shields.io/badge/Polkadot_SDK-1.0.0-5929FF)](https://github.com/paritytech/polkadot-sdk)
-[![StorageHub](https://img.shields.io/badge/StorageHub-0.9.0-FF6B6B)](https://github.com/Moonsong-Labs/storage-hub)
-[![KILT](https://img.shields.io/badge/KILT_SDK-0.27.0-FF6B6B)](https://www.kilt.io/)
+[![CESS](https://img.shields.io/badge/CESS-1.0.0-00B2FF)](https://www.cess.cloud/)
+[![Polkadot Identity](https://img.shields.io/badge/Polkadot_Identity-1.0.0-5929FF)](https://wiki.polkadot.network/learn/identity)
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
 [![Polkadot.js](https://img.shields.io/badge/Polkadot.js-10.9.1-E6007A)](https://polkadot.js.org/)
 [![Chainlink](https://img.shields.io/badge/Chainlink-2.0.0-375BD2)](https://chain.link/)
@@ -25,17 +25,16 @@
 - [Compliance](#compliance)
 
 ## Description
-Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
+Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using Polkadot's native Identity system and the People Chain for Decentralized Identifiers (DIDs). 
 
-Leveraging a custom Substrate chain (which can be deployed as either a public blockchain or a private/consortium blockchain) or a Substrate-based parachain in the Substrate ecosystem, Web3EMR uses StorageHub for off-chain storage. This flexible architecture allows for different deployment models to meet various regulatory and organizational requirements while maintaining Web3 principles of decentralization, transparency, and interoperability. The system is designed to comply with healthcare regulations (e.g., HIPAA, GDPR) in both public and private deployment scenarios.
+Leveraging a custom Substrate chain (which can be deployed as either a public blockchain or a private/consortium blockchain) or a Substrate-based parachain in the Substrate ecosystem, Web3EMR uses CESS (Cumulus Encrypted Storage System) for decentralized off-chain storage. This flexible architecture allows for different deployment models to meet various regulatory and organizational requirements while maintaining Web3 principles of decentralization, transparency, and interoperability. The system is designed to comply with healthcare regulations (e.g., HIPAA, GDPR) in both public and private deployment scenarios.
 
 ## Features
 
-- **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js) and KILT DIDs.
-- **Secure Data Storage**: EMRs and credentials are encrypted and stored on StorageHub, with hashes recorded on-chain for integrity.
-- **Attestation System**: Verifies patients, healthcare personnel, and entities (hospitals, clinics) through a Polkadot-based attestation pallet, ensuring only authorized participants interact with EMRs.
-- **Attestation System**: Verifies patients, healthcare personnel, and entities (hospitals, clinics) through a Substrate-based attestation pallet, ensuring only authorized participants interact with EMRs.
-- **Credential Validation**: Links medical licenses, nursing certifications, and hospital accreditations to KILT DIDs, validated by real-world organizations (e.g., medical boards, accreditation bodies).
+- **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js) and Polkadot Identity.
+- **Secure Data Storage**: EMRs and credentials are encrypted and stored on CESS (Cumulus Encrypted Storage System), with content-addressable hashes recorded on-chain for integrity and verification.
+- **Identity Management**: Leverages Polkadot's native Identity pallet and People Chain for secure, verifiable identities with hierarchical sub-identities.
+- **Credential Validation**: Links medical licenses, nursing certifications, and hospital accreditations to Polkadot DIDs, validated by real-world organizations (e.g., medical boards, accreditation bodies).
 - **Access Control**: Fine-grained permissions allow patients to grant/revoke provider access, with checks for valid credentials.
 - **Revocation Support**: Handles credential revocation (e.g., expired or suspended licenses) with on-chain updates.
 - **Interoperability**: Integrates with Polkadot's XCM for cross-chain data sharing, enabling multi-institutional ecosystems.
@@ -317,11 +316,11 @@ Check the blockchain's event log (via Polkadot.js Apps) for EMR and attestation 
 
 ## Security Considerations
 
-- **Encryption**: AES-256 for off-chain data on StorageHub
+- **Encryption**: AES-256 for off-chain data on CESS
 - **Key Management**: Secure patient/provider keys via Polkadot.js wallets and KILT DIDs
 - **Credential Validation**: Ensure real-world organizations attest credentials to prevent fraud
 - **Auditability**: Immutable on-chain logs for all interactions
-- **Privacy**: Use KILT's ZKPs for sensitive data (e.g., license details)
+- **Privacy**: Use selective disclosure and verification levels for sensitive data (e.g., license details)
 
 ## Contributing
 
