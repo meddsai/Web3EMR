@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Setup Substrate Blockchain Infrastructure
-# Status: pending
+# Status: in-progress
 # Dependencies: None
 # Priority: high
 # Description: Initialize and configure the Substrate-based blockchain that will serve as the foundation for the Web3EMR system.
@@ -45,3 +45,148 @@ impl pallet_nomination_pools::Config for Runtime {
 4. Test consensus mechanism with multiple validators
 5. Verify integration with off-chain workers
 6. Run integration tests for System, Timestamp, and Balances pallets
+
+# Subtasks:
+## 1. Install Development Environment and Initialize Substrate Node [in-progress]
+### Dependencies: None
+### Description: Set up the development environment by installing Rust, required dependencies, and initializing a new Substrate node template as the foundation for the Web3EMR system.
+### Details:
+1. Install Rust using rustup: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+2. Install required dependencies: `rustup update nightly && rustup target add wasm32-unknown-unknown --toolchain nightly`
+3. Install substrate node template: `git clone https://github.com/substrate-developer-hub/substrate-node-template`
+4. Navigate to the project directory and build the node: `cd substrate-node-template && cargo build --release`
+5. Verify installation by running the node in dev mode: `./target/release/node-template --dev`
+
+## 2. Configure Consensus Mechanism for NPoS [pending]
+### Dependencies: 1.1
+### Description: Modify the Substrate node to use Nominated Proof of Stake (NPoS) consensus mechanism instead of the default consensus algorithm.
+### Details:
+1. Add required pallets to `runtime/Cargo.toml`: pallet-staking, pallet-session, pallet-nomination-pools
+2. Configure the runtime in `runtime/src/lib.rs` to implement NPoS:
+```rust
+parameter_types! {
+    pub const SessionsPerEra: sp_staking::SessionIndex = 6;
+    pub const BondingDuration: pallet_staking::EraIndex = 24 * 28;
+    pub const MaxNominatorRewardedPerValidator: u32 = 256;
+}
+
+impl pallet_staking::Config for Runtime {
+    // NPoS configuration parameters
+}
+
+impl pallet_nomination_pools::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type Currency = Balances;
+    // Additional configuration
+}
+```
+3. Modify chain spec to define initial validators and nominators
+
+## 3. Configure Block Time and Runtime Performance [pending]
+### Dependencies: 1.2
+### Description: Adjust the blockchain configuration to set a 6-second block time and optimize for high transaction throughput (>1000 TPS).
+### Details:
+1. Configure block time in `runtime/src/lib.rs`:
+```rust
+// Set block time to 6 seconds
+parameter_types! {
+    pub const MinimumPeriod: u64 = 3000; // 3000 milliseconds (half of block time)
+}
+
+impl pallet_timestamp::Config for Runtime {
+    type Moment = u64;
+    type OnTimestampSet = Babe;
+    type MinimumPeriod = MinimumPeriod;
+}
+```
+2. Optimize for high throughput:
+```rust
+// Configure block weights for high throughput
+parameter_types! {
+    pub BlockWeights: frame_system::limits::BlockWeights = frame_system::limits::BlockWeights
+        ::builder()
+        .base_block(5_000_000_000)
+        .max_block(10_000_000_000)
+        .build_or_panic();
+    
+    pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength
+        ::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
+}
+```
+3. Adjust transaction pool configuration in `node/src/service.rs` to handle high transaction volume
+
+## 4. Implement Core Pallets and Runtime Configuration [pending]
+### Dependencies: 1.3
+### Description: Configure and implement the required core pallets (System, Timestamp, and Balances) in the runtime, ensuring they work together correctly.
+### Details:
+1. Configure System pallet in `runtime/src/lib.rs`:
+```rust
+impl frame_system::Config for Runtime {
+    type BaseCallFilter = frame_support::traits::Everything;
+    type BlockWeights = BlockWeights;
+    type BlockLength = BlockLength;
+    type AccountId = AccountId;
+    type RuntimeCall = RuntimeCall;
+    type Lookup = AccountIdLookup<AccountId, ()>;
+    type Hash = Hash;
+    type Hashing = BlakeTwo256;
+    type Block = Block;
+    // Additional configuration
+}
+```
+2. Configure Balances pallet:
+```rust
+parameter_types! {
+    pub const ExistentialDeposit: u128 = 1;
+}
+
+impl pallet_balances::Config for Runtime {
+    type MaxLocks = ConstU32<50>;
+    type MaxReserves = ();
+    type ReserveIdentifier = [u8; 8];
+    type Balance = Balance;
+    type RuntimeEvent = RuntimeEvent;
+    type DustRemoval = ();
+    type ExistentialDeposit = ExistentialDeposit;
+    type AccountStore = System;
+    type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
+}
+```
+3. Ensure all three pallets are included in the `construct_runtime!` macro
+
+## 5. Setup Development Environment and Off-chain Workers [pending]
+### Dependencies: 1.4
+### Description: Configure the development and testing environments, and set up off-chain workers for handling external data integration.
+### Details:
+1. Create development and testing chain specifications in `node/src/chain_spec.rs`:
+```rust
+pub fn development_config() -> ChainSpec {
+    // Development chain configuration
+}
+
+pub fn local_testnet_config() -> ChainSpec {
+    // Local testnet configuration
+}
+```
+2. Configure off-chain workers in `runtime/src/lib.rs`:
+```rust
+impl frame_system::offchain::SigningTypes for Runtime {
+    type Public = <Signature as traits::Verify>::Signer;
+    type Signature = Signature;
+}
+
+impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for Runtime
+where
+    RuntimeCall: From<LocalCall>,
+{
+    // Implementation for creating signed transactions in off-chain workers
+}
+
+impl frame_system::offchain::SendTransactionTypes<RuntimeCall> for Runtime {
+    type Extrinsic = UncheckedExtrinsic;
+    type OverarchingCall = RuntimeCall;
+}
+```
+3. Set up a Docker-based testing environment with a `docker-compose.yml` file for multi-node testing
+4. Create scripts for automated deployment and testing
+

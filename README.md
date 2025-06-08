@@ -1,7 +1,7 @@
 # Web3EMR dApp
 
 [![Rust](https://img.shields.io/badge/Rust-1.70.0-orange)](https://www.rust-lang.org/)
-[![Substrate](https://img.shields.io/badge/Substrate-4.0.0-5929FF)](https://substrate.dev/)
+[![Polkadot SDK](https://img.shields.io/badge/Polkadot_SDK-1.0.0-5929FF)](https://github.com/paritytech/polkadot-sdk)
 [![StorageHub](https://img.shields.io/badge/StorageHub-0.9.0-FF6B6B)](https://github.com/Moonsong-Labs/storage-hub)
 [![KILT](https://img.shields.io/badge/KILT_SDK-0.27.0-FF6B6B)](https://www.kilt.io/)
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
@@ -27,12 +27,13 @@
 ## Description
 Web3EMR is a decentralized Electronic Medical Record (EMR) with embedded AI/ML system built on a Substrate-based blockchain, transforming EMR into a Web3-native application. It empowers patients to control their medical records, ensures secure access for verified healthcare providers, and validates credentials (e.g., medical licenses, hospital accreditations) through real-world organizations using KILT Protocol for Decentralized Identifiers (DIDs). 
 
-Leveraging a custom Substrate chain (which can be deployed as either a public blockchain or a private/consortium blockchain) or a Substrate-based parachain in the Polkadot ecosystem, Web3EMR uses StorageHub for off-chain storage. This flexible architecture allows for different deployment models to meet various regulatory and organizational requirements while maintaining Web3 principles of decentralization, transparency, and interoperability. The system is designed to comply with healthcare regulations (e.g., HIPAA, GDPR) in both public and private deployment scenarios.
+Leveraging a custom Substrate chain (which can be deployed as either a public blockchain or a private/consortium blockchain) or a Substrate-based parachain in the Substrate ecosystem, Web3EMR uses StorageHub for off-chain storage. This flexible architecture allows for different deployment models to meet various regulatory and organizational requirements while maintaining Web3 principles of decentralization, transparency, and interoperability. The system is designed to comply with healthcare regulations (e.g., HIPAA, GDPR) in both public and private deployment scenarios.
 
 ## Features
 
 - **Patient-Centric Control**: Patients manage EMR access using cryptographic wallets (e.g., Polkadot.js) and KILT DIDs.
 - **Secure Data Storage**: EMRs and credentials are encrypted and stored on StorageHub, with hashes recorded on-chain for integrity.
+- **Attestation System**: Verifies patients, healthcare personnel, and entities (hospitals, clinics) through a Polkadot-based attestation pallet, ensuring only authorized participants interact with EMRs.
 - **Attestation System**: Verifies patients, healthcare personnel, and entities (hospitals, clinics) through a Substrate-based attestation pallet, ensuring only authorized participants interact with EMRs.
 - **Credential Validation**: Links medical licenses, nursing certifications, and hospital accreditations to KILT DIDs, validated by real-world organizations (e.g., medical boards, accreditation bodies).
 - **Access Control**: Fine-grained permissions allow patients to grant/revoke provider access, with checks for valid credentials.
@@ -80,8 +81,8 @@ graph TD
 
 ## Prerequisites
 
-- [Rust](https://www.rust-lang.org/): Stable toolchain (`rustup update stable`).
-- [Substrate](https://substrate.dev/): Substrate Node Template ([repository](https://github.com/substrate-developer-hub/substrate-node-template)).
+- [Rust](https://www.rust-lang.org/): Latest stable toolchain (`rustup update stable`).
+- [Polkadot SDK](https://github.com/paritytech/polkadot-sdk): For blockchain development.
 - [StorageHub](https://github.com/Moonsong-Labs/storage-hub): For off-chain storage.
 - [Node.js](https://nodejs.org/): For the React frontend (>=16.0.0).
 - [Polkadot.js](https://polkadot.js.org/extension/): Browser extension for wallet management.
@@ -98,18 +99,19 @@ git clone https://github.com/meddsai/Web3EMR.git
 cd Web3EMR
 ```
 
-### 2. Set Up the Substrate Blockchain
-
-Use the Substrate Node Template to create a custom chain:
+### 2. Set Up the Polkadot SDK Node
 
 ```bash
-git clone https://github.com/substrate-developer-hub/substrate-node-template
-cd substrate-node-template
-cargo build --release
+# Clone the Polkadot SDK
+git clone https://github.com/paritytech/polkadot-sdk
+cd polkadot-sdk
+
+# Build the node template
+cargo build --release -p node-template
 ./target/release/node-template --dev
 ```
 
-Alternatively, connect to an existing Substrate-based parachain in the Polkadot ecosystem (e.g., a testnet or mainnet).
+Alternatively, connect to an existing Polkadot-based parachain in the Polkadot ecosystem (e.g., a testnet or mainnet).
 
 ### 3. Set Up StorageHub
 
@@ -346,7 +348,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For questions or support, open an issue or contact the maintainers at meddsai@example.com.
+For questions or support, open an issue or contact [Kresna Sucandra](https://github.com/SHA888) at X [@ks_sha888](https://x.com/ks_sha888).
 
 ---
 

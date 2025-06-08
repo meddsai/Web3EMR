@@ -8,8 +8,62 @@
       "testStrategy": "1. Verify node startup and synchronization\n2. Measure block production time to ensure 6-second target is met\n3. Conduct load testing to verify >1000 TPS capacity\n4. Test consensus mechanism with multiple validators\n5. Verify integration with off-chain workers\n6. Run integration tests for System, Timestamp, and Balances pallets",
       "priority": "high",
       "dependencies": [],
-      "status": "pending",
-      "subtasks": []
+      "status": "in-progress",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Install Development Environment and Initialize Substrate Node",
+          "description": "Set up the development environment by installing Rust, required dependencies, and initializing a new Substrate node template as the foundation for the Web3EMR system.",
+          "dependencies": [],
+          "details": "1. Install Rust using rustup: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`\n2. Install required dependencies: `rustup update nightly && rustup target add wasm32-unknown-unknown --toolchain nightly`\n3. Install substrate node template: `git clone https://github.com/substrate-developer-hub/substrate-node-template`\n4. Navigate to the project directory and build the node: `cd substrate-node-template && cargo build --release`\n5. Verify installation by running the node in dev mode: `./target/release/node-template --dev`",
+          "status": "in-progress",
+          "testStrategy": "Verify successful installation by checking that the node starts and produces blocks in development mode. Confirm the Rust toolchain version and that all dependencies are correctly installed."
+        },
+        {
+          "id": 2,
+          "title": "Configure Consensus Mechanism for NPoS",
+          "description": "Modify the Substrate node to use Nominated Proof of Stake (NPoS) consensus mechanism instead of the default consensus algorithm.",
+          "dependencies": [
+            1
+          ],
+          "details": "1. Add required pallets to `runtime/Cargo.toml`: pallet-staking, pallet-session, pallet-nomination-pools\n2. Configure the runtime in `runtime/src/lib.rs` to implement NPoS:\n```rust\nparameter_types! {\n    pub const SessionsPerEra: sp_staking::SessionIndex = 6;\n    pub const BondingDuration: pallet_staking::EraIndex = 24 * 28;\n    pub const MaxNominatorRewardedPerValidator: u32 = 256;\n}\n\nimpl pallet_staking::Config for Runtime {\n    // NPoS configuration parameters\n}\n\nimpl pallet_nomination_pools::Config for Runtime {\n    type RuntimeEvent = RuntimeEvent;\n    type Currency = Balances;\n    // Additional configuration\n}\n```\n3. Modify chain spec to define initial validators and nominators",
+          "status": "pending",
+          "testStrategy": "Test the NPoS configuration by running the node and verifying that validators are selected correctly. Check that nomination and staking operations work as expected through extrinsics."
+        },
+        {
+          "id": 3,
+          "title": "Configure Block Time and Runtime Performance",
+          "description": "Adjust the blockchain configuration to set a 6-second block time and optimize for high transaction throughput (>1000 TPS).",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Configure block time in `runtime/src/lib.rs`:\n```rust\n// Set block time to 6 seconds\nparameter_types! {\n    pub const MinimumPeriod: u64 = 3000; // 3000 milliseconds (half of block time)\n}\n\nimpl pallet_timestamp::Config for Runtime {\n    type Moment = u64;\n    type OnTimestampSet = Babe;\n    type MinimumPeriod = MinimumPeriod;\n}\n```\n2. Optimize for high throughput:\n```rust\n// Configure block weights for high throughput\nparameter_types! {\n    pub BlockWeights: frame_system::limits::BlockWeights = frame_system::limits::BlockWeights\n        ::builder()\n        .base_block(5_000_000_000)\n        .max_block(10_000_000_000)\n        .build_or_panic();\n    \n    pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength\n        ::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);\n}\n```\n3. Adjust transaction pool configuration in `node/src/service.rs` to handle high transaction volume",
+          "status": "pending",
+          "testStrategy": "Perform load testing using tools like Jmeter or custom scripts to verify the node can handle >1000 TPS. Monitor block production to confirm 6-second block times are maintained under load."
+        },
+        {
+          "id": 4,
+          "title": "Implement Core Pallets and Runtime Configuration",
+          "description": "Configure and implement the required core pallets (System, Timestamp, and Balances) in the runtime, ensuring they work together correctly.",
+          "dependencies": [
+            3
+          ],
+          "details": "1. Configure System pallet in `runtime/src/lib.rs`:\n```rust\nimpl frame_system::Config for Runtime {\n    type BaseCallFilter = frame_support::traits::Everything;\n    type BlockWeights = BlockWeights;\n    type BlockLength = BlockLength;\n    type AccountId = AccountId;\n    type RuntimeCall = RuntimeCall;\n    type Lookup = AccountIdLookup<AccountId, ()>;\n    type Hash = Hash;\n    type Hashing = BlakeTwo256;\n    type Block = Block;\n    // Additional configuration\n}\n```\n2. Configure Balances pallet:\n```rust\nparameter_types! {\n    pub const ExistentialDeposit: u128 = 1;\n}\n\nimpl pallet_balances::Config for Runtime {\n    type MaxLocks = ConstU32<50>;\n    type MaxReserves = ();\n    type ReserveIdentifier = [u8; 8];\n    type Balance = Balance;\n    type RuntimeEvent = RuntimeEvent;\n    type DustRemoval = ();\n    type ExistentialDeposit = ExistentialDeposit;\n    type AccountStore = System;\n    type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;\n}\n```\n3. Ensure all three pallets are included in the `construct_runtime!` macro",
+          "status": "pending",
+          "testStrategy": "Write unit tests for each pallet configuration. Test basic functionality like account creation, balance transfers, and timestamp operations. Verify that the pallets interact correctly in the runtime."
+        },
+        {
+          "id": 5,
+          "title": "Setup Development Environment and Off-chain Workers",
+          "description": "Configure the development and testing environments, and set up off-chain workers for handling external data integration.",
+          "dependencies": [
+            4
+          ],
+          "details": "1. Create development and testing chain specifications in `node/src/chain_spec.rs`:\n```rust\npub fn development_config() -> ChainSpec {\n    // Development chain configuration\n}\n\npub fn local_testnet_config() -> ChainSpec {\n    // Local testnet configuration\n}\n```\n2. Configure off-chain workers in `runtime/src/lib.rs`:\n```rust\nimpl frame_system::offchain::SigningTypes for Runtime {\n    type Public = <Signature as traits::Verify>::Signer;\n    type Signature = Signature;\n}\n\nimpl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for Runtime\nwhere\n    RuntimeCall: From<LocalCall>,\n{\n    // Implementation for creating signed transactions in off-chain workers\n}\n\nimpl frame_system::offchain::SendTransactionTypes<RuntimeCall> for Runtime {\n    type Extrinsic = UncheckedExtrinsic;\n    type OverarchingCall = RuntimeCall;\n}\n```\n3. Set up a Docker-based testing environment with a `docker-compose.yml` file for multi-node testing\n4. Create scripts for automated deployment and testing",
+          "status": "pending",
+          "testStrategy": "Test off-chain workers by implementing a simple data fetching example. Verify the development and testing environments by running multiple nodes and checking their interaction. Create integration tests that verify the entire node setup works as expected."
+        }
+      ]
     },
     {
       "id": 2,
