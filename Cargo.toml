@@ -1,0 +1,43 @@
+[workspace]
+members = [
+    "node",
+    "pallets/*",
+    "runtime",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Unlicense"
+publish = false
+authors = ["Web3EMR Team"]
+description = "A decentralized Electronic Medical Record system built on Substrate"
+repository = "https://github.com/your-org/Web3EMR"
+homepage = "https://web3emr.tech"
+
+[workspace.dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+docify = "0.2.9"
+futures-timer = "3.0.2"
+polkadot-sdk = { version = "0.12.2", default-features = false }
+scale-info = { version = "2.5.0", default-features = false, features = ["derive"] }
+serde = { version = "1.0.163", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0.96", default-features = false }
+
+# Substrate dependencies
+frame-benchmarking = { version = "24.0.0", default-features = false }
+frame-support = { version = "24.0.0", default-features = false }
+frame-system = { version = "24.0.0", default-features = false }
+frame-system-rpc-runtime-api = { version = "24.0.0", default-features = false }
+sp-api = { version = "24.0.0", default-features = false }
+sp-core = { version = "24.0.0", default-features = false }
+sp-io = { version = "24.0.0", default-features = false }
+sp-runtime = { version = "24.0.0", default-features = false }
+sp-std = { version = "24.0.0", default-features = false }
+sp-version = { version = "24.0.0", default-features = false }
+
+# Node dependencies
+clap = { version = "4.0", features = ["derive"] }
+futures = { version = "0.3", default-features = false, features = ["thread-pool"] }
+jsonrpsee = { version = "0.24.0", default-features = false, features = ["server"] }

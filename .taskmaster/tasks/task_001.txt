@@ -1,12 +1,12 @@
 # Task ID: 1
-# Title: Setup Substrate Blockchain Infrastructure
-# Status: pending
+# Title: Setup Polkadot SDK Blockchain Infrastructure
+# Status: in-progress
 # Dependencies: None
 # Priority: high
-# Description: Initialize and configure the Substrate-based blockchain that will serve as the foundation for the Web3EMR system.
+# Description: Initialize and configure the Polkadot SDK-based blockchain that will serve as the foundation for the Web3EMR system.
 # Details:
-1. Install Rust and required dependencies for Substrate development
-2. Initialize a new Substrate node template
+1. Install Rust and required dependencies for Polkadot SDK development
+2. Initialize a new Polkadot SDK parachain
 3. Configure the runtime with required system pallets (System, Timestamp, Balances)
 4. Set up the consensus mechanism to Nominated Proof of Stake (NPoS)
 5. Configure block time to 6 seconds as specified
@@ -43,3 +43,60 @@ pub fn get_consensus_config() -> ConsensusConfig {
 5. Verify that all required pallets are correctly integrated
 6. Ensure proper functioning of the NPoS consensus mechanism
 7. Validate that the node can connect to the network and maintain synchronization
+
+# Subtasks:
+## 1. Setup Development Environment and Initialize Polkadot SDK [in-progress]
+### Dependencies: None
+### Description: Install all required dependencies and initialize a Polkadot SDK parachain as the foundation for the Web3EMR blockchain.
+### Details:
+1. Install Rust and Cargo using rustup
+2. Install required system packages (build-essential, cmake, etc.)
+3. Clone the Polkadot SDK repository
+4. Initialize the parachain project structure
+5. Verify the installation by building the parachain template
+6. Document the setup process for team members
+
+## 2. Configure Core Runtime Modules and Parameters [pending]
+### Dependencies: 1.1
+### Description: Configure the runtime with essential system pallets and set up basic blockchain parameters.
+### Details:
+1. Configure the System, Timestamp, and Balances pallets in the runtime
+2. Set appropriate weights and limits for transactions
+3. Configure block time to 6 seconds
+4. Set up appropriate storage items and genesis configuration
+5. Implement proper error handling for core functions
+
+## 3. Implement Nominated Proof of Stake Consensus [pending]
+### Dependencies: 1.2
+### Description: Configure and implement the Nominated Proof of Stake (NPoS) consensus mechanism for the blockchain.
+### Details:
+1. Add the Staking, Session, and Authority pallets to the runtime
+2. Configure validator selection and nomination parameters
+3. Implement the consensus algorithm with 6-second block time
+4. Set up appropriate reward mechanisms for validators
+5. Configure slashing conditions for misbehaving validators
+6. Implement validator rotation and session management
+
+## 4. Optimize for Transaction Throughput [pending]
+### Dependencies: 1.3
+### Description: Optimize the blockchain configuration to achieve the required transaction throughput of >1,000 TPS.
+### Details:
+1. Benchmark current transaction throughput
+2. Optimize transaction weights and fee calculations
+3. Configure block size limits and transaction queue parameters
+4. Implement parallel transaction execution where possible
+5. Optimize storage access patterns
+6. Configure runtime parameters for performance
+
+## 5. Set Up Network Environments and Synchronization [pending]
+### Dependencies: 1.4
+### Description: Configure development, testing, and production network environments and implement node synchronization.
+### Details:
+1. Create chain specifications for development, testing, and production networks
+2. Configure peer discovery and networking parameters
+3. Implement efficient block synchronization mechanisms
+4. Set up bootnodes for each network environment
+5. Configure firewall rules and network security
+6. Create documentation for node operators
+7. Implement monitoring for network health
+

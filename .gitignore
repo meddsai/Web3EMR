@@ -1,3 +1,33 @@
+!polkadot.service
+.cargo-remote.toml
+.direnv/
+.DS_Store
+.env*
+**/hfuzz_workspace/
+**/node_modules
+**/target/
+**/wip/*.stderr
+**/__pycache__/
+/.cargo/config
+/.envrc
+artifacts
+bin/node-template/Cargo.lock
+nohup.out
+polkadot_argument_parsing
+!docs/sdk/src/polkadot_sdk/polkadot.rs
+pwasm-alloc/Cargo.lock
+pwasm-libc/Cargo.lock
+release-artifacts
+release.json
+rls*.log
+runtime/wasm/target/
+substrate.code-workspace
+target/
+*.scale
+justfile
+rustc-ice-*
+
+
 # Logs
 logs
 *.log
@@ -9,17 +39,14 @@ dev-debug.log
 # Dependency directories
 node_modules/
 
-# Environment variables
-.env
+# Python
+**/__pycache__/
 
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Fuzzing
+**/hfuzz_workspace/
+
+# Exceptions
+!docs/sdk/src/polkadot_sdk/polkadot.rs
 
 # OS specific
 .DS_Store
