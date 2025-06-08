@@ -8,69 +8,78 @@ Phase 4 builds upon the analytics capabilities established in Phase 3, focusing 
 ## 2. Core Features for Phase 4
 
 ### 2.0 Technology Stack Update
-**Description**: Ensure AI/ML features are optimized for Polkadot SDK.
+**Description**: Ensure AI/ML features are optimized for Polkadot SDK and leverage People Chain for identity and CESS for data storage.
 
 **Requirements**:
-- Optimize AI/ML model inference for Polkadot's execution environment
-- Ensure secure enclave support for privacy-preserving computations
-- Update model training pipelines to work with Polkadot's off-chain workers
-- Document any SDK-specific considerations for AI/ML features
+- Optimize AI/ML model inference for Polkadot's execution environment with People Chain integration
+- Implement secure enclave support for privacy-preserving computations using Polkadot's TEE capabilities
+- Store all AI/ML models and encrypted training data on CESS with proper access controls
+- Use Polkadot Identity for secure, verifiable model authentication and access control
+- Document SDK-specific considerations for AI/ML features with People Chain integration
 
 **Acceptance Criteria**:
-- AI/ML models perform efficiently in the Polkadot environment
+- AI/ML models perform efficiently in the Polkadot environment with People Chain
+- All models and training data are securely stored on CESS with proper encryption
 - Privacy guarantees are maintained during model training and inference
-- Documentation is comprehensive and up-to-date
+- Model access is controlled through Polkadot Identity with proper permissions
+- Documentation is comprehensive and up-to-date with People Chain and CESS integration details
 
 ### 2.1 AI/ML Integration
-**Description**: Machine learning models for medical insights and predictive healthcare.
+**Description**: Machine learning models for medical insights and predictive healthcare using Polkadot Identity and CESS.
 
 **Requirements**:
-- Secure model training on encrypted or anonymized data
-- Federated learning capabilities for cross-institutional collaboration
-- Model validation and explainability features
-- Integration with clinical decision support systems
-- Version control and audit trail for AI models
+- Secure model training on encrypted data stored in CESS with access controlled by Polkadot Identity
+- Federated learning capabilities with model parameters secured by CESS and authenticated via People Chain
+- Model validation and explainability features with verifiable model provenance
+- Integration with clinical decision support systems using Polkadot Identity for access control
+- Version control and immutable audit trail for AI models stored on-chain
+- Support for hierarchical model access using sub-identities (up to 100 per account)
 
 **Acceptance Criteria**:
-- Models can be trained without exposing raw patient data
-- Federated learning successfully trains models across multiple institutions
-- Model decisions can be explained to healthcare providers
-- Clinical decision support provides valuable insights
-- All model usage is tracked in the audit system
+- Models can be trained on encrypted data in CESS without exposing raw patient data
+- Federated learning works across institutions with proper identity verification
+- Model decisions include explanations with verifiable data sources
+- Clinical decision support integrates with existing workflows using Polkadot Identity
+- All model usage is immutably logged on-chain with proper access controls
+- Model access respects patient consent stored in Polkadot Identity
 
 ### 2.2 Predictive Analytics
-**Description**: AI-powered predictive models for patient outcomes and population health.
+**Description**: AI-powered predictive models using Polkadot Identity and CESS for secure healthcare analytics.
 
 **Requirements**:
-- Risk prediction models for common conditions
-- Early warning systems for patient deterioration
-- Population health trend analysis
-- Personalized treatment recommendation systems
-- Privacy-preserving predictive analytics
+- Risk prediction models with inputs from CESS and identity-verified data
+- Early warning systems with real-time analysis of encrypted CESS data
+- Population health trend analysis with differential privacy guarantees
+- Personalized treatment recommendations authenticated via Polkadot Identity
+- Privacy-preserving analytics with on-chain access control and audit trails
+- Support for hierarchical data access patterns using sub-identities
 
 **Acceptance Criteria**:
-- Predictive models achieve clinically relevant accuracy
-- Early warning systems detect patient deterioration with high sensitivity
-- Population health trends are accurately identified
-- Treatment recommendations align with clinical best practices
-- All analytics maintain patient privacy
+- Predictive models maintain clinical accuracy while using encrypted CESS data
+- Early warning systems trigger alerts with minimal false positives/negatives
+- Population analytics preserve individual privacy through aggregation and noise
+- Treatment recommendations are explainable and verifiable through People Chain
+- All data access is properly authenticated and logged on-chain
+- Performance meets healthcare industry standards with sub-second response times
 
 ### 2.3 Explainable AI
-**Description**: Transparent AI systems that provide explanations for their recommendations.
+**Description**: Transparent AI systems with verifiable explanations using Polkadot Identity and on-chain data.
 
 **Requirements**:
-- Explanation mechanisms for all AI-generated insights
-- Confidence scores for predictions and recommendations
-- Visualization of factors influencing AI decisions
-- Traceability of AI decision pathways
-- Compliance with emerging explainable AI regulations
+- Explanation mechanisms with verifiable data sources from CESS
+- Confidence scores with uncertainty quantification visible through the UI
+- Visualization of decision factors with links to source data via CESS CIDs
+- Immutable audit trail of AI decision pathways stored on-chain
+- Compliance with explainable AI regulations with verifiable model provenance
+- Integration with Polkadot Identity for explanation access control
 
 **Acceptance Criteria**:
-- AI systems provide clear explanations for their recommendations
-- Healthcare providers can understand the basis for AI insights
-- Visualization tools effectively communicate AI decision factors
-- Decision pathways can be traced and audited
-- System complies with explainable AI requirements
+- AI systems provide cryptographically verifiable explanations
+- Healthcare providers can trace decisions back to source data in CESS
+- Visualization tools work with the Polkadot wallet for secure access
+- Decision pathways are stored immutably with proper identity context
+- System complies with regulations while maintaining patient privacy
+- All explanation access is properly authenticated and logged
 
 ### 2.4 Federated Learning Infrastructure
 **Description**: Distributed machine learning across healthcare entities without raw data sharing.
@@ -92,20 +101,23 @@ Phase 4 builds upon the analytics capabilities established in Phase 3, focusing 
 ## 3. Technical Architecture for Phase 4
 
 ### 3.1 AI/ML Layer
-**Description**: Components enabling secure, privacy-preserving machine learning.
+**Description**: Components enabling secure, privacy-preserving machine learning with Polkadot Identity and CESS.
 
 **Components**:
 - **Model Management**: System for managing ML model lifecycle
   - Functions: register_model, train_model, validate_model, deploy_model
-  - Features: Version control, audit trail, performance tracking
+  - Features: Version control with CESS hashes, on-chain audit trail, performance tracking
+  - Identity: Model access controlled via Polkadot Identity with hierarchical permissions
 
 - **Federated Learning**: Framework for distributed model training
   - Functions: initialize_federated_training, aggregate_model_updates, apply_differential_privacy
-  - Features: Secure aggregation, differential privacy, communication efficiency
+  - Features: Secure aggregation with CESS, differential privacy with People Chain verification
+  - Identity: Participant authentication via Polkadot Identity
 
-- **Explainability Engine**: Tools for generating explanations for AI decisions
+- **Explainability Engine**: Tools for generating verifiable explanations
   - Functions: generate_explanation, visualize_factors, trace_decision
-  - Features: Feature importance, counterfactual explanations, decision trees
+  - Features: Feature importance with CESS data references, verifiable decision paths
+  - Storage: Explanations stored in CESS with on-chain metadata and access control
 
 **Technical Requirements**:
 - Support for common ML frameworks (TensorFlow, PyTorch)
@@ -134,16 +146,18 @@ Phase 4 builds upon the analytics capabilities established in Phase 3, focusing 
 - Audit trail for all recommendations and alerts
 
 ### 3.3 Privacy-Preserving ML
-**Description**: Techniques ensuring patient privacy in machine learning.
+**Description**: Techniques ensuring patient privacy in machine learning with Polkadot Identity and CESS.
 
 **Components**:
-- **Differential Privacy**: Implementation of differential privacy for model training
+- **Differential Privacy**: Implementation of differential privacy with on-chain governance
   - Functions: add_noise, calculate_privacy_budget, track_privacy_expenditure
-  - Features: Adaptive privacy budget, privacy guarantees
+  - Features: Adaptive privacy budget with People Chain verification, on-chain privacy guarantees
+  - Storage: Privacy parameters stored in CESS with access control
 
-- **Secure Multi-Party Computation**: Framework for computation on encrypted data
-  - Functions: initialize_smpc, compute_on_encrypted, aggregate_results
-  - Features: Threshold encryption, secret sharing
+- **Secure Computation**: Framework for computation on encrypted data
+  - Functions: initialize_secure_computation, compute_on_encrypted, aggregate_results
+  - Features: Threshold encryption with Polkadot Identity, secure aggregation
+  - Identity: Computation participants authenticated via Polkadot Identity
 
 **Technical Requirements**:
 - Formal privacy guarantees (ε-differential privacy)
@@ -178,20 +192,22 @@ Phase 4 builds upon the analytics capabilities established in Phase 3, focusing 
 **Impact**: High
 **Probability**: Medium
 **Mitigation**:
-- Implement data quality assessment tools
-- Develop models robust to data quality issues
-- Use transfer learning and pre-trained models where appropriate
-- Create synthetic data generation capabilities for testing
+- Implement data quality assessment tools with CESS metadata verification
+- Develop models robust to data quality issues with Polkadot Identity for data provenance
+- Use transfer learning with models stored in CESS and verified via People Chain
+- Create synthetic data generation with differential privacy guarantees
+- Leverage on-chain governance for data quality standards
 
 **Risk**: Model bias leading to healthcare disparities
 **Impact**: Critical
 **Probability**: High
 **Mitigation**:
-- Implement bias detection and mitigation techniques
-- Ensure diverse training data representation
-- Regular bias audits of deployed models
-- Transparent reporting of model limitations
-- Involve diverse stakeholders in model development and validation
+- Implement bias detection with metrics stored on-chain
+- Ensure diverse training data with CESS metadata and Polkadot Identity for data sources
+- Regular bias audits with results recorded immutably
+- Transparent reporting with verifiable model performance data
+- On-chain governance for model validation and approval
+- Community review through Polkadot's decentralized governance
 
 ### 5.2 Operational Risks
 

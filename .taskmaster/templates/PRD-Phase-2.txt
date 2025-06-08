@@ -13,17 +13,21 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 **Requirements**:
 - Update all blockchain components to use the latest Polkadot SDK
 - Integrate with CESS (Cumulus Encrypted Storage System) for decentralized storage
-- Ensure compatibility with Polkadot's NPoS consensus
+- Ensure compatibility with Polkadot's NPoS consensus and People Chain for identity
 - Update development toolchain and documentation for CESS integration
 - Test all existing functionality with the new storage solution
 - Implement content addressing using CIDs (Content Identifiers)
+- Integrate with Polkadot's Identity pallet for decentralized identity management
+- Ensure end-to-end encryption for all stored EMRs
 
 **Acceptance Criteria**:
-- All blockchain functionality works with Polkadot SDK
-- EMRs are successfully stored and retrieved from CESS
+- All blockchain functionality works with Polkadot SDK and People Chain integration
+- EMRs are successfully stored and retrieved from CESS with proper encryption
 - Content addressing with CIDs is functioning correctly
-- Performance meets or exceeds previous benchmarks with the new storage layer
+- Performance meets or exceeds healthcare industry standards (sub-second retrieval times)
 - Updated documentation reflects the new technology stack and storage solution
+- Identity management through Polkadot Identity is fully functional
+- End-to-end encryption is properly implemented for all data at rest and in transit
 
 ### 2.1 Credential Attestation System
 **Description**: A system for verifying and attesting the credentials of healthcare entities and personnel using Polkadot Identity.
@@ -80,18 +84,23 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 - Storage costs and performance meet healthcare industry requirements
 
 ### 2.4 Enhanced Identity Management
-**Description**: Advanced KILT Protocol integration with expanded credential management.
+**Description**: Advanced Polkadot Identity integration with expanded credential management using People Chain.
 
 **Requirements**:
-- Support for complex credential structures and hierarchies
-- Enhanced verification mechanisms for credentials
-- Support for credential delegation and proxy access
-- Improved revocation mechanisms
+- Support for complex hierarchical identity structures (up to 100 sub-identities)
+- Enhanced verification mechanisms for credentials through People Chain
+- Support for credential delegation and proxy access using sub-identities
+- Improved revocation mechanisms with on-chain verification
+- Integration with Polkadot's Identity pallet for credential verification
+- Support for selective disclosure of identity attributes
 
 **Acceptance Criteria**:
-- Complex credential structures can be created and verified
-- Delegation of access works correctly and securely
+- Complex hierarchical identity structures can be created and managed
+- Delegation of access works correctly and securely using sub-identities
 - Revocation mechanisms function properly and immediately
+- Identity verification through People Chain is functional
+- Selective disclosure of attributes works as expected
+- Integration with Polkadot's Identity pallet is complete and functional
 
 ## 3. Technical Architecture for Phase 2
 
@@ -114,23 +123,27 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 - Support for regulatory compliance queries
 
 ### 3.2 Identity Layer
-**Description**: KILT Protocol integration for decentralized identity management.
+**Description**: Polkadot Identity integration with People Chain for decentralized identity management.
 
 **Components**:
-- **KILT SDK Integration**: Interface for creating and managing DIDs
-  - Functions: create_did, verify_did, manage_credentials
+- **Polkadot Identity Integration**: Interface for creating and managing DIDs
+  - Functions: create_identity, update_identity, manage_sub_identities, verify_identity
+  - Features: Hierarchical identities, up to 100 sub-identities per account
 
-- **Zero-Knowledge Proof Module**: Privacy-preserving credential verification
-  - Functions: generate_proof, verify_proof
+- **Credential Management**:
+  - Functions: issue_credential, verify_credential, revoke_credential
+  - Features: Selective disclosure, time-limited credentials, delegation
 
 - **Attestation Module**: Management of credential attestations
-  - Functions: issue_attestation, verify_attestation, revoke_attestation
+  - Functions: request_attestation, issue_attestation, verify_attestation, revoke_attestation
+  - Features: On-chain verification, revocation lists, expiration handling
 
 **Technical Requirements**:
-- Support for W3C DID standard
-- Integration with KILT's attestation mechanisms
-- Support for selective disclosure of credential attributes
-- Efficient ZKP generation and verification
+- Full support for W3C DID standard
+- Integration with Polkadot's Identity pallet and People Chain
+- Support for selective disclosure of attributes
+- Efficient verification of on-chain credentials
+- Support for identity recovery mechanisms
 
 ### 3.3 Frontend Layer Expansion
 **Description**: Enhanced web applications for different user types.
@@ -160,7 +173,7 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 - Implement comprehensive testing
 
 **Deliverables**:
-- Complete KILT DID integration
+- Complete Polkadot Identity integration with People Chain
 - Functional patient and provider portals
 - Enhanced encryption and security features
 - Comprehensive test suite with >80% coverage
@@ -179,13 +192,14 @@ Phase 2 builds upon the foundation established in Phase 1, focusing on implement
 - Conduct regular security audits
 - Implement a bug bounty program for security researchers
 
-**Risk**: Integration challenges with KILT Protocol
+**Risk**: Integration challenges with Polkadot Identity and People Chain
 **Impact**: High
 **Probability**: Medium
 **Mitigation**:
-- Establish direct communication with KILT development team
-- Create comprehensive integration tests
-- Develop fallback mechanisms for critical functions
+- Maintain close coordination with the Polkadot ecosystem teams
+- Create comprehensive integration tests for identity verification flows
+- Develop fallback mechanisms for critical identity functions
+- Leverage the active Polkadot developer community for support
 
 ### 5.2 Operational Risks
 

@@ -8,71 +8,79 @@ Phase 6 focuses on extending Web3EMR to integrate with Enterprise Risk Managemen
 ## 2. Core Features for Phase 6
 
 ### 2.0 Technology Stack Update
-**Description**: Ensure enterprise integration features are optimized for Polkadot SDK.
+**Description**: Ensure enterprise integration features are optimized for Polkadot SDK with People Chain and CESS.
 
 **Requirements**:
-- Update all enterprise integration components to use latest Polkadot SDK standards
-- Ensure API Gateway is compatible with Polkadot's latest features
-- Optimize data transformation for enterprise system integration
-- Document all SDK-specific enterprise integration patterns
+- Update all enterprise integration components to use latest Polkadot SDK and People Chain standards
+- Ensure API Gateway integrates with Polkadot Identity for authentication
+- Implement CESS storage for all enterprise data exchange with proper encryption
+- Optimize data transformation between enterprise systems and CESS storage
+- Document all SDK-specific patterns with People Chain and CESS integration
 
 **Acceptance Criteria**:
-- All enterprise integration features work with Polkadot SDK
-- Performance meets enterprise requirements
-- Documentation is comprehensive and up-to-date
+- All enterprise integration features work with Polkadot SDK and People Chain
+- API Gateway properly authenticates using Polkadot Identity
+- Enterprise data is securely stored in CESS with proper access controls
+- Performance meets enterprise requirements with sub-second response times
+- Documentation includes comprehensive People Chain and CESS integration details
 
 ### 2.1 Enterprise Integration Layer
-**Description**: A comprehensive API Gateway and connector system enabling secure integration with enterprise systems.
+**Description**: A comprehensive API Gateway and connector system with Polkadot Identity and CESS integration.
 
 **Requirements**:
-- Standardized API interfaces for enterprise system integration
-- Support for common enterprise authentication protocols (OAuth 2.0, SAML)
-- Data transformation between blockchain/Web3 formats and enterprise formats
-- Rate limiting and security controls for API access
-- Comprehensive logging and monitoring
+- Standardized API interfaces with Polkadot Identity authentication
+- Support for enterprise protocols (OAuth 2.0, SAML) with Polkadot Identity integration
+- Data transformation between CESS storage and enterprise formats
+- Rate limiting and security controls using on-chain identity verification
+- Comprehensive on-chain logging and monitoring with CESS storage
+- Support for verifiable credentials for enterprise partners
 
 **Acceptance Criteria**:
-- Enterprise systems can securely connect to Web3EMR via standardized APIs
-- Authentication and authorization work correctly across systems
-- Data transformations maintain data integrity and security
-- API usage is properly monitored and rate-limited
-- All integrations maintain compliance with healthcare regulations
+- Enterprise systems authenticate via Polkadot Identity with proper permissions
+- Authentication and authorization work across systems with verifiable credentials
+- Data transformations maintain integrity with CESS content addressing
+- API usage is monitored with on-chain logging and rate limits
+- All integrations comply with healthcare regulations and patient consent
+- Audit trails are stored immutably with proper identity context
 
 ### 2.2 ERM System Connectors
-**Description**: Specialized connectors for Enterprise Risk Management systems and other enterprise platforms.
+**Description**: Specialized connectors with Polkadot Identity and CESS integration.
 
 **Requirements**:
-- SAP connector with support for healthcare modules
-- Insurance system connectors with ACORD standard support
-- Supply chain management system connectors
-- Financial system connectors
-- Marketing/CRM system connectors
-- Customizable connector framework for additional systems
+- SAP connector with People Chain identity verification
+- Insurance system connectors with verifiable credentials
+- Supply chain connectors with CESS-stored product verification
+- Financial connectors with on-chain transaction verification
+- Marketing/CRM connectors with privacy-preserving analytics
+- Custom connector framework with Polkadot Identity integration
+- All connectors store and retrieve data from CESS with proper encryption
 
 **Acceptance Criteria**:
-- SAP systems can exchange data with Web3EMR securely
-- Insurance systems can verify coverage and process claims
-- Supply chain systems can verify medical supplies and equipment
-- Financial systems can access authorized billing and payment data
-- Marketing systems can access consented, anonymized patient data
-- Custom connectors can be developed using the connector framework
+- SAP systems integrate with proper identity verification
+- Insurance systems process claims with verifiable credentials
+- Supply chain data is verified against CESS-stored records
+- Financial transactions are recorded on-chain with proper authorization
+- Marketing systems access only consented, anonymized data from CESS
+- Custom connectors can be developed with standardized identity and storage interfaces
 
 ### 2.3 Blockchain Oracle System
-**Description**: Enhanced oracle system for secure data exchange between on-chain and off-chain systems.
+**Description**: Enhanced oracle system with Polkadot Identity and CESS integration.
 
 **Requirements**:
-- Integration with Chainlink or similar oracle services
-- Specialized oracles for different enterprise system types
-- Secure data validation and verification
-- Support for complex data types and transformations
-- Audit trail for all oracle operations
+- Integration with Polkadot's off-chain oracle framework
+- Specialized oracles with People Chain identity verification
+- Secure data validation with CESS content addressing
+- Support for complex data types with CESS storage
+- Immutable audit trail for all oracle operations on-chain
+- Decentralized oracle networks for critical data feeds
 
 **Acceptance Criteria**:
-- Oracles successfully facilitate data exchange between systems
-- Data integrity is maintained across all exchanges
-- Complex data types are handled correctly
-- All oracle operations are properly logged and auditable
-- System is resilient to oracle failures or attacks
+- Oracles authenticate using Polkadot Identity
+- Data integrity is verified using CESS content hashes
+- Complex data is stored in CESS with on-chain references
+- All operations are logged with proper identity context
+- System maintains high availability with decentralized oracles
+- Oracle data feeds are verifiable through People Chain
 
 ### 2.4 Enterprise Data Governance
 **Description**: Comprehensive data governance framework for enterprise integrations.
@@ -94,7 +102,7 @@ Phase 6 focuses on extending Web3EMR to integrate with Enterprise Risk Managemen
 ## 3. Technical Architecture for Phase 6
 
 ### 3.1 Enterprise Integration Layer
-**Description**: Core components enabling enterprise system integration.
+**Description**: Core components enabling secure enterprise system integration with Polkadot Identity and CESS.
 
 ```mermaid
 graph TD
@@ -102,6 +110,8 @@ graph TD
         AG[API Gateway] --- DT[Data Transformer]
         AG --- SG[Security Gateway]
         AG --- CM[Consent Manager]
+        AG --- ID[Identity Verifier]
+        AG --- DS[Data Shield]
     end
     
     subgraph "Connector Modules"
@@ -115,6 +125,8 @@ graph TD
     subgraph "Web3EMR Core"
         AG --- BL[Blockchain Layer]
         DT --- AA[Analytics & AI Layer]
+        DS --- CESS[CESS Storage]
+        ID --- PC[People Chain]
     end
     
     subgraph "External Systems"
@@ -127,21 +139,29 @@ graph TD
 ```
 
 **Components**:
-- **API Gateway**: Central interface for all enterprise integrations
-  - Functions: route_request, authenticate, authorize, rate_limit
-  - Features: OpenAPI specification, versioning, documentation
+- **API Gateway**: Central interface with Polkadot Identity
+  - Functions: route_request, authenticate_with_did, authorize, rate_limit
+  - Features: OpenAPI with DID Auth, versioning, documentation
 
-- **Data Transformer**: Handles data format conversions
+- **Data Transformer**: Handles data format conversions with CESS
   - Functions: transform_to_enterprise, transform_from_enterprise, validate_schema
-  - Features: Support for healthcare standards, enterprise formats
+  - Features: CESS storage integration, content addressing
 
-- **Security Gateway**: Manages security for enterprise connections
+- **Security Gateway**: Manages security with Polkadot Identity
   - Functions: authenticate_enterprise, authorize_access, encrypt_channel
-  - Features: OAuth 2.0, SAML, JWT support
+  - Features: DID Auth, verifiable credentials, zero-trust architecture
 
-- **Consent Manager**: Manages patient consent for enterprise data sharing
+- **Consent Manager**: On-chain consent management
   - Functions: verify_consent, record_consent_decision, enforce_consent
-  - Features: Granular consent options, audit trail
+  - Features: Granular consent with People Chain verification
+  
+- **Identity Verifier**: Validates Polkadot Identity credentials
+  - Functions: verify_did, check_permissions, issue_vc
+  - Features: Integration with People Chain, credential verification
+  
+- **Data Shield**: Manages CESS storage and encryption
+  - Functions: encrypt_data, store_in_cess, retrieve_from_cess
+  - Features: Client-side encryption, key management, access control
 
 **Technical Requirements**:
 - High availability (99.9% uptime)
@@ -178,26 +198,31 @@ graph TD
 - Compliance with industry-specific standards
 
 ### 3.3 Blockchain Oracle System
-**Description**: Enhanced oracle system for secure data exchange.
+**Description**: Enhanced oracle system with Polkadot Identity and CESS integration.
 
 ```mermaid
 sequenceDiagram
     participant ES as Enterprise System
-    participant OR as Oracle
+    participant ID as Identity Verifier
+    participant OR as Oracle Network
+    participant CESS as CESS Storage
     participant BL as Blockchain Layer
     
-    ES->>OR: Request data exchange
-    OR->>OR: Validate request
-    OR->>BL: Submit validated data
-    BL->>BL: Process on-chain
-    BL->>OR: Return result
-    OR->>ES: Deliver verified result
+    ES->>ID: Authenticate with DID
+    ID-->>ES: Issue verifiable credential
+    ES->>OR: Request data exchange (signed VC)
+    OR->>ID: Verify credential
+    OR->>CESS: Store/retrieve data
+    OR->>BL: Submit transaction with CESS reference
+    BL-->>OR: Transaction receipt
+    OR-->>ES: Return result with CESS CID
 ```
 
 **Components**:
-- **Oracle Network**: Distributed network of oracles for data validation
-  - Functions: validate_data, secure_transmission, verify_source
-  - Features: Chainlink integration, multi-oracle consensus
+- **Oracle Network**: Decentralized oracles with Polkadot Identity
+  - Functions: validate_data, verify_identity, submit_transaction
+  - Features: Integration with Polkadot's off-chain workers, CESS storage
+  - Identity: Verified oracles with reputation system
 
 - **Data Adapters**: Specialized adapters for different data types
   - Functions: adapt_healthcare_data, adapt_financial_data, adapt_supply_data
@@ -232,13 +257,15 @@ sequenceDiagram
 
 ### 5.1 Technical Risks
 
-**Risk**: Integration complexity with legacy enterprise systems
+**Risk**: Integration complexity with legacy systems
 **Impact**: High
 **Probability**: High
 **Mitigation**:
-- Develop robust adapter patterns for legacy systems
-- Create comprehensive integration testing framework
-- Implement graceful degradation for integration failures
+- Develop robust adapter patterns with CESS storage layer
+- Create comprehensive testing framework with People Chain verification
+- Implement graceful degradation with local caching in CESS
+- Use Polkadot Identity for secure authentication
+- Design for incremental adoption of new identity and storage standards
 - Provide detailed documentation for each enterprise system type
 - Establish integration support team with enterprise expertise
 
@@ -276,15 +303,15 @@ sequenceDiagram
 
 ### 5.3 Regulatory Risks
 
-**Risk**: Cross-system compliance challenges
+**Risk**: Data consistency across systems
 **Impact**: Critical
-**Probability**: High
+**Probability**: Medium
 **Mitigation**:
-- Implement compliance checking in all data exchanges
-- Create comprehensive audit trails across systems
-- Engage compliance experts for each enterprise domain
-- Design governance frameworks that enforce regulatory requirements
-- Provide compliance reporting across integrated systems
+- Use CESS as the source of truth with content addressing
+- Implement event sourcing with on-chain verification
+- Use Polkadot's off-chain workers for consistency checks
+- Implement conflict resolution with identity-based voting
+- Regular consistency checks with CESS content hashes
 
 ## 6. Logical Dependency Chain for Phase 6
 

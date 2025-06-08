@@ -8,18 +8,21 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 ## 2. Core Features for Phase 3
 
 ### 2.0 Technology Stack Update
-**Description**: Ensure all Phase 3 features are compatible with Polkadot SDK.
+**Description**: Ensure all Phase 3 features are compatible with Polkadot SDK and leverage People Chain for identity.
 
 **Requirements**:
-- Verify all interoperability features work with Polkadot's XCM v3
-- Update cross-chain communication to use latest Polkadot standards
-- Ensure privacy features leverage Polkadot's latest cryptographic primitives
-- Update documentation to reflect any SDK-specific implementations
+- Verify all interoperability features work with Polkadot's XCM v3 and People Chain
+- Update cross-chain communication to use latest Polkadot standards and People Chain integration
+- Ensure privacy features leverage Polkadot's latest cryptographic primitives and Identity pallet
+- Implement CESS storage for all new data storage requirements
+- Update documentation to reflect SDK-specific implementations and People Chain integration
 
 **Acceptance Criteria**:
-- All Phase 3 features function correctly with Polkadot SDK
-- Cross-chain communication is stable and secure
-- Updated documentation is comprehensive and accurate
+- All Phase 3 features function correctly with Polkadot SDK and People Chain
+- Cross-chain communication is stable and secure with proper identity verification
+- Privacy features leverage Polkadot's Identity pallet and cryptographic primitives
+- All new data is stored using CESS with proper encryption and access controls
+- Updated documentation is comprehensive and accurately reflects current implementation
 
 ### 2.1 Interoperability
 **Description**: Cross-chain communication capabilities for sharing data across different healthcare systems.
@@ -36,19 +39,21 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 - Shared data maintains its integrity and security across systems
 
 ### 2.2 Advanced Privacy Features
-**Description**: Enhanced privacy mechanisms including zero-knowledge proofs for sensitive data protection.
+**Description**: Enhanced privacy mechanisms including selective disclosure and advanced encryption using Polkadot Identity and CESS.
 
 **Requirements**:
-- Implementation of zero-knowledge proofs (ZKPs) for credential verification
-- Selective disclosure of medical record information
-- Enhanced encryption for specific sensitive data types
-- Privacy-preserving data sharing protocols
+- Implementation of selective disclosure using Polkadot's Identity pallet
+- Hierarchical identity structures for fine-grained access control (up to 100 sub-identities)
+- Enhanced encryption using AES-256 for all sensitive data stored on CESS
+- Privacy-preserving data sharing protocols with on-chain access control
+- Integration with People Chain for verifiable credentials and attestations
 
 **Acceptance Criteria**:
-- ZKPs successfully verify credentials without revealing sensitive information
-- Patients can selectively share portions of their medical records
-- Enhanced encryption provides additional protection for sensitive data
-- Privacy is maintained during cross-system data sharing
+- Selective disclosure works as expected using Polkadot Identity
+- Patients can define fine-grained access controls using hierarchical identities
+- All sensitive data is properly encrypted both in transit and at rest in CESS
+- Privacy is maintained during cross-system data sharing with proper access controls
+- Verification of credentials is efficient and secure using People Chain
 
 ### 2.3 Administrative Tools
 **Description**: Comprehensive tools for healthcare entities to manage their personnel and operations.
@@ -66,20 +71,23 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 - Integration with existing systems works seamlessly
 
 ### 2.4 Data Analytics
-**Description**: Privacy-preserving analytics on medical data with patient consent.
+**Description**: Privacy-preserving analytics on medical data with patient consent using CESS and Polkadot Identity.
 
 **Requirements**:
 - Differential privacy mechanisms to protect individual patient data
-- Aggregated analytics for population health insights
-- Patient consent management for analytics participation
-- Role-based access control for analytics results
-- Support for custom queries and reports
+- Aggregated analytics for population health insights with CESS storage
+- Patient consent management using Polkadot Identity for analytics participation
+- Role-based access control for analytics results with on-chain verification
+- Support for custom queries and reports with privacy guarantees
+- Integration with People Chain for verifiable consent and data access
 
 **Acceptance Criteria**:
 - Analytics can be performed without exposing individual patient data
-- Patients can opt in or out of analytics programs
-- Healthcare entities can access authorized analytics dashboards
-- System maintains privacy guarantees even with multiple queries
+- Patients can manage analytics consent through their Polkadot Identity
+- Healthcare entities can access authorized analytics dashboards with proper authentication
+- System maintains strong privacy guarantees even with complex queries
+- All analytics data access is properly logged and auditable on-chain
+- Consent management integrates seamlessly with People Chain for verification
 
 ## 3. Technical Architecture for Phase 3
 
@@ -102,22 +110,28 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 - Support for multiple healthcare data standards
 
 ### 3.2 Privacy Layer
-**Description**: Enhanced privacy mechanisms for sensitive data protection.
+**Description**: Enhanced privacy mechanisms for sensitive data protection using Polkadot Identity and CESS.
 
 **Components**:
-- **ZKP Module**: Implementation of zero-knowledge proofs for credential verification
-  - Functions: generate_proof, verify_proof, manage_proofs
-  - Features: Efficient proof generation and verification
+- **Identity Module**: Implementation of selective disclosure using Polkadot Identity
+  - Functions: create_identity, manage_sub_identities, verify_identity
+  - Features: Hierarchical identities (up to 100 sub-identities), selective disclosure
 
-- **Selective Disclosure**: Mechanisms for sharing partial data
-  - Functions: create_disclosure, verify_disclosure, revoke_disclosure
-  - Features: Fine-grained control over shared data
+- **Encryption Module**: Management of data encryption for CESS storage
+  - Functions: encrypt_data, decrypt_data, manage_keys
+  - Features: AES-256 encryption, client-side key management, key rotation
+
+- **Access Control**: Fine-grained access management
+  - Functions: grant_access, revoke_access, verify_access
+  - Features: On-chain access control lists, time-based permissions
 
 **Technical Requirements**:
-- Efficient ZKP generation and verification
-- Support for complex credential structures
-- Minimal performance impact on system operations
-- Compliance with privacy regulations
+- Integration with Polkadot's Identity pallet and People Chain
+- Support for hierarchical identity structures
+- End-to-end encryption for all sensitive data
+- Efficient key management and rotation
+- Compliance with healthcare privacy regulations (HIPAA, GDPR)
+- Sub-second response times for access verification
 
 ### 3.3 Administrative Layer
 **Description**: Tools and interfaces for healthcare entity management.
@@ -177,27 +191,29 @@ Phase 3 builds upon the core functionality established in Phases 1 and 2, focusi
 
 ### 5.1 Technical Risks
 
-**Risk**: Complexity in implementing ZKPs correctly
+**Risk**: Complexity in implementing privacy-preserving features with Polkadot Identity
 **Impact**: High
-**Probability**: High
+**Probability**: Medium
 **Mitigation**:
-- Engage cryptography experts for implementation review
-- Use established ZKP libraries where possible
-- Conduct thorough testing of ZKP implementation
-- Start with simpler ZKP applications before expanding
+- Leverage Polkadot's built-in Identity pallet functionality
+- Work closely with the Polkadot and People Chain development communities
+- Start with basic identity verification before implementing advanced features
+- Conduct thorough testing of all privacy features
+- Engage security experts for implementation review
 
 **Risk**: Privacy leakage through analytics or model inference
 **Impact**: Critical
 **Probability**: Medium
 **Mitigation**:
 - Implement robust differential privacy with formal guarantees
-- Use secure multi-party computation for sensitive analytics
-- Conduct privacy impact assessments for all analytics features
-- Develop privacy-preserving machine learning techniques
+- Use CESS's built-in encryption and access controls for all stored data
+- Implement strict data minimization principles in analytics
+- Conduct regular privacy impact assessments and security audits
+- Ensure all analytics features respect patient consent stored in Polkadot Identity
 
 ### 5.2 Operational Risks
 
-**Risk**: User confusion with advanced privacy features
+**Risk**: User confusion with identity and privacy features
 **Impact**: Medium
 **Probability**: High
 **Mitigation**:

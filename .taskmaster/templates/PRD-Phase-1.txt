@@ -51,7 +51,7 @@ Current EMR systems suffer from several critical issues:
 - All access control changes are reflected immediately in the system
 
 ### 2.2 Polkadot Identity Integration
-**Description**: Secure, verifiable digital identities using Polkadot's native Identity pallet and People Chain.
+**Description**: Integration with Polkadot's Identity pallet and People Chain for secure, verifiable digital identities for all system participants.
 
 **Requirements**:
 - Integration with Polkadot's People Chain for identity management
@@ -60,6 +60,9 @@ Current EMR systems suffer from several critical issues:
 - Selective disclosure of identity attributes for privacy preservation
 - Support for identity recovery mechanisms
 - Integration with the EMR system for access control
+- Verification of DIDs through the People Chain
+- Linking of DIDs to on-chain attestations and credentials
+- Support for hierarchical identities with up to 100 sub-identities
 
 **Acceptance Criteria**:
 - Users can create and manage their Polkadot Identity
@@ -68,37 +71,33 @@ Current EMR systems suffer from several critical issues:
 - Selective disclosure of attributes works as expected
 - Identity recovery mechanisms are secure and reliable
 - EMR access control integrates with Polkadot Identity
-**Description**: Integration with KILT Protocol for secure, verifiable digital identities for all system participants.
-
-**Requirements**:
-- Support for KILT DID creation and management for patients, personnel, and entities
-- Verification of DIDs through the KILT network
-- Linking of DIDs to on-chain attestations and credentials
-- Support for zero-knowledge proofs for privacy-preserving verification
-
-**Acceptance Criteria**:
-- All users can create and manage KILT DIDs through the system
-- DIDs are verifiable on the KILT network
+- All users can create and manage Polkadot Identities through the system
+- DIDs are verifiable on the People Chain
 - Attestations are correctly linked to DIDs
-- Zero-knowledge proofs function correctly for credential verification without revealing sensitive data
+- Hierarchical identity structures are supported
 
 ### 2.3 Secure EMR Storage and Access
-**Description**: Encrypted storage of EMRs on StorageHub with blockchain-based access control.
+**Description**: Encrypted storage of EMRs on CESS (Cumulus Encrypted Storage System) with blockchain-based access control.
 
 **Requirements**:
 - EMRs must be encrypted using AES-256 before storage
-- Only hash references to EMRs are stored on-chain
-- Access control lists are maintained on the blockchain
-- Only authorized users can retrieve and decrypt EMRs
-- All access attempts are logged on-chain
+- Content-addressable hashes (CIDs) of EMRs are stored on-chain, with actual data on CESS
+- Access control lists (ACLs) stored on-chain for each EMR
+- Support for fine-grained access permissions (read, write, share)
+- Immutable audit trail of all access attempts
+- Data integrity verification using CESS's PoDR² (Proof of Data Reduplication and Recovery)
+- Support for file sizes up to 100MB per EMR
+- Redundant storage across multiple CESS nodes for high availability
 
 **Acceptance Criteria**:
-- EMRs are successfully encrypted and stored on CESS (Cumulus Encrypted Storage System)
-- Content-addressable hashes (CIDs) are stored on the blockchain
-- Only users with permission can retrieve and decrypt EMRs from CESS
-- Data integrity is verifiable using on-chain CIDs
-- Unauthorized access attempts are blocked and logged
-- Access logs are immutable and verifiable
+- EMRs are successfully encrypted and stored on CESS with content-addressable references (CIDs)
+- CIDs are correctly stored and retrievable from the blockchain
+- Access control rules are enforced as specified, with on-chain management of ACLs and decryption keys
+- Only authorized users can retrieve and decrypt EMRs from CESS
+- All access attempts are properly logged and auditable on-chain
+- Data integrity is verifiable using CESS's PoDR² mechanism and on-chain CIDs
+- System maintains high availability even with node failures
+- Performance meets healthcare requirements with sub-second response times for authorized access
 - Data redundancy and availability meet healthcare industry standards
 
 ## 3. Technical Architecture for Phase 1
@@ -129,15 +128,19 @@ Current EMR systems suffer from several critical issues:
 **Components**:
 - **CESS Network**: Decentralized storage network with built-in encryption
 - **Content Addressing**: IPFS-compatible CIDs (Content Identifiers) for content-addressable storage
-- **Data Redundancy**: Automatic data replication and erasure coding for high availability
+- **Data Redundancy**: Automatic data replication and erasure coding for high availability (3x replication by default)
 - **Retrieval**: Efficient content retrieval using CIDs with built-in verification
 - **Proof of Data Reduplication and Recovery (PoDR²)**: Ensures data integrity and availability
+- **Client-Side Encryption**: All data encrypted before leaving the client
+- **Immutable Audit Logs**: All access attempts recorded on-chain
 
 **Technical Requirements**:
-- Support for storing files up to 100MB in size
-- Sub-second retrieval times for authorized requests
-- 99.99% uptime for storage nodes
-- Data redundancy across multiple storage nodes
+- Support for files up to 100MB in size
+- Sub-second retrieval times (p95 < 800ms)
+- 99.99% uptime SLA
+- Data redundancy across multiple CESS nodes (3x replication by default)
+- End-to-end encryption with client-side key management
+- Immutable audit logs of all access attempts
 
 ### 3.3 Frontend Layer
 **Description**: React-based web application for user interactions.
@@ -174,25 +177,25 @@ Current EMR systems suffer from several critical issues:
 
 ### 5.1 Technical Risks
 
-**Risk**: Integration challenges between Substrate and StorageHub
+- **Risk**: Integration challenges between Substrate and CESS
 **Impact**: High
 **Probability**: Medium
 **Mitigation**: 
 - Develop proof-of-concept integrations early in the development process
-- Maintain close communication with the StorageHub development team
+- Maintain close communication with the CESS development team
 - Create detailed integration tests to verify compatibility
 
-**Risk**: Performance bottlenecks in EMR retrieval
+- **Risk**: Performance bottlenecks in EMR retrieval
 **Impact**: High
 **Probability**: Medium
 **Mitigation**:
 - Implement caching mechanisms for frequently accessed data
-- Optimize StorageHub retrieval processes
+- Optimize CESS storage and retrieval processes
 - Conduct regular performance testing throughout development
 
 ### 5.2 Regulatory Risks
 
-**Risk**: Non-compliance with healthcare regulations (HIPAA, GDPR)
+- **Risk**: Non-compliance with healthcare regulations (HIPAA, GDPR)
 **Impact**: Critical
 **Probability**: Medium
 **Mitigation**:
@@ -210,11 +213,14 @@ Current EMR systems suffer from several critical issues:
 - Transaction Throughput: >1,000 TPS
 - Storage Capacity: Optimized for references, not full data storage
 
-**StorageHub Specifications**:
-- Encryption: AES-256
+**CESS Specifications**:
+- Encryption: AES-256 (client-side)
 - File Size Limit: 100MB per EMR
-- Redundancy: Minimum 3x replication
-- Retrieval Time: <1 second for authorized requests
+- Redundancy: 3x replication with erasure coding
+- Retrieval Time: < 800ms (p95)
+- Uptime: 99.99% SLA
+- Data Integrity: PoDR² verification
+- Access Control: On-chain ACLs with fine-grained permissions
 
 **Frontend Specifications**:
 - Framework: React with TypeScript
