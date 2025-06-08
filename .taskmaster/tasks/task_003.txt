@@ -1,0 +1,90 @@
+# Task ID: 3
+# Title: Integrate CESS Storage System
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Integrate the Cumulus Encrypted Storage System (CESS) for secure, decentralized off-chain storage of EMRs with the blockchain layer.
+# Details:
+1. Set up CESS client libraries for interaction with CESS network
+2. Implement client-side AES-256 encryption for EMRs before storage
+3. Develop functions to store encrypted EMRs on CESS and retrieve CIDs
+4. Implement content retrieval using CIDs with built-in verification
+5. Configure data redundancy with 3x replication as specified
+6. Implement PoDR² (Proof of Data Reduplication and Recovery) verification
+7. Create a service layer to abstract CESS interactions
+8. Implement error handling and retry mechanisms for storage operations
+
+Code structure:
+```rust
+// CESS integration service
+pub struct CessStorageService {
+    client: CessClient,
+    config: CessConfig,
+}
+
+impl CessStorageService {
+    pub fn new(endpoint: &str, credentials: Credentials) -> Self {
+        let client = CessClient::new(endpoint, credentials);
+        let config = CessConfig {
+            replication_factor: 3,
+            encryption_algorithm: "AES-256",
+            max_file_size: 100 * 1024 * 1024, // 100MB
+        };
+        
+        Self { client, config }
+    }
+    
+    pub async fn store_emr(&self, data: &[u8], encryption_key: &[u8]) -> Result<String, StorageError> {
+        // 1. Encrypt data with AES-256
+        let encrypted_data = self.encrypt(data, encryption_key)?;
+        
+        // 2. Store on CESS with redundancy
+        let storage_options = StorageOptions {
+            replication_factor: self.config.replication_factor,
+            verify_podr2: true,
+        };
+        
+        let cid = self.client.store(encrypted_data, storage_options).await?;
+        
+        // 3. Return CID for on-chain storage
+        Ok(cid)
+    }
+    
+    pub async fn retrieve_emr(&self, cid: &str, encryption_key: &[u8]) -> Result<Vec<u8>, StorageError> {
+        // 1. Retrieve encrypted data from CESS
+        let encrypted_data = self.client.retrieve(cid).await?;
+        
+        // 2. Verify data integrity using PoDR²
+        self.verify_integrity(cid, &encrypted_data)?;
+        
+        // 3. Decrypt data
+        let decrypted_data = self.decrypt(&encrypted_data, encryption_key)?;
+        
+        Ok(decrypted_data)
+    }
+    
+    // Helper methods for encryption, decryption, and verification
+    fn encrypt(&self, data: &[u8], key: &[u8]) -> Result<Vec<u8>, StorageError> {
+        // AES-256 encryption implementation
+    }
+    
+    fn decrypt(&self, data: &[u8], key: &[u8]) -> Result<Vec<u8>, StorageError> {
+        // AES-256 decryption implementation
+    }
+    
+    fn verify_integrity(&self, cid: &str, data: &[u8]) -> Result<(), StorageError> {
+        // PoDR² verification implementation
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for encryption and decryption functions
+2. Integration tests with CESS testnet
+3. Verify data integrity after storage and retrieval
+4. Test redundancy by simulating node failures
+5. Measure retrieval times to ensure they meet the <800ms (p95) requirement
+6. Test handling of files of various sizes up to the 100MB limit
+7. Verify PoDR² verification functionality
+8. Test error handling and recovery mechanisms
+9. Benchmark performance under load conditions

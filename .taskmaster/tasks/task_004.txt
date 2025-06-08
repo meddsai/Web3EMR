@@ -1,0 +1,109 @@
+# Task ID: 4
+# Title: Implement Polkadot Identity Integration
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Integrate with Polkadot's Identity pallet and People Chain for secure, verifiable digital identities for all system participants.
+# Details:
+1. Integrate with Polkadot's Identity pallet
+2. Implement support for hierarchical identity structures with up to 100 sub-identities
+3. Develop verification mechanisms for credentials by trusted registrars
+4. Implement selective disclosure of identity attributes
+5. Create identity recovery mechanisms
+6. Integrate identity verification with the EMR system for access control
+7. Implement DID verification through the People Chain
+8. Develop functionality to link DIDs to on-chain attestations and credentials
+
+Code structure:
+```rust
+// Identity integration service
+pub struct IdentityService<T: Config> {
+    people_chain_client: PeopleChainClient,
+    _marker: PhantomData<T>,
+}
+
+impl<T: Config> IdentityService<T> {
+    pub fn new(people_chain_endpoint: &str) -> Self {
+        let people_chain_client = PeopleChainClient::new(people_chain_endpoint);
+        Self {
+            people_chain_client,
+            _marker: PhantomData,
+        }
+    }
+    
+    pub async fn create_identity(&self, account: &T::AccountId, identity_data: IdentityInfo) -> Result<(), IdentityError> {
+        // Create identity on People Chain
+        self.people_chain_client.set_identity(account, identity_data).await?;
+        Ok(())
+    }
+    
+    pub async fn create_sub_identity(
+        &self,
+        parent: &T::AccountId,
+        sub_name: &str,
+        sub_data: IdentityInfo
+    ) -> Result<(), IdentityError> {
+        // Create sub-identity (up to 100 allowed)
+        self.people_chain_client.add_sub(parent, sub_name, sub_data).await?;
+        Ok(())
+    }
+    
+    pub async fn verify_identity(&self, account: &T::AccountId, registrar: &T::AccountId) -> Result<(), IdentityError> {
+        // Request verification from registrar
+        self.people_chain_client.request_judgment(account, registrar).await?;
+        Ok(())
+    }
+    
+    pub async fn get_identity(&self, account: &T::AccountId) -> Result<Option<IdentityInfo>, IdentityError> {
+        // Retrieve identity information
+        let identity = self.people_chain_client.identity(account).await?;
+        Ok(identity)
+    }
+    
+    pub async fn verify_did(&self, did: &str) -> Result<bool, IdentityError> {
+        // Verify DID on People Chain
+        let is_valid = self.people_chain_client.verify_did(did).await?;
+        Ok(is_valid)
+    }
+    
+    pub async fn link_attestation(&self, did: &str, attestation: &Attestation) -> Result<(), IdentityError> {
+        // Link attestation to DID
+        self.people_chain_client.add_attestation(did, attestation).await?;
+        Ok(())
+    }
+}
+
+// Integration with EMR pallet for access control
+impl<T: Config> Pallet<T> {
+    pub fn verify_identity_for_access(
+        requester: &T::AccountId,
+        owner: &T::AccountId,
+        cid: &BoundedVec<u8, T::MaxCidLength>
+    ) -> Result<bool, DispatchError> {
+        // Verify identity and check access permissions
+        let identity_service = IdentityService::<T>::new(T::PeopleChainEndpoint::get());
+        let identity = identity_service.get_identity(requester)
+            .map_err(|_| Error::<T>::IdentityVerificationFailed)?
+            .ok_or(Error::<T>::IdentityNotFound)?;
+            
+        // Check if identity is verified by trusted registrar
+        if !Self::is_identity_verified(&identity) {
+            return Err(Error::<T>::UnverifiedIdentity.into());
+        }
+        
+        // Check access permissions
+        Self::has_access(requester, owner, cid)
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for identity creation, verification, and management
+2. Test creation and management of hierarchical identities with sub-identities
+3. Verify integration with People Chain for DID verification
+4. Test selective disclosure of identity attributes
+5. Verify identity recovery mechanisms
+6. Test integration with EMR access control
+7. Verify proper handling of attestations and credentials
+8. Test identity verification by trusted registrars
+9. Verify support for up to 100 sub-identities per identity

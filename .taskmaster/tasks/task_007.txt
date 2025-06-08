@@ -1,0 +1,204 @@
+# Task ID: 7
+# Title: Develop Patient Portal Frontend
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Create a React-based web application that provides patients with an intuitive interface to manage their EMRs and access controls.
+# Details:
+1. Set up React project with TypeScript
+2. Implement responsive design for desktop and mobile
+3. Create components for EMR management (upload, view, delete)
+4. Develop access control interface for granting and revoking permissions
+5. Implement history viewing for audit trails
+6. Create Polkadot.js wallet integration for transaction signing
+7. Implement offline capabilities for basic functions
+8. Ensure WCAG 2.1 AA accessibility compliance
+
+Code structure:
+```typescript
+// src/App.tsx
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ApiProvider } from '@context/ApiContext';
+import { AuthProvider } from '@context/AuthContext';
+import Dashboard from '@pages/Dashboard';
+import EmrManagement from '@pages/EmrManagement';
+import AccessControl from '@pages/AccessControl';
+import History from '@pages/History';
+import Settings from '@pages/Settings';
+import Login from '@pages/Login';
+import Layout from '@components/Layout';
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <ApiProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="emr" element={<EmrManagement />} />
+              <Route path="access" element={<AccessControl />} />
+              <Route path="history" element={<History />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </ApiProvider>
+    </BrowserRouter>
+  );
+};
+
+export default App;
+
+// src/context/ApiContext.tsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { web3FromSource } from '@polkadot/extension-dapp';
+
+interface ApiContextType {
+  api: ApiPromise | null;
+  isApiReady: boolean;
+  isApiError: boolean;
+  apiError: Error | null;
+}
+
+const ApiContext = createContext<ApiContextType>({
+  api: null,
+  isApiReady: false,
+  isApiError: false,
+  apiError: null,
+});
+
+export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [api, setApi] = useState<ApiPromise | null>(null);
+  const [isApiReady, setIsApiReady] = useState(false);
+  const [isApiError, setIsApiError] = useState(false);
+  const [apiError, setApiError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const connectApi = async () => {
+      try {
+        const wsProvider = new WsProvider('wss://your-node-endpoint');
+        const api = await ApiPromise.create({ provider: wsProvider });
+        await api.isReady;
+        
+        setApi(api);
+        setIsApiReady(true);
+      } catch (error) {
+        setIsApiError(true);
+        setApiError(error as Error);
+      }
+    };
+
+    connectApi();
+
+    return () => {
+      if (api) {
+        api.disconnect();
+      }
+    };
+  }, []);
+
+  return (
+    <ApiContext.Provider value={{ api, isApiReady, isApiError, apiError }}>
+      {children}
+    </ApiContext.Provider>
+  );
+};
+
+export const useApi = () => useContext(ApiContext);
+
+// src/pages/EmrManagement.tsx
+import React, { useState, useEffect } from 'react';
+import { useApi } from '@context/ApiContext';
+import { useAuth } from '@context/AuthContext';
+import EmrUpload from '@components/EmrUpload';
+import EmrList from '@components/EmrList';
+import EmrViewer from '@components/EmrViewer';
+
+const EmrManagement: React.FC = () => {
+  const { api, isApiReady } = useApi();
+  const { account } = useAuth();
+  const [emrs, setEmrs] = useState<any[]>([]);
+  const [selectedEmr, setSelectedEmr] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isApiReady && account) {
+      fetchEmrs();
+    }
+  }, [isApiReady, account]);
+
+  const fetchEmrs = async () => {
+    setIsLoading(true);
+    try {
+      // Fetch EMRs from blockchain
+      const emrCids = await api?.query.emrPallet.emrCids(account);
+      
+      // Transform data for UI
+      const emrList = emrCids ? emrCids.map((cid: any, index: number) => ({
+        id: index,
+        cid: cid.toString(),
+        name: `EMR-${index}`,
+        date: new Date().toISOString(),
+      })) : [];
+      
+      setEmrs(emrList);
+    } catch (error) {
+      console.error('Error fetching EMRs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmrUpload = async (file: File) => {
+    // Implementation for EMR upload
+  };
+
+  const handleEmrSelect = (cid: string) => {
+    setSelectedEmr(cid);
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">EMR Management</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="md:col-span-1">
+          <EmrUpload onUpload={handleEmrUpload} />
+          <EmrList 
+            emrs={emrs} 
+            isLoading={isLoading} 
+            onSelect={handleEmrSelect} 
+            selectedEmr={selectedEmr} 
+          />
+        </div>
+        <div className="md:col-span-2">
+          {selectedEmr ? (
+            <EmrViewer cid={selectedEmr} />
+          ) : (
+            <div className="bg-gray-100 rounded p-4 text-center">
+              Select an EMR to view
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EmrManagement;
+```
+
+# Test Strategy:
+1. Unit tests for React components using Jest and React Testing Library
+2. Integration tests for API interactions
+3. End-to-end tests using Cypress to verify user flows
+4. Accessibility testing using axe-core to ensure WCAG 2.1 AA compliance
+5. Responsive design testing across different device sizes
+6. Browser compatibility testing on Chrome, Firefox, Safari, and Edge
+7. Offline functionality testing
+8. Performance testing for load times and responsiveness
+9. User acceptance testing with representative users

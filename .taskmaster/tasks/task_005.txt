@@ -1,0 +1,138 @@
+# Task ID: 5
+# Title: Develop Patient-Centric Access Control System
+# Status: pending
+# Dependencies: 2, 3, 4
+# Priority: high
+# Description: Implement a comprehensive access control system that gives patients full ownership and granular control over their medical records.
+# Details:
+1. Implement fine-grained access permissions (read, write, share)
+2. Develop access control lists (ACLs) stored on-chain for each EMR
+3. Create functions for patients to grant and revoke access to specific healthcare providers
+4. Implement immediate reflection of access control changes
+5. Create an immutable audit trail of all access attempts
+6. Develop mechanisms for temporary access grants with expiration
+7. Implement emergency access protocols with proper safeguards
+
+Code structure:
+```rust
+// Access permission types
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub enum AccessPermission {
+    Read,
+    Write,
+    Share,
+}
+
+// Access action for audit trail
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub enum AccessAction {
+    Granted,
+    Revoked,
+    Attempted,
+    Accessed,
+}
+
+#[pallet::call]
+impl<T: Config> Pallet<T> {
+    #[pallet::weight(T::WeightInfo::grant_access())]
+    pub fn grant_access(
+        origin: OriginFor<T>,
+        provider: T::AccountId,
+        cid: BoundedVec<u8, T::MaxCidLength>,
+        permission: AccessPermission,
+        expiration: Option<T::BlockNumber>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        // Verify ownership of the EMR
+        ensure!(Self::is_emr_owner(&who, &cid)?, Error::<T>::NotEmrOwner);
+        
+        // Verify provider identity
+        let identity_service = IdentityService::<T>::new(T::PeopleChainEndpoint::get());
+        ensure!(
+            identity_service.get_identity(&provider).is_ok(),
+            Error::<T>::ProviderIdentityNotFound
+        );
+        
+        // Grant access
+        AccessLists::<T>::mutate(&who, &cid, |providers| {
+            let mut providers = providers.unwrap_or_default();
+            providers.insert((provider.clone(), permission.clone()));
+            *providers = providers;
+        });
+        
+        // Record in access history
+        Self::record_access_history(&who, &cid, &provider, AccessAction::Granted)?;
+        
+        // Set expiration if provided
+        if let Some(exp_block) = expiration {
+            ExpiringAccess::<T>::insert(&who, &cid, &provider, exp_block);
+        }
+        
+        Self::deposit_event(Event::AccessGranted(who, provider, cid, permission));
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::revoke_access())]
+    pub fn revoke_access(
+        origin: OriginFor<T>,
+        provider: T::AccountId,
+        cid: BoundedVec<u8, T::MaxCidLength>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        // Verify ownership of the EMR
+        ensure!(Self::is_emr_owner(&who, &cid)?, Error::<T>::NotEmrOwner);
+        
+        // Revoke access
+        AccessLists::<T>::mutate(&who, &cid, |providers| {
+            if let Some(providers) = providers {
+                providers.retain(|(p, _)| p != &provider);
+            }
+        });
+        
+        // Remove any expiration
+        ExpiringAccess::<T>::remove(&who, &cid, &provider);
+        
+        // Record in access history
+        Self::record_access_history(&who, &cid, &provider, AccessAction::Revoked)?;
+        
+        Self::deposit_event(Event::AccessRevoked(who, provider, cid));
+        Ok(())
+    }
+    
+    // Helper functions
+    fn is_emr_owner(owner: &T::AccountId, cid: &BoundedVec<u8, T::MaxCidLength>) -> Result<bool, DispatchError> {
+        let cids = EmrCids::<T>::get(owner).unwrap_or_default();
+        Ok(cids.contains(cid))
+    }
+    
+    fn record_access_history(
+        owner: &T::AccountId,
+        cid: &BoundedVec<u8, T::MaxCidLength>,
+        user: &T::AccountId,
+        action: AccessAction,
+    ) -> DispatchResult {
+        let current_block = <frame_system::Pallet<T>>::block_number();
+        
+        AccessHistory::<T>::mutate(owner, cid, |history| {
+            let mut history = history.unwrap_or_default();
+            history.push((user.clone(), current_block, action));
+            *history = history;
+        });
+        
+        Ok(())
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for granting and revoking access permissions
+2. Test different permission types (read, write, share)
+3. Verify that access control changes are reflected immediately
+4. Test the audit trail functionality for all access attempts
+5. Verify that only authorized users can access EMRs
+6. Test temporary access grants with expiration
+7. Verify emergency access protocols
+8. Test access revocation scenarios
+9. Verify that patients can effectively manage access to their records

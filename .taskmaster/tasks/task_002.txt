@@ -1,0 +1,65 @@
+# Task ID: 2
+# Title: Implement EMR Pallet Core Functionality
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Develop the core EMR pallet that will manage EMR storage references and access control on the blockchain.
+# Details:
+1. Create a new Substrate pallet named 'emr_pallet'
+2. Implement storage structures for EMR Content Identifiers (CIDs), AccessLists, and AccessHistory
+3. Implement core functions: store_emr, grant_access, revoke_access, verify_access
+4. Add events for important state changes (EMRAdded, AccessGranted, AccessRevoked)
+5. Implement error handling for various failure scenarios
+6. Add proper weight calculations for extrinsics
+7. Implement on-chain storage optimization for CIDs and access control lists
+
+Code structure:
+```rust
+#[pallet::storage]
+#[pallet::getter(fn emr_cids)]
+pub type EmrCids<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, Vec<BoundedVec<u8, T::MaxCidLength>>>;
+
+#[pallet::storage]
+#[pallet::getter(fn access_lists)]
+pub type AccessLists<T: Config> = StorageDoubleMap<
+    _,
+    Blake2_128Concat, T::AccountId,  // Owner
+    Blake2_128Concat, BoundedVec<u8, T::MaxCidLength>,  // CID
+    BTreeSet<(T::AccountId, AccessPermission)>,  // (Provider, Permission)
+>;
+
+#[pallet::storage]
+#[pallet::getter(fn access_history)]
+pub type AccessHistory<T: Config> = StorageDoubleMap<
+    _,
+    Blake2_128Concat, T::AccountId,  // Owner
+    Blake2_128Concat, BoundedVec<u8, T::MaxCidLength>,  // CID
+    Vec<(T::AccountId, T::BlockNumber, AccessAction)>,  // (User, Block, Action)
+>;
+
+#[pallet::call]
+impl<T: Config> Pallet<T> {
+    #[pallet::weight(T::WeightInfo::store_emr())]
+    pub fn store_emr(
+        origin: OriginFor<T>,
+        cid: BoundedVec<u8, T::MaxCidLength>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        // Implementation details
+        Self::deposit_event(Event::EmrAdded(who, cid));
+        Ok(())
+    }
+    
+    // Implement other functions: grant_access, revoke_access, verify_access
+}
+```
+
+# Test Strategy:
+1. Unit tests for each function in the EMR pallet
+2. Integration tests to verify interactions between functions
+3. Test various access control scenarios (grant, revoke, verify)
+4. Verify proper event emission for all state changes
+5. Test error handling for invalid inputs and unauthorized access attempts
+6. Benchmark performance to ensure it meets the requirements
+7. Test storage efficiency and optimization
+8. Verify that access history is correctly maintained

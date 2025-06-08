@@ -1,0 +1,267 @@
+# Task ID: 9
+# Title: Implement Regulatory Compliance Features
+# Status: pending
+# Dependencies: 5, 6
+# Priority: high
+# Description: Develop features to ensure compliance with healthcare regulations like HIPAA and GDPR, including audit trails, consent management, and data protection measures.
+# Details:
+1. Implement comprehensive audit logging for all system actions
+2. Develop consent management system for patient data
+3. Create data retention and deletion mechanisms
+4. Implement data export functionality for patient data portability
+5. Develop privacy-preserving query mechanisms
+6. Create compliance reporting tools
+7. Implement breach detection and notification system
+
+Code structure:
+```rust
+// Compliance-related structures
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub enum ComplianceAction {
+    DataAccess,
+    DataModification,
+    ConsentGiven,
+    ConsentRevoked,
+    DataExported,
+    DataDeleted,
+    BreachDetected,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub struct ComplianceLog<T: Config> {
+    pub user: T::AccountId,
+    pub action: ComplianceAction,
+    pub resource: BoundedVec<u8, T::MaxResourceLength>,
+    pub timestamp: T::Moment,
+    pub details: BoundedVec<u8, T::MaxDetailsLength>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub struct ConsentRecord<T: Config> {
+    pub patient: T::AccountId,
+    pub purpose: BoundedVec<u8, T::MaxPurposeLength>,
+    pub granted_to: Option<T::AccountId>,
+    pub data_categories: BoundedVec<BoundedVec<u8, T::MaxCategoryLength>, T::MaxCategories>,
+    pub expiration: Option<T::BlockNumber>,
+    pub created_at: T::BlockNumber,
+    pub updated_at: T::BlockNumber,
+}
+
+// Storage items
+#[pallet::storage]
+#[pallet::getter(fn compliance_logs)]
+pub type ComplianceLogs<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat, T::AccountId,
+    Vec<ComplianceLog<T>>,
+    ValueQuery
+>;
+
+#[pallet::storage]
+#[pallet::getter(fn consent_records)]
+pub type ConsentRecords<T: Config> = StorageDoubleMap<
+    _,
+    Blake2_128Concat, T::AccountId,  // Patient
+    Blake2_128Concat, BoundedVec<u8, T::MaxPurposeLength>,  // Purpose
+    ConsentRecord<T>,
+    OptionQuery
+>;
+
+#[pallet::storage]
+#[pallet::getter(fn data_retention_policies)]
+pub type DataRetentionPolicies<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat, BoundedVec<u8, T::MaxCategoryLength>,  // Data category
+    T::BlockNumber,  // Retention period in blocks
+    ValueQuery
+>;
+
+// Extrinsics
+#[pallet::call]
+impl<T: Config> Pallet<T> {
+    #[pallet::weight(T::WeightInfo::log_compliance_action())]
+    pub fn log_compliance_action(
+        origin: OriginFor<T>,
+        action: ComplianceAction,
+        resource: BoundedVec<u8, T::MaxResourceLength>,
+        details: BoundedVec<u8, T::MaxDetailsLength>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        let now = <pallet_timestamp::Pallet<T>>::now();
+        
+        let log = ComplianceLog {
+            user: who.clone(),
+            action,
+            resource: resource.clone(),
+            timestamp: now,
+            details,
+        };
+        
+        ComplianceLogs::<T>::mutate(&who, |logs| {
+            logs.push(log.clone());
+        });
+        
+        Self::deposit_event(Event::ComplianceActionLogged(who, action, resource));
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::manage_consent())]
+    pub fn manage_consent(
+        origin: OriginFor<T>,
+        purpose: BoundedVec<u8, T::MaxPurposeLength>,
+        granted_to: Option<T::AccountId>,
+        data_categories: BoundedVec<BoundedVec<u8, T::MaxCategoryLength>, T::MaxCategories>,
+        expiration: Option<T::BlockNumber>,
+        grant: bool,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        let current_block = <frame_system::Pallet<T>>::block_number();
+        
+        if grant {
+            // Grant consent
+            let consent = ConsentRecord {
+                patient: who.clone(),
+                purpose: purpose.clone(),
+                granted_to,
+                data_categories,
+                expiration,
+                created_at: current_block,
+                updated_at: current_block,
+            };
+            
+            ConsentRecords::<T>::insert(&who, &purpose, consent);
+            
+            // Log consent action
+            Self::log_compliance_action(
+                Origin::signed(who.clone()),
+                ComplianceAction::ConsentGiven,
+                purpose.clone().into(),
+                BoundedVec::default(),
+            )?;
+            
+            Self::deposit_event(Event::ConsentGranted(who, purpose));
+        } else {
+            // Revoke consent
+            ConsentRecords::<T>::remove(&who, &purpose);
+            
+            // Log consent action
+            Self::log_compliance_action(
+                Origin::signed(who.clone()),
+                ComplianceAction::ConsentRevoked,
+                purpose.clone().into(),
+                BoundedVec::default(),
+            )?;
+            
+            Self::deposit_event(Event::ConsentRevoked(who, purpose));
+        }
+        
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::export_data())]
+    pub fn request_data_export(
+        origin: OriginFor<T>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        // Queue data export job in off-chain worker
+        let export_request = ExportRequest {
+            account: who.clone(),
+            requested_at: <pallet_timestamp::Pallet<T>>::now(),
+        };
+        
+        DataExportQueue::<T>::mutate(|queue| {
+            queue.push(export_request);
+        });
+        
+        // Log export request
+        Self::log_compliance_action(
+            Origin::signed(who.clone()),
+            ComplianceAction::DataExported,
+            BoundedVec::default(),
+            BoundedVec::default(),
+        )?;
+        
+        Self::deposit_event(Event::DataExportRequested(who));
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::delete_data())]
+    pub fn request_data_deletion(
+        origin: OriginFor<T>,
+        data_categories: Option<BoundedVec<BoundedVec<u8, T::MaxCategoryLength>, T::MaxCategories>>,
+    ) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        
+        // Queue data deletion job in off-chain worker
+        let deletion_request = DeletionRequest {
+            account: who.clone(),
+            data_categories,
+            requested_at: <pallet_timestamp::Pallet<T>>::now(),
+        };
+        
+        DataDeletionQueue::<T>::mutate(|queue| {
+            queue.push(deletion_request);
+        });
+        
+        // Log deletion request
+        Self::log_compliance_action(
+            Origin::signed(who.clone()),
+            ComplianceAction::DataDeleted,
+            BoundedVec::default(),
+            BoundedVec::default(),
+        )?;
+        
+        Self::deposit_event(Event::DataDeletionRequested(who));
+        Ok(())
+    }
+}
+
+// Off-chain worker for compliance tasks
+#[pallet::hooks]
+impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
+    fn offchain_worker(block_number: T::BlockNumber) {
+        // Process data export requests
+        if (block_number % 10u32.into()).is_zero() {
+            if let Err(e) = Self::process_data_export_queue() {
+                log::error!("Error processing data export queue: {:?}", e);
+            }
+        }
+        
+        // Process data deletion requests
+        if (block_number % 10u32.into()).is_zero() {
+            if let Err(e) = Self::process_data_deletion_queue() {
+                log::error!("Error processing data deletion queue: {:?}", e);
+            }
+        }
+        
+        // Check for expired data based on retention policies
+        if (block_number % 100u32.into()).is_zero() {
+            if let Err(e) = Self::enforce_data_retention_policies() {
+                log::error!("Error enforcing data retention policies: {:?}", e);
+            }
+        }
+        
+        // Check for potential data breaches
+        if (block_number % 50u32.into()).is_zero() {
+            if let Err(e) = Self::check_for_breaches() {
+                log::error!("Error checking for breaches: {:?}", e);
+            }
+        }
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for compliance-related functions
+2. Verify audit logging for all system actions
+3. Test consent management functionality
+4. Verify data retention and deletion mechanisms
+5. Test data export functionality
+6. Verify privacy-preserving query mechanisms
+7. Test compliance reporting tools
+8. Verify breach detection and notification system
+9. Test integration with regulatory frameworks (HIPAA, GDPR)
+10. Verify that all compliance features meet regulatory requirements

@@ -1,0 +1,155 @@
+# Task ID: 6
+# Title: Implement Off-Chain Workers for EMR Operations
+# Status: pending
+# Dependencies: 2, 3
+# Priority: medium
+# Description: Develop off-chain workers to handle complex EMR operations that are not suitable for on-chain execution.
+# Details:
+1. Implement off-chain workers for EMR validation and preprocessing
+2. Develop workers for handling large EMR files and chunking if necessary
+3. Create workers for monitoring CESS storage health and redundancy
+4. Implement background verification of data integrity using PoDR²
+5. Develop workers for handling encryption key management
+6. Create notification services for access requests and grants
+
+Code structure:
+```rust
+#[pallet::hooks]
+impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
+    fn offchain_worker(block_number: T::BlockNumber) {
+        // Process EMR validation queue
+        if let Err(e) = Self::process_emr_validation_queue() {
+            log::error!("Error processing EMR validation queue: {:?}", e);
+        }
+        
+        // Check CESS storage health every 100 blocks
+        if (block_number % 100u32.into()).is_zero() {
+            if let Err(e) = Self::check_cess_storage_health() {
+                log::error!("Error checking CESS storage health: {:?}", e);
+            }
+        }
+        
+        // Verify data integrity using PoDR² for a subset of EMRs
+        if (block_number % 50u32.into()).is_zero() {
+            if let Err(e) = Self::verify_emr_integrity() {
+                log::error!("Error verifying EMR integrity: {:?}", e);
+            }
+        }
+        
+        // Process expired access grants
+        if let Err(e) = Self::process_expired_access() {
+            log::error!("Error processing expired access: {:?}", e);
+        }
+        
+        // Send notifications for new access requests
+        if let Err(e) = Self::process_notification_queue() {
+            log::error!("Error processing notification queue: {:?}", e);
+        }
+    }
+}
+
+impl<T: Config> Pallet<T> {
+    fn process_emr_validation_queue() -> Result<(), OffchainError> {
+        // Get validation queue from storage
+        let validation_queue = StorageValueRef::persistent(b"emr_validation_queue");
+        
+        if let Some(queue) = validation_queue.get::<Vec<(T::AccountId, Vec<u8>)>>().ok().flatten() {
+            let mut new_queue = Vec::new();
+            
+            for (account, emr_data) in queue {
+                // Validate EMR format and content
+                match Self::validate_emr(&emr_data) {
+                    Ok(true) => {
+                        // EMR is valid, encrypt and store on CESS
+                        let cess_service = CessStorageService::new(T::CessEndpoint::get());
+                        
+                        // Generate encryption key (in a real system, this would use a secure key management system)
+                        let encryption_key = Self::generate_encryption_key();
+                        
+                        match cess_service.store_emr(&emr_data, &encryption_key) {
+                            Ok(cid) => {
+                                // Submit transaction to store CID on-chain
+                                let call = Call::store_emr { cid: cid.into() };
+                                
+                                // Submit signed transaction from off-chain worker
+                                let result = SubmitTransaction::<T, Call<T>>::submit_signed_transaction(call);
+                                
+                                if result.is_err() {
+                                    // If failed, keep in queue for retry
+                                    new_queue.push((account, emr_data));
+                                }
+                            },
+                            Err(_) => {
+                                // Storage failed, keep in queue for retry
+                                new_queue.push((account, emr_data));
+                            }
+                        }
+                    },
+                    Ok(false) => {
+                        // EMR is invalid, log and discard
+                        log::warn!("Invalid EMR format for account {:?}", account);
+                    },
+                    Err(_) => {
+                        // Validation error, keep in queue for retry
+                        new_queue.push((account, emr_data));
+                    }
+                }
+            }
+            
+            // Update queue
+            validation_queue.set(&new_queue);
+        }
+        
+        Ok(())
+    }
+    
+    fn check_cess_storage_health() -> Result<(), OffchainError> {
+        let cess_service = CessStorageService::new(T::CessEndpoint::get());
+        
+        // Get a sample of CIDs to check
+        let sample_cids = Self::get_cid_sample()?;
+        
+        for (owner, cid) in sample_cids {
+            // Check replication factor
+            match cess_service.check_replication(&cid) {
+                Ok(replication) if replication < 3 => {
+                    // Replication below threshold, trigger re-replication
+                    if let Err(e) = cess_service.trigger_replication(&cid) {
+                        log::error!("Failed to trigger replication for CID {:?}: {:?}", cid, e);
+                    }
+                },
+                Err(e) => {
+                    log::error!("Failed to check replication for CID {:?}: {:?}", cid, e);
+                },
+                _ => {} // Replication is sufficient
+            }
+        }
+        
+        Ok(())
+    }
+    
+    // Other off-chain worker functions
+    fn verify_emr_integrity() -> Result<(), OffchainError> {
+        // Implementation for PoDR² verification
+    }
+    
+    fn process_expired_access() -> Result<(), OffchainError> {
+        // Implementation for handling expired access grants
+    }
+    
+    fn process_notification_queue() -> Result<(), OffchainError> {
+        // Implementation for sending notifications
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for each off-chain worker function
+2. Test EMR validation with valid and invalid data
+3. Verify CESS storage health monitoring
+4. Test data integrity verification using PoDR²
+5. Verify handling of expired access grants
+6. Test notification services
+7. Verify proper error handling and retry mechanisms
+8. Test performance under load conditions
+9. Verify that off-chain workers correctly interact with on-chain storage

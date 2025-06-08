@@ -1,0 +1,174 @@
+# Task ID: 8
+# Title: Implement Healthcare Provider Portal
+# Status: pending
+# Dependencies: 5, 7
+# Priority: medium
+# Description: Develop a specialized interface for healthcare providers to securely access and manage patient EMRs they have been granted access to.
+# Details:
+1. Create provider-specific dashboard for viewing accessible EMRs
+2. Implement patient search functionality
+3. Develop EMR viewing interface with medical context
+4. Create access request mechanism for providers
+5. Implement audit logging for provider actions
+6. Develop notification system for access grants and revocations
+7. Create interface for managing provider identity and credentials
+
+Code structure:
+```typescript
+// src/pages/ProviderDashboard.tsx
+import React, { useState, useEffect } from 'react';
+import { useApi } from '@context/ApiContext';
+import { useAuth } from '@context/AuthContext';
+import PatientSearch from '@components/PatientSearch';
+import AccessibleEmrList from '@components/AccessibleEmrList';
+import EmrViewer from '@components/EmrViewer';
+import AccessRequestModal from '@components/AccessRequestModal';
+
+const ProviderDashboard: React.FC = () => {
+  const { api, isApiReady } = useApi();
+  const { account } = useAuth();
+  const [patients, setPatients] = useState<any[]>([]);
+  const [accessibleEmrs, setAccessibleEmrs] = useState<any[]>([]);
+  const [selectedEmr, setSelectedEmr] = useState<any | null>(null);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isApiReady && account) {
+      fetchAccessibleEmrs();
+    }
+  }, [isApiReady, account]);
+
+  const fetchAccessibleEmrs = async () => {
+    setIsLoading(true);
+    try {
+      // Query the blockchain for EMRs the provider has access to
+      const result = await api?.query.emrPallet.providerAccessibleEmrs(account);
+      
+      // Transform data for UI
+      const emrList = result ? result.map((item: any) => {
+        const [patientId, cid, permission] = item;
+        return {
+          patientId: patientId.toString(),
+          cid: cid.toString(),
+          permission: permission.toString(),
+          name: `EMR-${cid.toString().substring(0, 8)}`,
+          date: new Date().toISOString(),
+        };
+      }) : [];
+      
+      // Group by patient
+      const patientMap = new Map();
+      emrList.forEach((emr: any) => {
+        if (!patientMap.has(emr.patientId)) {
+          patientMap.set(emr.patientId, []);
+        }
+        patientMap.get(emr.patientId).push(emr);
+      });
+      
+      // Convert to array for UI
+      const patientList = Array.from(patientMap.entries()).map(([id, emrs]) => ({
+        id,
+        name: `Patient-${id.substring(0, 8)}`,
+        emrCount: (emrs as any[]).length,
+        emrs,
+      }));
+      
+      setPatients(patientList);
+      setAccessibleEmrs(emrList);
+    } catch (error) {
+      console.error('Error fetching accessible EMRs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePatientSelect = (patient: any) => {
+    setSelectedPatient(patient);
+    setAccessibleEmrs(patient.emrs);
+  };
+
+  const handleEmrSelect = (emr: any) => {
+    setSelectedEmr(emr);
+  };
+
+  const handleRequestAccess = (patient: any) => {
+    setSelectedPatient(patient);
+    setIsRequestModalOpen(true);
+  };
+
+  const handleSubmitRequest = async (patientId: string, reason: string) => {
+    try {
+      // Submit access request transaction
+      const txHash = await api?.tx.emrPallet
+        .requestAccess(patientId, reason)
+        .signAndSend(account);
+      
+      console.log('Access request submitted:', txHash);
+      setIsRequestModalOpen(false);
+    } catch (error) {
+      console.error('Error requesting access:', error);
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Provider Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="md:col-span-1">
+          <PatientSearch 
+            patients={patients} 
+            onSelect={handlePatientSelect} 
+            onRequestAccess={handleRequestAccess}
+            isLoading={isLoading}
+          />
+        </div>
+        <div className="md:col-span-1">
+          <AccessibleEmrList 
+            emrs={accessibleEmrs} 
+            onSelect={handleEmrSelect} 
+            selectedEmr={selectedEmr} 
+            isLoading={isLoading}
+          />
+        </div>
+        <div className="md:col-span-2">
+          {selectedEmr ? (
+            <EmrViewer 
+              cid={selectedEmr.cid} 
+              permission={selectedEmr.permission} 
+              patientId={selectedEmr.patientId}
+            />
+          ) : (
+            <div className="bg-gray-100 rounded p-4 text-center">
+              Select an EMR to view
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <AccessRequestModal 
+        isOpen={isRequestModalOpen} 
+        onClose={() => setIsRequestModalOpen(false)}
+        onSubmit={handleSubmitRequest}
+        patient={selectedPatient}
+      />
+    </div>
+  );
+};
+
+export default ProviderDashboard;
+```
+
+# Test Strategy:
+1. Unit tests for provider portal components
+2. Integration tests for provider-specific API interactions
+3. Test access request functionality
+4. Verify proper display of accessible EMRs
+5. Test audit logging for provider actions
+6. Verify notification system for access changes
+7. Test identity and credential management
+8. Verify proper enforcement of access permissions
+9. Test search functionality for patients and EMRs
+10. Verify responsive design and accessibility compliance

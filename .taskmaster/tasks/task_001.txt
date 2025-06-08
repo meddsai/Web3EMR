@@ -1,0 +1,45 @@
+# Task ID: 1
+# Title: Setup Substrate Blockchain Infrastructure
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Initialize and configure the Substrate-based blockchain that will serve as the foundation for the Web3EMR system.
+# Details:
+1. Install Rust and required dependencies for Substrate development
+2. Initialize a new Substrate node template
+3. Configure the runtime with required system pallets (System, Timestamp, Balances)
+4. Set up the consensus mechanism to Nominated Proof of Stake (NPoS)
+5. Configure block time to 6 seconds as specified
+6. Optimize for transaction throughput of >1,000 TPS
+7. Set up development, testing, and production environments
+8. Configure network parameters for the blockchain
+9. Implement basic node operation and synchronization
+
+Code structure:
+```rust
+// Runtime configuration example
+#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+pub struct Runtime {
+    pub system: frame_system::GenesisConfig,
+    pub timestamp: pallet_timestamp::GenesisConfig,
+    pub balances: pallet_balances::GenesisConfig<Runtime>,
+    // Additional configuration will be added in later tasks
+}
+
+// NPoS consensus configuration
+pub fn get_consensus_config() -> ConsensusConfig {
+    ConsensusConfig {
+        block_time: 6, // 6 seconds block time
+        // Additional NPoS parameters
+    }
+}
+```
+
+# Test Strategy:
+1. Verify node startup and synchronization
+2. Measure block production time to ensure it meets the 6-second requirement
+3. Conduct load testing to verify >1,000 TPS capability
+4. Test network stability under various conditions
+5. Verify that all required pallets are correctly integrated
+6. Ensure proper functioning of the NPoS consensus mechanism
+7. Validate that the node can connect to the network and maintain synchronization
