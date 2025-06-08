@@ -1,0 +1,110 @@
+# Task ID: 5
+# Title: Develop Patient Portal UI with React
+# Status: pending
+# Dependencies: 3, 4
+# Priority: medium
+# Description: Create a responsive React-based web application for patient interactions with the Web3EMR system.
+# Details:
+1. Set up React project with TypeScript
+2. Implement responsive design for desktop and mobile
+3. Create components for EMR management, access control, and history viewing
+4. Implement Polkadot.js wallet integration
+5. Develop UI for KILT DID creation and management
+6. Create interfaces for EMR upload, viewing, and sharing
+7. Implement accessibility features (WCAG 2.1 AA compliance)
+8. Add offline capabilities for basic functions
+
+Pseudo-code for React components:
+```typescript
+// src/components/EMRManagement.tsx
+import React, { useState, useEffect } from 'react';
+import { useSubstrateState } from '../substrate-lib';
+import { web3FromSource } from '@polkadot/extension-dapp';
+
+interface EMR {
+  id: string;
+  name: string;
+  date: string;
+  hash: string;
+}
+
+const EMRManagement: React.FC = () => {
+  const { api, currentAccount } = useSubstrateState();
+  const [emrs, setEmrs] = useState<EMR[]>([]);
+  const [file, setFile] = useState<File | null>(null);
+  
+  useEffect(() => {
+    if (api && currentAccount) {
+      fetchEMRs();
+    }
+  }, [api, currentAccount]);
+  
+  const fetchEMRs = async () => {
+    if (!api || !currentAccount) return;
+    
+    // Fetch EMR hashes from blockchain
+    const emrHashes = await api.query.emrPallet.emrHashes(currentAccount.address);
+    
+    // Fetch EMR metadata from StorageHub or local cache
+    // Implementation details
+    
+    setEmrs(/* processed EMRs */);
+  };
+  
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
+    }
+  };
+  
+  const uploadEMR = async () => {
+    if (!file || !api || !currentAccount) return;
+    
+    // Encrypt and upload file to StorageHub
+    // Implementation details
+    
+    // Store hash on blockchain
+    const injector = await web3FromSource(currentAccount.meta.source);
+    
+    api.tx.emrPallet
+      .storeEmr(/* EMR hash */)
+      .signAndSend(currentAccount.address, { signer: injector.signer }, (result) => {
+        // Handle transaction result
+      });
+  };
+  
+  return (
+    <div className="emr-management">
+      <h2>My Medical Records</h2>
+      
+      <div className="upload-section">
+        <input type="file" onChange={handleFileChange} />
+        <button onClick={uploadEMR} disabled={!file}>Upload Medical Record</button>
+      </div>
+      
+      <div className="emr-list">
+        {emrs.map(emr => (
+          <div key={emr.id} className="emr-item">
+            <h3>{emr.name}</h3>
+            <p>Date: {emr.date}</p>
+            <button>View</button>
+            <button>Share</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default EMRManagement;
+```
+
+# Test Strategy:
+1. Unit tests for React components
+2. Integration tests for wallet connectivity
+3. UI/UX testing across different devices and screen sizes
+4. Accessibility testing for WCAG 2.1 AA compliance
+5. Performance testing for rendering and data loading
+6. Offline functionality testing
+7. Cross-browser testing (Chrome, Firefox, Safari, Edge)
+8. User acceptance testing with sample patient scenarios

@@ -1,0 +1,94 @@
+# Task ID: 7
+# Title: Implement Audit Trail and Access Logging
+# Status: pending
+# Dependencies: 2, 6
+# Priority: medium
+# Description: Develop a comprehensive audit trail system that logs all access and modifications to EMRs on the blockchain.
+# Details:
+1. Extend EMR pallet with access history tracking
+2. Implement immutable logging of all EMR access events
+3. Create functions to record data modifications
+4. Develop query interfaces for access history
+5. Implement UI components for viewing audit trails
+6. Ensure compliance with regulatory requirements for audit logging
+
+Pseudo-code for audit trail implementation:
+```rust
+// In emr_pallet/src/lib.rs
+
+#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo)]
+pub enum AccessType {
+    View,
+    Modify,
+    Share,
+    Revoke,
+}
+
+#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo)]
+pub struct AccessRecord<AccountId, BlockNumber> {
+    account: AccountId,
+    access_type: AccessType,
+    timestamp: BlockNumber,
+}
+
+#[pallet::storage]
+pub type AccessHistory<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat,
+    EMRHash,
+    BoundedVec<AccessRecord<T::AccountId, T::BlockNumber>, T::MaxAccessRecords>,
+>;
+
+impl<T: Config> Pallet<T> {
+    fn record_access(
+        emr_hash: EMRHash,
+        account: T::AccountId,
+        access_type: AccessType,
+    ) -> DispatchResult {
+        AccessHistory::<T>::try_mutate(emr_hash.clone(), |history| -> DispatchResult {
+            let bounded_history = history.get_or_insert_with(BoundedVec::default);
+            
+            let record = AccessRecord {
+                account: account.clone(),
+                access_type: access_type.clone(),
+                timestamp: <frame_system::Pallet<T>>::block_number(),
+            };
+            
+            bounded_history.try_push(record)
+                .map_err(|_| Error::<T>::TooManyAccessRecords)?;
+                
+            Ok(())
+        })?;
+        
+        Self::deposit_event(Event::AccessRecorded(emr_hash, account, access_type));
+        
+        Ok(())
+    }
+    
+    // Hook into all EMR access functions to record access
+    fn on_emr_access(
+        emr_hash: &EMRHash,
+        account: &T::AccountId,
+        access_type: AccessType,
+    ) -> DispatchResult {
+        Self::record_access(emr_hash.clone(), account.clone(), access_type)
+    }
+    
+    // Query function for access history
+    pub fn get_access_history(
+        emr_hash: &EMRHash,
+    ) -> Option<BoundedVec<AccessRecord<T::AccountId, T::BlockNumber>, T::MaxAccessRecords>> {
+        AccessHistory::<T>::get(emr_hash)
+    }
+}
+```
+
+# Test Strategy:
+1. Unit tests for audit logging functions
+2. Verify all access types are correctly recorded
+3. Test query functions for access history
+4. Verify immutability of audit logs
+5. Test handling of large access history records
+6. Verify compliance with regulatory requirements
+7. Performance testing for audit logging operations
+8. UI testing for audit trail visualization

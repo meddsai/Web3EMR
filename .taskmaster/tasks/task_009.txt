@@ -1,0 +1,126 @@
+# Task ID: 9
+# Title: Implement Regulatory Compliance Features
+# Status: pending
+# Dependencies: 4, 7
+# Priority: high
+# Description: Develop features to ensure compliance with healthcare regulations like HIPAA and GDPR.
+# Details:
+1. Implement data protection mechanisms required by HIPAA and GDPR
+2. Create consent management system for patient data
+3. Develop data portability features
+4. Implement right-to-be-forgotten mechanisms
+5. Create compliance reporting tools
+6. Develop data breach notification system
+7. Implement geographic restrictions based on regulatory requirements
+
+Pseudo-code for regulatory compliance features:
+```typescript
+// src/compliance/ConsentManager.ts
+
+interface ConsentRecord {
+  patientId: string;
+  providerId: string;
+  purpose: string;
+  dataCategories: string[];
+  expiryDate?: Date;
+  createdAt: Date;
+  revokedAt?: Date;
+}
+
+class ConsentManager {
+  private api: ApiPromise;
+  
+  constructor(api: ApiPromise) {
+    this.api = api;
+  }
+  
+  async recordConsent(consent: Omit<ConsentRecord, 'createdAt'>): Promise<string> {
+    // Create consent record on blockchain
+    const consentId = await this.storeConsentOnChain({
+      ...consent,
+      createdAt: new Date(),
+    });
+    
+    // Log consent for compliance reporting
+    await this.logComplianceEvent({
+      type: 'ConsentRecorded',
+      consentId,
+      patientId: consent.patientId,
+      timestamp: new Date(),
+    });
+    
+    return consentId;
+  }
+  
+  async revokeConsent(consentId: string, patientId: string): Promise<void> {
+    // Verify patient is authorized to revoke
+    await this.verifyPatientOwnership(consentId, patientId);
+    
+    // Revoke consent on blockchain
+    await this.revokeConsentOnChain(consentId);
+    
+    // Log revocation for compliance reporting
+    await this.logComplianceEvent({
+      type: 'ConsentRevoked',
+      consentId,
+      patientId,
+      timestamp: new Date(),
+    });
+  }
+  
+  async verifyConsent(providerId: string, patientId: string, purpose: string, dataCategory: string): Promise<boolean> {
+    // Query blockchain for valid consent
+    const consent = await this.getConsentFromChain(providerId, patientId, purpose, dataCategory);
+    
+    if (!consent) return false;
+    
+    // Check if consent is still valid
+    if (consent.revokedAt) return false;
+    
+    if (consent.expiryDate && new Date() > consent.expiryDate) return false;
+    
+    // Log consent verification for compliance reporting
+    await this.logComplianceEvent({
+      type: 'ConsentVerified',
+      consentId: consent.id,
+      patientId,
+      providerId,
+      timestamp: new Date(),
+    });
+    
+    return true;
+  }
+  
+  // Implementation of helper methods
+  private async storeConsentOnChain(consent: ConsentRecord): Promise<string> {
+    // Implementation details
+  }
+  
+  private async revokeConsentOnChain(consentId: string): Promise<void> {
+    // Implementation details
+  }
+  
+  private async getConsentFromChain(providerId: string, patientId: string, purpose: string, dataCategory: string): Promise<ConsentRecord & { id: string } | null> {
+    // Implementation details
+  }
+  
+  private async verifyPatientOwnership(consentId: string, patientId: string): Promise<void> {
+    // Implementation details
+  }
+  
+  private async logComplianceEvent(event: ComplianceEvent): Promise<void> {
+    // Implementation details
+  }
+}
+```
+
+# Test Strategy:
+1. Test consent management for different scenarios
+2. Verify data protection mechanisms
+3. Test data portability features
+4. Verify right-to-be-forgotten implementation
+5. Test compliance reporting tools
+6. Verify data breach notification system
+7. Test geographic restrictions
+8. Conduct mock regulatory audits to verify compliance
+9. Verify integration with access control and audit logging

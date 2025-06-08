@@ -1,0 +1,55 @@
+# Task ID: 2
+# Title: Implement EMR Pallet Core Functionality
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Develop the core EMR pallet that will manage EMR storage references and access control on the blockchain.
+# Details:
+1. Create a new pallet structure for EMR management
+2. Implement storage structures for EMRHashes, AccessLists, and AccessHistory
+3. Develop core functions: store_emr, grant_access, revoke_access, verify_access
+4. Implement events for tracking pallet operations
+5. Add error handling for all functions
+6. Implement access control verification logic
+
+Pseudo-code for EMR pallet:
+```rust
+#[pallet::storage]
+pub type EMRHashes<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, BoundedVec<EMRHash, T::MaxEMRsPerAccount>>;
+
+#[pallet::storage]
+pub type AccessLists<T: Config> = StorageDoubleMap<_, Blake2_128Concat, EMRHash, Blake2_128Concat, T::AccountId, AccessLevel>;
+
+#[pallet::storage]
+pub type AccessHistory<T: Config> = StorageMap<_, Blake2_128Concat, EMRHash, BoundedVec<AccessRecord<T::AccountId, T::BlockNumber>, T::MaxAccessRecords>>;
+
+#[pallet::call]
+impl<T: Config> Pallet<T> {
+    #[pallet::weight(T::WeightInfo::store_emr())]
+    pub fn store_emr(origin: OriginFor<T>, emr_hash: EMRHash) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        // Implementation logic
+        Self::deposit_event(Event::EMRStored(who, emr_hash));
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::grant_access())]
+    pub fn grant_access(origin: OriginFor<T>, emr_hash: EMRHash, grantee: T::AccountId, level: AccessLevel) -> DispatchResult {
+        let who = ensure_signed(origin)?;
+        // Verify ownership and implement access granting logic
+        Self::deposit_event(Event::AccessGranted(who, grantee, emr_hash, level));
+        Ok(())
+    }
+    
+    // Additional functions implementation
+}
+```
+
+# Test Strategy:
+1. Unit tests for each pallet function
+2. Integration tests for pallet interactions
+3. Test access control mechanisms with various scenarios
+4. Verify event emissions for all operations
+5. Test error handling for invalid operations
+6. Benchmark tests to ensure performance meets requirements
+7. Test storage limits and optimization

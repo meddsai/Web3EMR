@@ -1,0 +1,47 @@
+# Task ID: 1
+# Title: Setup Substrate Blockchain Infrastructure
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Initialize and configure the Substrate-based blockchain that will serve as the foundation for the Web3EMR system.
+# Details:
+1. Install Rust and required dependencies
+2. Initialize a new Substrate node template
+3. Configure the node for Nominated Proof of Stake (NPoS) consensus
+4. Set block time to 6 seconds as specified
+5. Configure runtime for >1000 TPS throughput
+6. Include System, Timestamp, and Balances pallets
+7. Setup development and testing environments
+8. Configure node for integration with off-chain workers
+
+Pseudo-code for node setup:
+```rust
+// In node/cargo.toml
+[dependencies]
+substrate = { git = "https://github.com/paritytech/substrate", branch = "master" }
+// Additional dependencies
+
+// In runtime/src/lib.rs
+impl frame_system::Config for Runtime {
+    // System configuration
+    type BlockHashCount = BlockHashCount;
+    type BlockWeights = BlockWeights;
+    type BlockLength = BlockLength;
+    // Configure for 6-second block time
+    type MinimumPeriod = ConstU32<3000>; // 3000 milliseconds (half of block time)
+    // Other configurations
+}
+
+// NPoS Configuration
+impl pallet_nomination_pools::Config for Runtime {
+    // NPoS specific configuration
+}
+```
+
+# Test Strategy:
+1. Verify node startup and synchronization
+2. Measure block production time to ensure 6-second target is met
+3. Conduct load testing to verify >1000 TPS capacity
+4. Test consensus mechanism with multiple validators
+5. Verify integration with off-chain workers
+6. Run integration tests for System, Timestamp, and Balances pallets

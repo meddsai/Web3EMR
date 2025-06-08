@@ -1,0 +1,74 @@
+# Task ID: 4
+# Title: Implement StorageHub Integration for Off-chain EMR Storage
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Develop integration with StorageHub for secure, encrypted off-chain storage of EMRs with blockchain-based access control.
+# Details:
+1. Implement StorageHub client for interaction with StorageHub nodes
+2. Develop AES-256 encryption/decryption module for EMRs
+3. Create functions for storing and retrieving encrypted data
+4. Implement data integrity verification using hash functions
+5. Develop key management system for encryption/decryption
+6. Create off-chain worker for handling StorageHub operations
+
+Pseudo-code for StorageHub integration:
+```rust
+// In off-chain worker module
+use aes_gcm::{Aes256Gcm, Key, Nonce};
+use aes_gcm::aead::{Aead, NewAead};
+
+pub struct StorageHubClient {
+    endpoint: String,
+    // Other configuration
+}
+
+impl StorageHubClient {
+    pub fn new(endpoint: String) -> Self {
+        Self { endpoint }
+    }
+    
+    pub fn store_encrypted_data(&self, data: Vec<u8>, encryption_key: &[u8]) -> Result<String, Error> {
+        // Encrypt data using AES-256
+        let key = Key::from_slice(encryption_key);
+        let cipher = Aes256Gcm::new(key);
+        let nonce = Nonce::from_slice(b"unique nonce"); // In production, generate a unique nonce
+        
+        let encrypted_data = cipher.encrypt(nonce, data.as_ref())
+            .map_err(|_| Error::EncryptionFailed)?;
+        
+        // Store encrypted data on StorageHub
+        let storage_response = self.upload_to_storagehub(encrypted_data)?;
+        
+        // Return content identifier
+        Ok(storage_response.content_id)
+    }
+    
+    pub fn retrieve_encrypted_data(&self, content_id: &str, encryption_key: &[u8]) -> Result<Vec<u8>, Error> {
+        // Retrieve encrypted data from StorageHub
+        let encrypted_data = self.download_from_storagehub(content_id)?;
+        
+        // Decrypt data
+        let key = Key::from_slice(encryption_key);
+        let cipher = Aes256Gcm::new(key);
+        let nonce = Nonce::from_slice(b"unique nonce"); // Must match the nonce used for encryption
+        
+        let decrypted_data = cipher.decrypt(nonce, encrypted_data.as_ref())
+            .map_err(|_| Error::DecryptionFailed)?;
+        
+        Ok(decrypted_data)
+    }
+    
+    // Additional methods for StorageHub interaction
+}
+```
+
+# Test Strategy:
+1. Test encryption and decryption of sample EMR data
+2. Verify successful storage and retrieval from StorageHub
+3. Test data integrity verification
+4. Measure retrieval times to ensure <1 second target
+5. Test handling of files up to 100MB in size
+6. Verify error handling for network issues
+7. Test concurrent access scenarios
+8. Validate redundancy across multiple storage nodes

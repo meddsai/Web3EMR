@@ -1,0 +1,117 @@
+# Task ID: 8
+# Title: Implement Healthcare Provider Verification
+# Status: pending
+# Dependencies: 3, 6
+# Priority: medium
+# Description: Develop a system for verifying healthcare providers' credentials and managing their access to patient records.
+# Details:
+1. Extend KILT integration for healthcare provider credential verification
+2. Implement attestation mechanisms for medical boards and accreditation bodies
+3. Create verification workflows for healthcare provider credentials
+4. Develop UI for healthcare provider registration and verification
+5. Implement credential revocation mechanisms
+6. Create directory of verified healthcare providers
+
+Pseudo-code for healthcare provider verification:
+```rust
+// In provider_verification_pallet/src/lib.rs
+
+#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo)]
+pub struct ProviderCredential<AccountId, BlockNumber> {
+    provider_did: Did,
+    credential_type: CredentialType,
+    issuer_did: Did,
+    issuance_date: BlockNumber,
+    expiry_date: Option<BlockNumber>,
+    revoked: bool,
+}
+
+#[pallet::storage]
+pub type ProviderCredentials<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat,
+    Did,
+    BoundedVec<ProviderCredential<T::AccountId, T::BlockNumber>, T::MaxCredentialsPerProvider>,
+>;
+
+#[pallet::call]
+impl<T: Config> Pallet<T> {
+    #[pallet::weight(T::WeightInfo::register_credential())]
+    pub fn register_credential(
+        origin: OriginFor<T>,
+        provider_did: Did,
+        credential_type: CredentialType,
+        proof: CredentialProof,
+    ) -> DispatchResult {
+        let issuer = ensure_signed(origin)?;
+        
+        // Verify issuer is authorized to issue this credential type
+        Self::ensure_authorized_issuer(&issuer, &credential_type)?;
+        
+        // Verify credential proof
+        Self::verify_credential_proof(&provider_did, &credential_type, &proof)?;
+        
+        // Register credential
+        ProviderCredentials::<T>::try_mutate(provider_did.clone(), |credentials| -> DispatchResult {
+            let bounded_credentials = credentials.get_or_insert_with(BoundedVec::default);
+            
+            let credential = ProviderCredential {
+                provider_did: provider_did.clone(),
+                credential_type: credential_type.clone(),
+                issuer_did: Self::get_issuer_did(&issuer)?,
+                issuance_date: <frame_system::Pallet<T>>::block_number(),
+                expiry_date: Self::calculate_expiry(&credential_type),
+                revoked: false,
+            };
+            
+            bounded_credentials.try_push(credential)
+                .map_err(|_| Error::<T>::TooManyCredentials)?;
+                
+            Ok(())
+        })?;
+        
+        Self::deposit_event(Event::CredentialRegistered(provider_did, credential_type));
+        
+        Ok(())
+    }
+    
+    #[pallet::weight(T::WeightInfo::revoke_credential())]
+    pub fn revoke_credential(
+        origin: OriginFor<T>,
+        provider_did: Did,
+        credential_type: CredentialType,
+    ) -> DispatchResult {
+        let issuer = ensure_signed(origin)?;
+        
+        // Verify issuer is authorized to revoke this credential
+        Self::ensure_authorized_issuer(&issuer, &credential_type)?;
+        
+        // Revoke credential
+        ProviderCredentials::<T>::try_mutate(provider_did.clone(), |credentials| -> DispatchResult {
+            let bounded_credentials = credentials.get_or_insert_with(BoundedVec::default);
+            
+            for credential in bounded_credentials.iter_mut() {
+                if credential.credential_type == credential_type && credential.issuer_did == Self::get_issuer_did(&issuer)? {
+                    credential.revoked = true;
+                    Self::deposit_event(Event::CredentialRevoked(provider_did.clone(), credential_type.clone()));
+                    return Ok(());
+                }
+            }
+            
+            Err(Error::<T>::CredentialNotFound.into())
+        })
+    }
+    
+    // Additional credential management functions
+}
+```
+
+# Test Strategy:
+1. Test credential registration for different provider types
+2. Verify credential verification with valid and invalid proofs
+3. Test credential revocation mechanisms
+4. Verify expiry date calculations
+5. Test authorization checks for credential issuers
+6. Verify integration with EMR access control
+7. Test directory queries for verified providers
+8. UI testing for provider registration and verification
